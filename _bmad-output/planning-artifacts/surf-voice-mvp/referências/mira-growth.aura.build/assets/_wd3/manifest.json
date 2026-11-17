@@ -1,0 +1,458 @@
+{
+ "entryUrl": "https://mira-growth.aura.build/",
+ "capturedAt": "2026-11-17T22:39:29+00:00",
+ "indexHtml": {
+  "kind": "arquivo",
+  "description": "site vivo aberto com duplo clique (file://): um runtime faz o papel do Service Worker; imagens e vídeos que a página só exibe são lidos de assets/, o resto (CSS, JS, fontes, dados, imagens de WebGL) vai embutido no index.html"
+ },
+ "files": [
+  {
+   "url": "https://mira-growth.aura.build/favicon.ico",
+   "file": "assets/mira-growth.aura.build/favicon.ico",
+   "type": "image/vnd.microsoft.icon",
+   "resourceType": "other",
+   "size": 696,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://mira-growth.aura.build/",
+   "file": "assets/mira-growth.aura.build/index.html",
+   "type": "text/html",
+   "resourceType": "document",
+   "size": 174599,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:bose.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_bose__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:craftsman.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_craftsman__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:discover.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_discover__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:dji.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_dji__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:grab.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_grab__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:nasa.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_nasa__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:nikon.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_nikon__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:sony.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_sony__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:spacex.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_spacex__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:uber.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_uber__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/simple-icons:visa.svg?color=white",
+   "file": "assets/api.iconify.design/simple-icons_visa__qce2dc8cc.svg",
+   "type": "image",
+   "resourceType": "image",
+   "size": 0,
+   "status": 404,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",
+   "file": "assets/cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 155629,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "library": {
+    "name": "unicornstudio",
+    "version": null
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/npm/chart.js",
+   "file": "assets/cdn.jsdelivr.net/npm/chart.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 210082,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://cdn.tailwindcss.com/3.4.17",
+   "file": "assets/cdn.tailwindcss.com/3.4.17.js",
+   "type": "text/javascript",
+   "resourceType": "script",
+   "size": 407279,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "library": {
+    "name": "tailwindcss (Play CDN)",
+    "version": "3.4.17"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://firebasestorage.googleapis.com/v0/b/unicorn-studio.appspot.com/o/Zz28X5RDkvcGGVYLr9X6QdTIhxy1%2FUntitled%20design%20-%202025-10-14T141250.707.webp?alt=media&token=bfcd11a8-6529-41a6-a592-d78147e93840",
+   "file": "assets/firebasestorage.googleapis.com/v0/b/unicorn-studio.appspot.com/o/Zz28X5RDkvcGGVYLr9X6QdTIhxy1/Untitled design - 2025-10-14T141250.707__qa23a38ee.webp",
+   "type": "image/webp",
+   "resourceType": "image",
+   "size": 154704,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q007694ca.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1290,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q1943cfff.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 28360,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q2aa424eb.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 10210,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q8921a011.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 4405,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q8b13e5bf.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 9235,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__q926a173b.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 18356,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap",
+   "file": "assets/fonts.googleapis.com/css2__qa4cd1a53.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 10530,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://fonts.gstatic.com/l/font?kit=gyBUhwUxId8gMGYQMKR3pzfaWI_RwuNalrErE8iusq2Kkq6JNBi4zpPN36U&skey=70a816dcd17c8a3c&v=v5",
+   "file": "assets/fonts.gstatic.com/l/font__q11cc5e98.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 29528,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+   "file": "assets/fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 48432,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://fonts.gstatic.com/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYgEM86xQ.woff2",
+   "file": "assets/fonts.gstatic.com/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYgEM86xQ.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 38460,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://fonts.gstatic.com/s/playfairdisplay/v40/nuFkD-vYSZviVYUb_rj3ij__anPXDTnogkk7yRZrPA.woff2",
+   "file": "assets/fonts.gstatic.com/s/playfairdisplay/v40/nuFkD-vYSZviVYUb_rj3ij__anPXDTnogkk7yRZrPA.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 38888,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1ebff6d5-cc57-4279-972f-e83f6c19894e_1600w.jpg",
+   "file": "assets/hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1ebff6d5-cc57-4279-972f-e83f6c19894e_1600w.jpg",
+   "type": "image/jpeg",
+   "resourceType": "image",
+   "size": 102308,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg",
+   "file": "assets/hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg",
+   "type": "image/jpeg",
+   "resourceType": "image",
+   "size": 77557,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80",
+   "file": "assets/images.unsplash.com/photo-1524504388940-b1c1722653e1__q73becaed.avif",
+   "type": "image/avif",
+   "resourceType": "image",
+   "size": 6753,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+   "file": "assets/images.unsplash.com/photo-1535713875002-d1d0cf377fde__q73becaed.avif",
+   "type": "image/avif",
+   "resourceType": "image",
+   "size": 5968,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80",
+   "file": "assets/images.unsplash.com/photo-1544723795-3fb6469f5b39__q73becaed.avif",
+   "type": "image/avif",
+   "resourceType": "image",
+   "size": 9539,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://storage.googleapis.com/unicornstudio-production/embeds/bcBYZIStYXwiogchBNHO?v=1794955182099",
+   "file": "assets/storage.googleapis.com/unicornstudio-production/embeds/bcBYZIStYXwiogchBNHO__qa757f0ae.js",
+   "type": "text/javascript",
+   "resourceType": "fetch",
+   "size": 42854,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "library": {
+    "name": "unicornstudio",
+    "version": null
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://unpkg.com/lucide@1.74.0/dist/umd/lucide.min.js",
+   "file": "assets/unpkg.com/lucide@1.74.0/dist/umd/lucide.min.js",
+   "type": "text/javascript",
+   "resourceType": "script",
+   "size": 495602,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop"
+   ],
+   "library": {
+    "name": "lucide",
+    "version": "1.74.0"
+   },
+   "role": "library"
+  }
+ ]
+}

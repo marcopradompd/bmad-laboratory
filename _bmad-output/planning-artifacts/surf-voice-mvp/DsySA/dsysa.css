@@ -1,0 +1,907 @@
+/* ==========================================================================
+   DsySA — Design System SurfAgent v1.1
+   Baseado na arquitetura visual de mira-growth.aura.build + Matriz de Ondas/Período
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Backgrounds & Surfaces */
+  --dsysa-bg-canvas: #000000;
+  --dsysa-bg-midnight: #02010A;
+  --dsysa-bg-telemetry: #05080F;
+  --dsysa-bg-glass-dark: #0A0A10;
+  --dsysa-bg-slate-950: #020617;
+  --dsysa-bg-slate-900: #0F172A;
+  --dsysa-bg-slate-800: #1E293B;
+
+  /* Brand & Ocean Accent Colors */
+  --dsysa-sky-300: #7DD3FC;
+  --dsysa-sky-400: #38BDF8;
+  --dsysa-sky-500: #0EA5E9;
+  --dsysa-blue-400: #60A5FA;
+  --dsysa-blue-500: #3B82F6;
+  --dsysa-cyan-400: #22D3EE;
+  --dsysa-indigo-400: #818CF8;
+  --dsysa-indigo-500: #6366F1;
+  --dsysa-purple-500: #A855F7;
+
+  /* Surf Condition Semantic Colors */
+  --dsysa-emerald-400: #34D399;
+  --dsysa-emerald-500: #10B981;
+  --dsysa-amber-300: #FCD34D;
+  --dsysa-amber-500: #F59E0B;
+  --dsysa-rose-400: #FB7185;
+  --dsysa-rose-500: #F43F5E;
+
+  /* Escala Cromática DsySA de Período Primário em Segundos (2s a 21+s) */
+  --dsysa-period-2: #3B5998;
+  --dsysa-period-3: #4361EE;
+  --dsysa-period-4: #0284C7;
+  --dsysa-period-5: #0EA5E9;
+  --dsysa-period-6: #00B4D8;
+  --dsysa-period-7: #06B6D4;
+  --dsysa-period-8: #22D3EE;
+  --dsysa-period-9: #14B8A6;
+  --dsysa-period-10: #10B981;
+  --dsysa-period-11: #22C55E;
+  --dsysa-period-12: #84CC16;
+  --dsysa-period-13: #A3E635;
+  --dsysa-period-14: #EAB308;
+  --dsysa-period-15: #F59E0B;
+  --dsysa-period-16: #F97316;
+  --dsysa-period-17: #EA580C;
+  --dsysa-period-18: #EF4444;
+  --dsysa-period-19: #BE123C;
+  --dsysa-period-20: #A21CAF;
+  --dsysa-period-21: #D946EF;
+
+  /* Text Hierarchy */
+  --dsysa-text-primary: #F8FAFC;
+  --dsysa-text-secondary: #CBD5E1;
+  --dsysa-text-muted: #94A3B8;
+  --dsysa-text-dim: #64748B;
+
+  /* Borders & Gradients */
+  --dsysa-border-hairline: rgba(255, 255, 255, 0.05);
+  --dsysa-border-subtle: rgba(255, 255, 255, 0.10);
+  --dsysa-border-strong: rgba(255, 255, 255, 0.20);
+  --dsysa-border-gradient-blue: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0));
+  --dsysa-border-gradient-indigo: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(59, 130, 246, 0));
+  --dsysa-border-gradient-emerald: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(56, 189, 248, 0.05));
+
+  /* Typography */
+  --dsysa-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --dsysa-font-serif: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+  --dsysa-font-geist: 'Geist', 'Inter', sans-serif;
+  --dsysa-font-oswald: 'Oswald', sans-serif;
+  --dsysa-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Shadows */
+  --dsysa-shadow-console: 0 24px 80px rgba(0, 0, 0, 0.8);
+  --dsysa-shadow-glass: 0 18px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --dsysa-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --dsysa-shadow-sky-cta: 0 14px 40px rgba(56, 189, 248, 0.45);
+}
+
+/* Font Helper Classes (from Mira) */
+.font-inter { font-family: var(--dsysa-font-sans) !important; }
+.font-playfair { font-family: var(--dsysa-font-serif) !important; }
+.font-geist { font-family: var(--dsysa-font-geist) !important; }
+.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
+.font-oswald { font-family: var(--dsysa-font-oswald) !important; }
+
+/* ==========================================================================
+   1. SIGNATURE MASK BORDER GRADIENT ([style*="--border-gradient"]::before)
+   ========================================================================== */
+[style*="--border-gradient"]::before,
+.dsysa-border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: var(--border-radius-before, inherit);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  background: var(--border-gradient, var(--dsysa-border-gradient-blue));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Alpha Vertical & Horizontal Masks */
+.dsysa-mask-fade-b {
+  -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 85%, transparent);
+  mask-image: linear-gradient(180deg, transparent, black 0%, black 85%, transparent);
+}
+.dsysa-mask-marquee {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+.dsysa-dot-matrix {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+
+/* ==========================================================================
+   2. KEYFRAME ANIMATIONS & SCROLL TRANSITIONS (Copied from Mira)
+   ========================================================================== */
+@keyframes fadeSlideIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-on-scroll {
+  animation-play-state: paused !important;
+  will-change: opacity, transform;
+}
+.animate-on-scroll.animate {
+  animation-play-state: running !important;
+}
+
+@keyframes aura-bar {
+  0%, 10% { transform: scaleX(0); }
+  40%, 90% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+@keyframes aura-spark {
+  0%, 20% { stroke-dashoffset: 150; }
+  50%, 90% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 150; }
+}
+
+@keyframes aura-fade {
+  0%, 30% { opacity: 0; }
+  50%, 90% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+@keyframes aura-dot {
+  0%, 40% { opacity: 0; }
+  50%, 90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes aura-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes translate-y {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-25%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes translate-y-up {
+  0% { transform: translateY(-20%); }
+  50% { transform: translateY(0); }
+  100% { transform: translateY(-20%); }
+}
+
+/* ==========================================================================
+   3. LASER-EDGE GLOW BUTTON (Signature Hero CTA / Voice Trigger)
+   ========================================================================== */
+.dsysa-btn-laser {
+  position: relative;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-family: var(--dsysa-font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 0.75rem 2rem;
+  border-radius: 0.375rem;
+  border: none;
+  transition: all 0.3s ease;
+}
+.dsysa-btn-laser:hover { background: rgba(0, 0, 0, 0.8); }
+.dsysa-btn-laser .laser-edge-v {
+  pointer-events: none;
+  position: absolute;
+  top: -28px;
+  bottom: -28px;
+  width: 2px;
+  background: linear-gradient(transparent, rgba(255,255,255,0.2) 28px, rgba(255,255,255,0.75) 28px, #ffffff, rgba(255,255,255,0.75) calc(100% - 28px), rgba(255,255,255,0.2) calc(100% - 28px), transparent);
+}
+.dsysa-btn-laser .laser-edge-v.left { left: -2px; }
+.dsysa-btn-laser .laser-edge-v.right { right: -2px; }
+.dsysa-btn-laser .laser-edge-h {
+  pointer-events: none;
+  position: absolute;
+  left: -28px;
+  right: -28px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2) 28px, rgba(255,255,255,0.75) 28px, #ffffff, rgba(255,255,255,0.75) calc(100% - 28px), rgba(255,255,255,0.2) calc(100% - 28px), transparent);
+}
+.dsysa-btn-laser .laser-edge-h.top { top: -2px; }
+.dsysa-btn-laser .laser-edge-h.bottom { bottom: -2px; }
+.dsysa-btn-laser .laser-blur-base {
+  position: absolute;
+  inset: 0;
+  filter: blur(4px);
+  opacity: 0.8;
+  background: inherit;
+}
+.dsysa-btn-laser .laser-blur-hover {
+  position: absolute;
+  inset: 0;
+  filter: blur(10px);
+  opacity: 0;
+  background: inherit;
+  transition: opacity 0.3s ease;
+}
+.dsysa-btn-laser .laser-radial-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: -20px;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), transparent 60%);
+  filter: blur(18px);
+  transition: opacity 0.3s ease;
+}
+.dsysa-btn-laser:hover .laser-blur-hover,
+.dsysa-btn-laser:hover .laser-radial-glow { opacity: 1; }
+.dsysa-btn-laser.listening .laser-radial-glow {
+  opacity: 1;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.45), transparent 65%);
+}
+
+/* ==========================================================================
+   4. SURFAGENT TABS & TELEMETRY SURFACES
+   ========================================================================== */
+.dsysa-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--dsysa-text-muted);
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid var(--dsysa-border-subtle);
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dsysa-tab:hover {
+  color: var(--dsysa-text-primary);
+  background: rgba(30, 41, 59, 0.8);
+  border-color: var(--dsysa-border-strong);
+}
+.dsysa-tab.active {
+  color: #020617;
+  background: linear-gradient(90deg, #38bdf8, #3b82f6);
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.35);
+}
+.dsysa-tab.best-spot {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.1);
+}
+.dsysa-tab.best-spot.active {
+  color: #022c22;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  border-color: transparent;
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.45);
+}
+
+/* ==========================================================================
+   5. DSYSA WAVE HEIGHT, PERIOD & PRIMARY DIRECTION CHART
+   (Reconstruído em DsySA a partir do modelo Altura e Período das Ondas)
+   ========================================================================== */
+.dsysa-wave-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgba(5, 8, 15, 0.96) 0%, rgba(2, 1, 10, 0.98) 100%);
+  border: 1px solid var(--dsysa-border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--dsysa-shadow-glass);
+  font-family: var(--dsysa-font-sans);
+}
+
+/* Top Banner: "ALTURA E PERÍODO DAS ONDAS" */
+.dsysa-wave-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.35) 50%, rgba(15, 23, 42, 0.95) 100%);
+  border-bottom: 1px solid var(--dsysa-border-subtle);
+}
+.dsysa-wave-topbar-title {
+  font-family: var(--dsysa-font-oswald);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 4 Sub-Mode Tabs: Altura total | Vagas | Swell A | Swell B */
+.dsysa-wave-subtabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 12px 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 6, 23, 0.6);
+  overflow-x: auto;
+}
+.dsysa-wave-subtab {
+  padding: 7px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #94a3b8;
+  background: rgba(15, 118, 110, 0.18);
+  border: 1px solid rgba(20, 184, 166, 0.25);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.dsysa-wave-subtab:hover {
+  color: #f8fafc;
+  background: rgba(20, 184, 166, 0.28);
+}
+.dsysa-wave-subtab.active {
+  color: #020617;
+  background: #f8fafc;
+  border-color: #f8fafc;
+  box-shadow: 0 -4px 16px rgba(56, 189, 248, 0.25);
+}
+
+/* Matrix Layout: Left Y-Axis | Central Columns | Right Y-Axis */
+.dsysa-wave-matrix-wrap {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 58px;
+  align-items: stretch;
+  background: #05080F;
+  position: relative;
+}
+
+/* Left & Right Y-Axis (metros) + "direção primária" label */
+.dsysa-wave-yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(2, 6, 23, 0.92);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  user-select: none;
+  z-index: 5;
+}
+.dsysa-wave-yaxis.right {
+  border-right: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dsysa-wave-yaxis-spacer {
+  height: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dsysa-wave-yaxis-ticks {
+  height: 210px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 4px 24px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.05;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.dsysa-wave-yaxis-ticks .unit-label {
+  font-size: 9px;
+  color: #64748b;
+  display: block;
+}
+.dsysa-wave-dir-box {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 9.5px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(15, 23, 42, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+}
+
+/* Central Viewport with Horizontal Infinite Scroll (Mouse + Touch Finger Drag), Day Headers, Day/Night Bands, Dashed Lines, Wave Bars, and Direction Arrows */
+.dsysa-wave-viewport,
+.dsysa-touch-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  cursor: grab;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.55) rgba(15, 23, 42, 0.9);
+}
+.dsysa-wave-viewport.dragging,
+.dsysa-touch-scroll.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+.dsysa-wave-viewport::-webkit-scrollbar {
+  height: 7px;
+}
+.dsysa-wave-viewport::-webkit-scrollbar-track {
+  background: rgba(2, 6, 23, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.dsysa-wave-viewport::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.5), rgba(59, 130, 246, 0.85));
+  border-radius: 9999px;
+}
+.dsysa-wave-viewport::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #38bdf8, #3b82f6);
+}
+
+.dsysa-wave-canvas-grid {
+  position: relative;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Day Headers Row: Ontem | TER 17 | QUA 18 | QUI 19 | SEX 20 */
+.dsysa-wave-days-row {
+  display: grid;
+  height: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.dsysa-wave-day-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.65);
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+}
+.dsysa-wave-day-cell.is-past {
+  background: linear-gradient(90deg, #072238, #0c4a6e);
+  color: #f8fafc;
+}
+.dsysa-wave-day-cell.is-today {
+  background: linear-gradient(90deg, rgba(14, 165, 233, 0.28), rgba(59, 130, 246, 0.22));
+  color: #38bdf8;
+}
+
+/* Bars Plot Area (210px height, 3.5m max scale) */
+.dsysa-wave-plot-area {
+  position: relative;
+  height: 210px;
+  display: grid;
+  align-items: end;
+  background: linear-gradient(180deg, rgba(8, 47, 73, 0.38) 0%, rgba(15, 118, 110, 0.22) 100%);
+}
+
+/* Horizontal Dashed Meter Lines (0.5m, 1.0m, 1.5m, 2.0m, 2.5m, 3.0m) */
+.dsysa-wave-gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed rgba(148, 163, 184, 0.25);
+  pointer-events: none;
+  z-index: 1;
+}
+.dsysa-wave-gridline.major {
+  border-top-style: dashed;
+  border-top-color: rgba(226, 232, 240, 0.35);
+}
+
+/* Individual Time Slot Column inside Plot Area */
+.dsysa-wave-slot-col {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 2px;
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+.dsysa-wave-slot-col.daylight {
+  background: rgba(56, 189, 248, 0.08);
+}
+.dsysa-wave-slot-col.twilight {
+  background: rgba(15, 23, 42, 0.25);
+}
+.dsysa-wave-slot-col.night {
+  background: rgba(2, 6, 23, 0.45);
+}
+.dsysa-wave-slot-col.day-divider {
+  border-right: 1px solid rgba(2, 6, 23, 0.95);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.16);
+}
+.dsysa-wave-slot-col:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.dsysa-wave-slot-col.is-now::after {
+  content: "AGORA";
+  position: absolute;
+  top: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: #10b981;
+  color: #022c22;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+  z-index: 4;
+}
+
+/* The Wave Bar itself (height = meters, background = primary period color) */
+.dsysa-wave-bar {
+  width: 86%;
+  border-radius: 3px 3px 0 0;
+  position: relative;
+  z-index: 2;
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, filter 0.2s ease;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.dsysa-wave-slot-col:hover .dsysa-wave-bar {
+  filter: brightness(1.18);
+}
+
+/* Primary Direction Row (Circular Arrow Badges + Cardinal Text) */
+.dsysa-wave-dirs-row {
+  display: grid;
+  height: 54px;
+  background: rgba(2, 6, 23, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.dsysa-wave-dir-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 1px;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+.dsysa-wave-dir-cell.day-divider {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+.dsysa-dir-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: 1px solid rgba(147, 197, 253, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
+  transition: transform 0.35s ease;
+}
+.dsysa-dir-cardinal {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #cbd5e1;
+}
+
+/* Period Color Legend Strip: 2s to 21+s */
+.dsysa-period-legend-wrap {
+  padding: 10px 14px 8px;
+  background: rgba(2, 6, 23, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+.dsysa-period-scale-bar {
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  max-width: 680px;
+  margin: 0 auto;
+}
+.dsysa-period-cell {
+  padding: 3px 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #020617;
+  text-align: center;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+.dsysa-period-cell.light-text {
+  color: #f8fafc;
+}
+.dsysa-period-caption {
+  margin-top: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #cbd5e1;
+}
+
+/* Bottom Infinite Scroll Status & Forecast Limit Alert Bar */
+.dsysa-scroll-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #020617;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 14px;
+  gap: 10px;
+  font-size: 11px;
+  color: #94a3b8;
+  transition: all 0.25s ease;
+}
+.dsysa-scroll-status-bar.at-end {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(245, 158, 11, 0.16), rgba(15, 23, 42, 0.95));
+  border-top-color: rgba(251, 191, 36, 0.4);
+}
+.dsysa-end-forecast-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  color: #fde68a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
+  animation: fadeSlideIn 0.35s ease-out both;
+}
+.dsysa-end-cap-col {
+  width: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.98));
+  border-left: 1px dashed rgba(251, 191, 36, 0.45);
+  color: #fde68a;
+  z-index: 3;
+}
+
+/* ==========================================================================
+   6. DSYSA SURFACE WIND FORECAST CHART ("VENTO DE SUPERFÍCIE MÉDIO")
+   (Costeiro/Marítimo, Unidades KT/KmH/MS/MPH, Vento + Rajadas, Cores das Setas)
+   ========================================================================== */
+.dsysa-wind-zone-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px 8px;
+  background: rgba(2, 6, 23, 0.78);
+}
+.dsysa-wind-zone-group {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 23, 42, 0.9);
+}
+.dsysa-wind-zone-btn {
+  padding: 8px 16px;
+  font-family: var(--dsysa-font-oswald);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dsysa-wind-zone-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+}
+.dsysa-wind-zone-btn.active {
+  color: #020617;
+  background: #f8fafc;
+  box-shadow: inset 0 0 0 1px #020617;
+}
+.dsysa-wind-help-btn {
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 41, 59, 0.85);
+  color: #f8fafc;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.dsysa-wind-help-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+.dsysa-wind-zone-note {
+  font-size: 11px;
+  font-weight: 600;
+  color: #93c5fd;
+  line-height: 1.35;
+}
+
+/* Subtabs row: Nós (KT) | Km/H | M/S | MPH  +  Vento / Rajadas Legend */
+.dsysa-wind-subtabs-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 6px 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 6, 23, 0.6);
+}
+.dsysa-wind-bars-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.dsysa-wind-swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.dsysa-wind-swatch.sustained {
+  background: #facc15;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
+}
+.dsysa-wind-swatch.gust {
+  background: #f97316;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.45);
+}
+
+/* Stacked Wind + Gust Bar inside Plot Area */
+.dsysa-wind-bar-stack {
+  width: 86%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+  transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+}
+.dsysa-wave-slot-col:hover .dsysa-wind-bar-stack {
+  filter: brightness(1.15);
+}
+.dsysa-wind-bar-gust-part {
+  width: 100%;
+  background: linear-gradient(180deg, #fb923c 0%, #f97316 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.dsysa-wind-bar-sustained-part {
+  width: 100%;
+  background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
+}
+
+/* Wind Direction Arrow Circles Colored by Surf Quality (fraco, terral, cruzado, maral) */
+.dsysa-wind-dir-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: transform 0.35s ease;
+}
+.dsysa-wind-dir-circle.fraco {
+  background: linear-gradient(135deg, #818cf8, #6366f1);
+  border: 1px solid rgba(199, 210, 254, 0.5);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+.dsysa-wind-dir-circle.terral {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  border: 1px solid rgba(134, 239, 172, 0.5);
+  box-shadow: 0 2px 10px rgba(22, 163, 74, 0.5);
+}
+.dsysa-wind-dir-circle.cruzado {
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+  border: 1px solid rgba(253, 186, 116, 0.5);
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.45);
+}
+.dsysa-wind-dir-circle.maral {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  border: 1px solid rgba(252, 165, 165, 0.5);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.45);
+}
+
+/* Bottom Arrow Colors Legend: CORES DAS SETAS | fraco | terral | cruzado | maral */
+.dsysa-wind-arrows-legend-wrap {
+  padding: 10px 14px;
+  background: rgba(2, 6, 23, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.dsysa-wind-arrows-title {
+  font-family: var(--dsysa-font-oswald);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #f8fafc;
+  text-transform: uppercase;
+}
+.dsysa-wind-arrows-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(78px, 120px));
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.dsysa-wind-arrow-key {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.dsysa-wind-arrow-key.fraco { background: #818cf8; }
+.dsysa-wind-arrow-key.terral { background: #16a34a; }
+.dsysa-wind-arrow-key.cruzado { background: #ea580c; }
+.dsysa-wind-arrow-key.maral { background: #991b1b; }
