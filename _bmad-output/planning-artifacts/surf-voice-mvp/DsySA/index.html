@@ -48,7 +48,6 @@
           <a href="#console" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE & ABAS</a>
           <a href="#dsysaWavePeriodChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS & ENERGIA</a>
           <a href="#dsysaWindChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO & MARÉ</a>
-          <a href="#tokens" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">TOKENS & COMPONENTES</a>
         </nav>
 
         <div class="h-5 w-px bg-white/15"></div>
@@ -74,16 +73,6 @@
     <section class="flex flex-col max-w-6xl mx-auto pt-10 px-4 lg:px-8 lg:pt-14 relative isolate">
       <!-- Hero Copy & Voice Trigger -->
       <div class="text-center max-w-3xl mx-auto relative z-10">
-        <!-- Surfers Strip -->
-        <div class="flex flex-col mb-5 items-center">
-          <div class="flex items-center space-x-3 bg-slate-950/70 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-md">
-            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-            <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-200/90">
-              DSYSA DESIGN SYSTEM · ABERTO PARA TODAS AS PRAIAS · VOICE-FIRST AI
-            </p>
-          </div>
-        </div>
-
         <!-- Headline (Inter + Playfair Display Italic) -->
         <div class="space-y-2">
           <h1 class="sm:text-5xl lg:text-6xl text-3xl font-semibold text-slate-50 tracking-tight">
@@ -291,7 +280,7 @@
             </div>
 
             <!-- RIGHT (2 COLS): Condition Doughnut + AI Voice Assistant Panel -->
-            <div class="space-y-4 lg:col-span-2 flex flex-col justify-between">
+            <div class="space-y-4 lg:col-span-2 flex flex-col">
               <!-- Doughnut Distribution Card (Copied from Mira Client Distribution) -->
               <div class="rounded-2xl bg-slate-950/85 p-4 border border-white/5">
                 <div class="flex items-center justify-between">
@@ -332,7 +321,7 @@
               </div>
 
               <!-- AI Voice Assistant Panel (Copied from Mira AI Expansion Assistant) -->
-              <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex-1 h-auto min-h-fit flex flex-col justify-between transition-all">
+              <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-fit flex-none flex flex-col gap-4 transition-all">
                 <div>
                   <div class="flex items-center justify-between">
                     <div>
@@ -370,7 +359,7 @@
                 </div>
 
                 <!-- Voice / Text Input Pill -->
-                <div class="mt-4 flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5">
+                <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5">
                   <i data-lucide="sparkles" class="mr-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
                   <input id="consoleQueryInput"
                          onkeydown="if(event.key==='Enter') handleConsoleInput()"
@@ -388,116 +377,10 @@
       </div>
     </section>
 
-    <!-- ===================================================================
-         TOKENS DSYSA (CORES, TIPOGRAFIA, BOTÕES, BORDAS & ESPAÇAMENTOS)
-         =================================================================== -->
-    <section id="tokens" class="flex flex-col lg:px-8 lg:pt-16 max-w-6xl mx-auto pt-12 px-6">
-      <div class="sm:px-10 sm:py-10 bg-gradient-to-br from-blue-500/0 via-blue-500/10 to-blue-500/0 p-6 relative"
-           style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
-        <div class="flex items-center justify-between border-b border-white/10 pb-4">
-          <span class="text-[11px] uppercase font-medium text-sky-300 tracking-[0.2em]">
-            DSYSA DESIGN TOKENS · CORES, FONTES, BOTÕES & BORDAS
-          </span>
-          <span class="text-[11px] text-slate-400">Salvo em <code>DsySA/tokens.json</code> e <code>DsySA/dsysa.css</code></span>
-        </div>
-
-        <!-- Color Palette Swatches -->
-        <div class="mt-8">
-          <h3 class="text-lg font-medium text-white mb-4">1. Paleta de Cores & Superfícies</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 text-[11px]">
-            <div class="p-3 rounded-lg bg-[#000000] border border-white/15">
-              <div class="h-8 w-full rounded bg-[#000000] border border-white/10 mb-2"></div>
-              <p class="font-semibold text-white">Canvas Black</p>
-              <p class="text-slate-400 font-mono">#000000</p>
-            </div>
-            <div class="p-3 rounded-lg bg-[#02010A] border border-white/15">
-              <div class="h-8 w-full rounded bg-[#02010A] border border-white/10 mb-2"></div>
-              <p class="font-semibold text-white">Midnight</p>
-              <p class="text-slate-400 font-mono">#02010A</p>
-            </div>
-            <div class="p-3 rounded-lg bg-[#05080F] border border-white/15">
-              <div class="h-8 w-full rounded bg-[#05080F] border border-white/10 mb-2"></div>
-              <p class="font-semibold text-white">Telemetry</p>
-              <p class="text-slate-400 font-mono">#05080F</p>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-white/15">
-              <div class="h-8 w-full rounded bg-sky-400 mb-2 shadow-[0_0_12px_#38bdf8]"></div>
-              <p class="font-semibold text-sky-300">Sky 400 (Swell)</p>
-              <p class="text-slate-400 font-mono">#38BDF8</p>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-white/15">
-              <div class="h-8 w-full rounded bg-blue-500 mb-2 shadow-[0_0_12px_#3b82f6]"></div>
-              <p class="font-semibold text-blue-300">Blue 500</p>
-              <p class="text-slate-400 font-mono">#3B82F6</p>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-white/15">
-              <div class="h-8 w-full rounded bg-emerald-500 mb-2 shadow-[0_0_12px_#10b981]"></div>
-              <p class="font-semibold text-emerald-300">Emerald (Melhor)</p>
-              <p class="text-slate-400 font-mono">#10B981</p>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-white/15">
-              <div class="h-8 w-full rounded bg-indigo-500 mb-2 shadow-[0_0_12px_#6366f1]"></div>
-              <p class="font-semibold text-indigo-300">Indigo (Radar)</p>
-              <p class="text-slate-400 font-mono">#6366F1</p>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-white/15">
-              <div class="h-8 w-full rounded bg-rose-500 mb-2 shadow-[0_0_12px_#f43f5e]"></div>
-              <p class="font-semibold text-rose-300">Rose (Spike/Voz)</p>
-              <p class="text-slate-400 font-mono">#F43F5E</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Typography & Buttons Showcase -->
-        <div class="grid md:grid-cols-2 gap-8 mt-10 pt-8 border-t border-white/10">
-          <div>
-            <h3 class="text-lg font-medium text-white mb-4">2. Tipografia Multimodal</h3>
-            <div class="space-y-3 bg-slate-950/80 p-5 border border-white/5 rounded-xl">
-              <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">EYEBROW · INTER 11PX TRACKING 0.2EM</p>
-              <p class="text-2xl font-semibold text-white tracking-tight">Inter Semibold — Títulos & Dados</p>
-              <p class="text-2xl italic text-sky-200 font-playfair">Playfair Display Italic — Destaque de Onda</p>
-              <p class="text-sm font-geist text-slate-300">Geist Sans — Telemetria Costeira, Energia (kJ) e Vento</p>
-              <p class="text-xs font-mono text-emerald-300">Monospace — Query: Swell = 1.7m &amp; Vento = Terral</p>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-medium text-white mb-4">3. Botões, Abas & Badges DsySA</h3>
-            <div class="flex flex-wrap items-center gap-3 bg-slate-950/80 p-5 border border-white/5 rounded-xl">
-              <button class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-2.5 text-[11px] font-semibold text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)]">
-                SKY-BLUE PILL CTA
-              </button>
-              <button class="inline-flex items-center justify-center rounded-sm bg-slate-50 px-5 py-2.5 text-xs font-semibold text-slate-950 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                WHITE CONTRAST
-              </button>
-              <button class="inline-flex items-center justify-center rounded-sm border border-white/10 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-50 hover:bg-slate-800">
-                GLASS SECONDARY
-              </button>
-              <span class="dsysa-tab best-spot active">★ Aba Melhor Pico</span>
-              <span class="dsysa-tab">🌊 Aba Salva</span>
-              <button type="button" onclick="window.openDsySACompassModal()" class="dsysa-btn-expand-compass">
-                🧭 Ampliar bússola (Modal DsySA)
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Catálogo do Novo Componente: Bússola Funcional de Posicionamento da Praia -->
-        <div class="mt-10 pt-8 border-t border-white/10">
-          <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
-            <div>
-              <h3 class="text-lg font-medium text-white">4. Componente DsySA — Bússola Funcional de Posicionamento da Praia & Modal</h3>
-              <p class="text-xs text-slate-400">Componente reutilizável (<code>renderDsySACompassCard</code> + <code>openDsySACompassModal</code>) com anel graduado 0°–350°, rosa dos ventos de 8 pontas, agulha bicolor e modal interativo.</p>
-            </div>
-            <button type="button" onclick="window.openDsySACompassModal()" class="dsysa-btn-expand-compass">
-              <span>🔍 Testar Modal da Bússola</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </main>
+
+  <!-- Open-Meteo Surf & Marine Ingestion Service -->
+  <script src="./open-meteo-service.js"></script>
 
   <!-- DsySA Core JS -->
   <script src="./dsysa.js"></script>
@@ -509,6 +392,8 @@
         id: 'itacimirim',
         name: 'Itacimirim (A Espera)',
         region: 'Litoral Norte · A 5,8 km de você',
+        lat: -12.63,
+        lon: -38.05,
         swellSize: '1.7 m',
         swellPeriod: '13 s',
         swellDir: 'SE 135°',
@@ -535,6 +420,8 @@
         id: 'stella_maris',
         name: 'Stella Maris',
         region: 'Salvador · A 8,2 km de você',
+        lat: -12.95,
+        lon: -38.35,
         swellSize: '1.2 m',
         swellPeriod: '11 s',
         swellDir: 'SE 142°',
@@ -561,6 +448,8 @@
         id: 'guarajuba',
         name: 'Guarajuba (Praia do Surf)',
         region: 'Litoral Norte · A 9,5 km de você',
+        lat: -12.65,
+        lon: -38.07,
         swellSize: '0.8 m',
         swellPeriod: '10 s',
         swellDir: 'L-SE 120°',
@@ -587,6 +476,8 @@
         id: 'pedra_do_sal',
         name: 'Pedra do Sal',
         region: 'Itapuã · A 11,0 km de você',
+        lat: -12.94,
+        lon: -38.36,
         swellSize: '1.1 m',
         swellPeriod: '9 s',
         swellDir: 'L 95°',
@@ -613,6 +504,8 @@
         id: 'spec_maresias',
         name: 'Maresias',
         region: 'São Sebastião, SP · Pico Específico',
+        lat: -23.79,
+        lon: -45.56,
         swellSize: '1.6 m',
         swellPeriod: '12 s',
         swellDir: 'S-SE 155°',
@@ -632,6 +525,8 @@
         id: 'spec_arpoador',
         name: 'Arpoador',
         region: 'Rio de Janeiro, RJ · Pico Específico',
+        lat: -22.99,
+        lon: -43.19,
         swellSize: '1.3 m',
         swellPeriod: '11 s',
         swellDir: 'S-SO 195°',
@@ -651,6 +546,8 @@
         id: 'spec_itamambuca',
         name: 'Itamambuca',
         region: 'Ubatuba, SP · Pico Específico',
+        lat: -23.40,
+        lon: -45.01,
         swellSize: '1.5 m',
         swellPeriod: '12 s',
         swellDir: 'SE 140°',
@@ -907,11 +804,82 @@
       }).join('');
     }
 
-    function renderActiveSpot() {
-      const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
+    const spotForecastCache = new Map();
+
+    async function loadSpotForecast(spot) {
+      if (!spot || !spot.lat || !spot.lon || !window.fetchSurfForecast) return;
+      if (spotForecastCache.has(spot.id)) {
+        spot.forecastData = spotForecastCache.get(spot.id);
+        updateSpotMetricsFromForecast(spot);
+        renderSpotTelemetryAndCharts(spot);
+        return;
+      }
+
+      try {
+        console.log(`🌊 [Open-Meteo] Disparando requisições paralelas (WW3 + GFS) para ${spot.name} (${spot.lat}, ${spot.lon})...`);
+        const data = await window.fetchSurfForecast({
+          lat: spot.lat,
+          lon: spot.lon,
+          timezone: 'America/Sao_Paulo',
+          forecastDays: 7
+        });
+        console.log(`✅ [Open-Meteo] Previsão de 7 dias recebida com sucesso para ${spot.name}! (${data.timeline.length} horas normalizadas)`);
+        spotForecastCache.set(spot.id, data);
+        spot.forecastData = data;
+        updateSpotMetricsFromForecast(spot);
+        renderSpotTelemetryAndCharts(spot);
+      } catch (err) {
+        console.warn('⚠️ Falha ao obter dados Open-Meteo para ' + spot.name, err);
+      }
+    }
+
+    function updateSpotMetricsFromForecast(spot) {
+      if (!spot.forecastData || !spot.forecastData.timeline || spot.forecastData.timeline.length === 0) return;
+      const timeline = spot.forecastData.timeline;
+      const nowIdx = Math.min(timeline.length - 1, new Date().getHours());
+      const now = timeline[nowIdx] || timeline[0];
+
+      if (now.swell) {
+        spot.swellSize = `${now.swell.totalHeightM.toFixed(1)} m`;
+        spot.swellPeriod = `${now.swell.primary.periodS} s`;
+        spot.swellDir = `${now.swell.primary.directionCardinal} ${now.swell.primary.directionDeg}°`;
+        spot.energy = `${Math.round(now.swell.totalHeightM * now.swell.totalHeightM * now.swell.primary.periodS * 28)} kJ`;
+      }
+
+      if (now.wind) {
+        const kmh = Math.round((now.wind.speedKnots || 5) * 1.852);
+        spot.windSpeed = `${kmh} km/h`;
+        spot.windDir = `${now.wind.directionCardinal} ${now.wind.directionDeg}°`;
+        if (kmh <= 7) {
+          spot.windRelation = 'Terral Fraco';
+        } else if (['O', 'W', 'ONO', 'WNW', 'NO', 'NW', 'NNO', 'NNW', 'N'].includes(now.wind.directionCardinal)) {
+          spot.windRelation = 'Terral Liso';
+        } else if (['ESE', 'SE', 'SSE', 'S'].includes(now.wind.directionCardinal)) {
+          spot.windRelation = 'Maral';
+        } else {
+          spot.windRelation = 'Vento Cruzado';
+        }
+      }
+
+      if (now.waterTempC) {
+        const temp = Math.round(now.waterTempC);
+        spot.waterTemp = `${temp} °C (${temp >= 24 ? 'Boardshort' : 'Wetsuit'})`;
+      }
+
+      const nextExtrema = timeline.slice(nowIdx).find(p => p.tide && p.tide.type);
+      if (nextExtrema) {
+        const extType = nextExtrema.tide.type === 'HIGH' ? 'Preia-mar' : 'Baixa-mar';
+        const extH = +(nextExtrema.tide.heightM + 1.2).toFixed(1);
+        const extTime = nextExtrema.timestamp.slice(11, 16);
+        const curH = +(now.tide.heightM + 1.2).toFixed(1);
+        const isRising = nextExtrema.tide.type === 'HIGH';
+        spot.tidePhase = `${isRising ? 'Enchendo' : 'Vazante'} (${curH}m → ${extH}m às ${extTime}h)`;
+      }
+    }
+
+    function renderSpotTelemetryAndCharts(spot) {
       if (!spot) return;
 
-      // Atualiza automaticamente o Background Reativo ao Clima do Pico Ativo (Ensolarado | Parcialmente Nublado | Chuvoso | Chuva com Raios)
       if (window.setDsySAWeatherBackground) {
         window.setDsySAWeatherBackground(spot.weather);
       }
@@ -932,7 +900,6 @@
         bestBadge.classList.add('hidden');
       }
 
-      // Renderiza todos os 10 indicadores obrigatórios em 4 cards semânticos simplificados de mesma altura (antes do gráfico de ondas)
       const tideShort = (spot.tidePhase || 'Enchendo (0.9m → 1.8m)').replace(/\s*às\s*\d{2}:\d{2}/i, '');
       const moonShort = (spot.moonPhase || '🌕 Lua Cheia').replace(/\s*\(.*?\)/g, '');
       const waterTempDeg = ((spot.waterTemp || '26 °C').match(/\d+\s*°C/) || ['26 °C'])[0] + ' Água';
@@ -971,7 +938,7 @@
             <span class="dsysa-telemetry-card-badge">${moonShort}</span>
           </div>
           <p class="dsysa-telemetry-card-value">${tideShort}</p>
-          <p class="dsysa-telemetry-card-sub">Maré Viva · Preamar às 20:51h (Porto de Salvador)</p>
+          <p class="dsysa-telemetry-card-sub">Maré Viva · Preamar (Porto de Salvador)</p>
         </div>
 
         <!-- 4. TEMPO & TEMP. DA ÁGUA -->
@@ -1009,7 +976,7 @@
         spot
       );
 
-      // Atualiza o Componente DsySA de Bússola Funcional de Posicionamento da Praia (Último card da coluna dos gráficos)
+      // Atualiza o Componente DsySA de Bússola Funcional de Posicionamento da Praia
       window.renderDsySACompassCard(
         document.getElementById('dsysaCompassCardRoot'),
         spot
@@ -1024,6 +991,17 @@
         dist,
         ["Ondulação & Energia", "Alinhamento do Vento", "Fase da Maré & Lua"]
       );
+    }
+
+    function renderActiveSpot() {
+      const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
+      if (!spot) return;
+
+      // Renderiza imediatamente com dados disponíveis
+      renderSpotTelemetryAndCharts(spot);
+
+      // Dispara a ingestão de dados meteorológicos reais da Open-Meteo
+      loadSpotForecast(spot);
     }
 
     window.addEventListener('DOMContentLoaded', () => {

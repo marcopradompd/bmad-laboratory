@@ -1473,15 +1473,18 @@
 }
 
 /* ==========================================================================
-   Card Flexível: SurfAgent Voice Assistant
+   Card Hug Contents: SurfAgent Voice Assistant
    ========================================================================== */
 .dsysa-voice-assistant-card {
-  height: auto !important;
-  min-height: fit-content;
-  flex: 1 1 auto;
+  height: fit-content !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex: 0 0 auto !important; /* Nunca estica para preencher a coluna; mantém sempre o tamanho do conteúdo interno (HUG) */
+  align-self: flex-start;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start !important;
   gap: 16px;
   transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }

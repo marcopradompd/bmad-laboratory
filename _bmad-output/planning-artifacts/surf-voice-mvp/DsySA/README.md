@@ -9,6 +9,7 @@ O **DsySA (Design System SurfAgent)** é o sistema de design oficial do **SurfAg
 - [`tokens.json`](./tokens.json) — Design Tokens estruturados (cores, superfícies, tipografia, espaçamentos, bordas, sombras e animações).
 - [`dsysa.css`](./dsysa.css) — Folha de estilos completa com variáveis CSS, máscaras de borda gradiente (`--border-gradient`), `@keyframes`, botões Laser-Edge Glow, abas persistentes e utilitários.
 - [`dsysa.js`](./dsysa.js) — Motor JavaScript com `IntersectionObserver` para animações de scroll (`fadeSlideIn`), inicializador WebGL Aura (`UnicornStudio`) e fábricas de gráficos Chart.js (`createDsySASwellChart` e `createDsySADoughnutChart`).
+- [`open-meteo-service.js`](./open-meteo-service.js) — Camada de ingestão e normalização de dados meteorológicos e oceanográficos (NOAA WW3, GFS, marés harmônicas) via Open-Meteo REST APIs com merge assíncrono, conversão de 16 pontos cardeais, detecção de preia-mar/baixa-mar e índice de energia.
 - [`index.html`](./index.html) — **Catálogo Interativo Vivo (Showcase DsySA + Console SurfAgent Completo)** com todos os componentes, gráficos, animações, alertas, abas e voz funcionando ao vivo.
 
 ---
@@ -113,6 +114,6 @@ O background do aplicativo muda automaticamente conforme a condição climática
    - **Layout Lado a Lado:** Bússola interativa à esquerda (arrastável com mouse ou toque para girar o disco) e painel explicativo à direita com o título ***"Veja a posição da praia onde você está."***, resumo geográfico da bancada, badges de azimute e o botão **`Ampliar bússola`** (`.dsysa-btn-expand-compass`).
    - **Modal de Bússola Ampliada (`#dsysaCompassModal`):** Ao clicar em **`Ampliar bússola`**, abre um modal `DsySA` com `backdrop-blur`, bússola de alta precisão (`310×310px`), controle deslizante de rotação (`0°–359°`), botões de alinhamento rápido (`Norte no Topo 0°` e `Olhar de Frente p/ o Mar`) e botão **`✕ Fechar`** (`.dsysa-btn-close-modal`).
 6. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
-7. **Card Flexível do SurfAgent Voice Assistant (`.dsysa-voice-assistant-card` / Node Figma `15:252`):**
-   - **Altura Flexível & Fluida (`h-auto` / `flex: 1 1 auto` / `layoutSizingVertical = "HUG"`):** O card do assistente adapta sua dimensão vertical dinamicamente ao volume de perguntas rápidas, histórico de diálogo por voz, sugestões de picos e redimensionamento de janela sem sobreposição ou corte interno.
+7. **Card Hug Contents do SurfAgent Voice Assistant (`.dsysa-voice-assistant-card` / Node Figma `15:252`):**
+   - **Altura Hug Contents (`h-fit` / `flex: 0 0 auto` / `layoutSizingVertical = "HUG"`):** O card ajusta sua altura estritamente ao tamanho do seu conteúdo interno (título, botões de ação rápida e barra de texto), sem forçar esticamento para ocupar o resto da coluna e sem cortar elementos internos.
 

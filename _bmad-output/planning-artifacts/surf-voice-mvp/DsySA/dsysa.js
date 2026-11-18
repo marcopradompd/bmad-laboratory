@@ -191,24 +191,62 @@
 
   /* Conversão de direção cardeal para ângulo de propagação da seta */
   const DIR_ANGLES = {
-    "N": 180,
-    "NNE": 202,
-    "NE": 225,
-    "ENE": 247,
-    "E": 270,
-    "L": 270,
-    "ESE": 292,
-    "SE": 315,
-    "SSE": 337,
-    "S": 0,
-    "SSO": 22,
-    "SO": 45,
-    "OSO": 67,
-    "O": 90,
-    "ONO": 112,
-    "NO": 135,
-    "NNO": 157
+    N: 180,
+    NNE: 202,
+    NE: 225,
+    ENE: 247,
+    E: 270,
+    L: 270,
+    ESE: 292,
+    SE: 315,
+    SSE: 337,
+    S: 0,
+    SSW: 22,
+    SSO: 22,
+    SW: 45,
+    SO: 45,
+    WSW: 67,
+    OSO: 67,
+    W: 90,
+    O: 90,
+    WNW: 112,
+    ONO: 112,
+    NW: 135,
+    NO: 135,
+    NNW: 157,
+    NNO: 157
   };
+
+  /* Helper Universal: Extração Dinâmica de Dias e Slots da Previsão (Open-Meteo) */
+  function getDsySAFiniteDays(spotConfig) {
+    if (spotConfig?.forecastData?.timeline && spotConfig.forecastData.timeline.length > 0) {
+      const timeline = spotConfig.forecastData.timeline;
+      const daysMap = new Map();
+      const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
+      const fullDayNames = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+
+      timeline.forEach((pt) => {
+        const dateStr = pt.timestamp.slice(0, 10);
+        if (!daysMap.has(dateStr)) {
+          const [y, m, d] = dateStr.split("-").map(Number);
+          const dateObj = new Date(y, m - 1, d);
+          const dayOfWeek = dateObj.getDay();
+          const isToday = daysMap.size === 0;
+          const formattedDate = `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}`;
+          daysMap.set(dateStr, {
+            dateStr,
+            label: isToday ? "Hoje" : `${dayNames[dayOfWeek]} ${d}`,
+            fullDate: `${fullDayNames[dayOfWeek]} ${formattedDate}`,
+            isToday,
+            points: []
+          });
+        }
+        daysMap.get(dateStr).points.push(pt);
+      });
+      return Array.from(daysMap.values());
+    }
+    return ALL_FORECAST_DAYS;
+  }
 
   /* ==========================================================================
      6. COMPONENTE 1: GRÁFICO DSYSA DE ALTURA, PERÍODO E DIREÇÃO DAS ONDAS
@@ -233,8 +271,10 @@
     };
     containerEl.__waveChartState = state;
 
-    const visibleDays = ALL_FORECAST_DAYS.slice(0, state.loadedDaysCount);
-    const allDaysLoaded = state.loadedDaysCount >= ALL_FORECAST_DAYS.length;
+    const allDays = getDsySAFiniteDays(spotConfig);
+    const visibleDays = allDays.slice(0, state.loadedDaysCount);
+    const allDaysLoaded = state.loadedDaysCount >= allDays.length;
+    const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
     const modeMultipliers = {
       total:  { hMult: 1.0,  pDelta: 0,  dirOverride: null,    label: "Altura total (Significativa)" },
@@ -251,17 +291,49 @@
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
         const globalIdx = dIdx * 4 + hIdx;
-        const waveEnvelope = Math.sin((globalIdx / 22) * Math.PI) * 0.42 + 0.78;
-        const rawH = Math.max(
-          0.3,
-          Math.min(3.1, +(baseHeight * activeMod.hMult * waveEnvelope + (hIdx % 2 === 0 ? 0.08 : -0.05)).toFixed(1))
-        );
-        const rawP = Math.max(
-          4,
-          Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.45) * 1.8))
-        );
-        const dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
-        const energyKj = Math.round(rawH * rawH * rawP * 28);
+        let rawH, rawP, dirCode, angle, energyKj;
+
+        if (day.points && day.points.length > 0) {
+          const targetHourInt = parseInt(hr, 10);
+          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
+            day.points[Math.min(day.points.length - 1, hIdx * 6)];
+
+          if (state.subTab === "swellA") {
+            rawH = pt.swell.primary.heightM || 0.8;
+            rawP = pt.swell.primary.periodS || 9;
+            dirCode = pt.swell.primary.directionCardinal || "SE";
+            angle = pt.swell.primary.directionDeg !== null ? pt.swell.primary.directionDeg : 135;
+          } else if (state.subTab === "swellB") {
+            rawH = pt.swell.secondary.heightM || 0.4;
+            rawP = pt.swell.secondary.periodS || 8;
+            dirCode = pt.swell.secondary.directionCardinal || "E";
+            angle = pt.swell.secondary.directionDeg !== null ? pt.swell.secondary.directionDeg : 90;
+          } else if (state.subTab === "vagas") {
+            rawH = Math.max(0.2, Number(((pt.swell.totalHeightM || 1.0) - ((pt.swell.primary.heightM || 0.7) * 0.75)).toFixed(1)));
+            rawP = Math.max(4, Math.round((pt.swell.primary.periodS || 10) * 0.55));
+            dirCode = pt.wind.directionCardinal || "E";
+            angle = pt.wind.directionDeg !== null ? pt.wind.directionDeg : 90;
+          } else {
+            rawH = pt.swell.totalHeightM || 1.1;
+            rawP = pt.swell.primary.periodS || 9;
+            dirCode = pt.swell.primary.directionCardinal || "SE";
+            angle = pt.swell.primary.directionDeg !== null ? pt.swell.primary.directionDeg : 135;
+          }
+          energyKj = Math.round(rawH * rawH * rawP * 28);
+        } else {
+          const waveEnvelope = Math.sin((globalIdx / 22) * Math.PI) * 0.42 + 0.78;
+          rawH = Math.max(
+            0.3,
+            Math.min(3.1, +(baseHeight * activeMod.hMult * waveEnvelope + (hIdx % 2 === 0 ? 0.08 : -0.05)).toFixed(1))
+          );
+          rawP = Math.max(
+            4,
+            Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.45) * 1.8))
+          );
+          dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
+          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300;
+          energyKj = Math.round(rawH * rawH * rawP * 28);
+        }
 
         slots.push({
           dayLabel: day.label,
@@ -269,12 +341,12 @@
           hour: hr,
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && hIdx === 2),
+          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
           height: rawH,
           period: rawP,
           color: window.getDsySAPeriodColor(rawP),
           dir: dirCode,
-          angle: DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300,
+          angle: angle,
           energy: energyKj
         });
       });
@@ -378,7 +450,7 @@
                       <span class="text-base mb-1">⏳</span>
                       <p class="text-[11px] font-semibold text-amber-200 leading-snug">
                         Neste momento só temos previsão até<br>
-                        <strong class="text-amber-300 underline decoration-amber-400/50">${LAST_FORECAST_DATE_LABEL}</strong>
+                        <strong class="text-amber-300 underline decoration-amber-400/50">${lastDateLabel}</strong>
                       </p>
                       <span class="mt-2 text-[9.5px] text-slate-400">Novos dados a cada 6h</span>
                     </div>
@@ -438,11 +510,11 @@
           <div class="dsysa-scroll-status-bar ${state.reachedEnd ? "at-end" : ""}">
             <div class="flex items-center gap-2">
               <span class="h-1.5 w-1.5 rounded-full bg-sky-400"></span>
-              <span>Exibindo <strong>${visibleDays.length} de ${ALL_FORECAST_DAYS.length} dias</strong> · Arraste com o dedo ou mouse</span>
+              <span>Exibindo <strong>${visibleDays.length} de ${allDays.length} dias</strong> · Arraste com o dedo ou mouse</span>
             </div>
             <div class="dsysa-end-banner ${state.reachedEnd ? "dsysa-end-forecast-msg" : "hidden"}">
               <span>⚠️</span>
-              <span>Neste momento só temos previsão até <strong>${LAST_FORECAST_DATE_LABEL}</strong></span>
+              <span>Neste momento só temos previsão até <strong>${lastDateLabel}</strong></span>
             </div>
           </div>
         </div>
@@ -456,7 +528,7 @@
     window.attachDsySAInfiniteTouchScroll(
       viewport,
       state,
-      ALL_FORECAST_DAYS.length,
+      allDays.length,
       () => window.renderDsySAWavePeriodChart(containerEl, spotConfig),
       statusBar,
       endBanner
@@ -528,8 +600,10 @@
     };
     containerEl.__windChartState = state;
 
-    const visibleDays = ALL_FORECAST_DAYS.slice(0, state.loadedDaysCount);
-    const allDaysLoaded = state.loadedDaysCount >= ALL_FORECAST_DAYS.length;
+    const allDays = getDsySAFiniteDays(spotConfig);
+    const visibleDays = allDays.slice(0, state.loadedDaysCount);
+    const allDaysLoaded = state.loadedDaysCount >= allDays.length;
+    const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
     // Configuração de conversão de unidades (base = Km/h, topo da escala = 55 Km/h)
     const UNIT_CONFIG = {
@@ -541,7 +615,7 @@
     const activeUnit = UNIT_CONFIG[state.unit] || UNIT_CONFIG.kmh;
     const zoneMultiplier = state.zone === "maritimo" ? 1.28 : 1.0;
 
-    // Sequência realista de direções médias e classificações (fraco, terral, cruzado, maral)
+    // Sequência de fallback caso a API ainda não tenha retornado
     const windSequence = [
       { dir: "N",   type: "terral",  vMult: 1.1, gMult: 1.65 },
       { dir: "ONO", type: "terral",  vMult: 1.2, gMult: 1.55 },
@@ -568,12 +642,37 @@
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
         const globalIdx = dIdx * 4 + hIdx;
-        const pattern = windSequence[globalIdx % windSequence.length];
-        const rawSustainedKmh = Math.max(4, Math.min(40, Math.round((baseWindKmh + 8) * pattern.vMult * zoneMultiplier)));
-        const rawGustKmh = Math.max(rawSustainedKmh + 3, Math.min(50, Math.round((baseWindKmh + 10) * pattern.gMult * zoneMultiplier)));
+        let rawSustainedKmh, rawGustKmh, dirCode, arrowType, angle;
 
-        const arrowType = rawSustainedKmh <= 7 ? "fraco" : pattern.type;
-        const dirCode = globalIdx === 6 ? baseWindDir : pattern.dir;
+        if (day.points && day.points.length > 0) {
+          const targetHourInt = parseInt(hr, 10);
+          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
+            day.points[Math.min(day.points.length - 1, hIdx * 6)];
+
+          const knots = pt.wind?.speedKnots || 5;
+          const gusts = pt.wind?.gustsKnots || (knots * 1.35);
+          rawSustainedKmh = Math.round(knots * 1.852 * zoneMultiplier);
+          rawGustKmh = Math.round(gusts * 1.852 * zoneMultiplier);
+          dirCode = pt.wind?.directionCardinal || "E";
+          angle = pt.wind?.directionDeg !== null && pt.wind?.directionDeg !== undefined ? pt.wind.directionDeg : 90;
+
+          if (rawSustainedKmh <= 7) {
+            arrowType = "fraco";
+          } else if (['O', 'W', 'ONO', 'WNW', 'NO', 'NW', 'NNO', 'NNW', 'N'].includes(dirCode)) {
+            arrowType = "terral";
+          } else if (['ESE', 'SE', 'SSE', 'S'].includes(dirCode)) {
+            arrowType = "maral";
+          } else {
+            arrowType = "cruzado";
+          }
+        } else {
+          const pattern = windSequence[globalIdx % windSequence.length];
+          rawSustainedKmh = Math.max(4, Math.min(40, Math.round((baseWindKmh + 8) * pattern.vMult * zoneMultiplier)));
+          rawGustKmh = Math.max(rawSustainedKmh + 3, Math.min(50, Math.round((baseWindKmh + 10) * pattern.gMult * zoneMultiplier)));
+          arrowType = rawSustainedKmh <= 7 ? "fraco" : pattern.type;
+          dirCode = globalIdx === 6 ? baseWindDir : pattern.dir;
+          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 180;
+        }
 
         const convSustained = +(rawSustainedKmh * activeUnit.factor).toFixed(activeUnit.decimals);
         const convGust = +(rawGustKmh * activeUnit.factor).toFixed(activeUnit.decimals);
@@ -584,13 +683,13 @@
           hour: hr,
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && hIdx === 2),
+          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
           sustainedKmh: rawSustainedKmh,
           gustKmh: rawGustKmh,
           convSustained,
           convGust,
           dir: dirCode,
-          angle: DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 180,
+          angle: angle,
           arrowType
         });
       });
@@ -746,7 +845,7 @@
                       <span class="text-base mb-1">⏳</span>
                       <p class="text-[11px] font-semibold text-amber-200 leading-snug">
                         Neste momento só temos previsão até<br>
-                        <strong class="text-amber-300 underline decoration-amber-400/50">${LAST_FORECAST_DATE_LABEL}</strong>
+                        <strong class="text-amber-300 underline decoration-amber-400/50">${lastDateLabel}</strong>
                       </p>
                       <span class="mt-2 text-[9.5px] text-slate-400">Modelo atmosférico completo</span>
                     </div>
@@ -804,11 +903,11 @@
           <div class="dsysa-scroll-status-bar ${state.reachedEnd ? "at-end" : ""}">
             <div class="flex items-center gap-2">
               <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
-              <span>Exibindo <strong>${visibleDays.length} de ${ALL_FORECAST_DAYS.length} dias</strong> · Arraste com o dedo ou mouse</span>
+              <span>Exibindo <strong>${visibleDays.length} de ${allDays.length} dias</strong> · Arraste com o dedo ou mouse</span>
             </div>
             <div class="dsysa-end-banner ${state.reachedEnd ? "dsysa-end-forecast-msg" : "hidden"}">
               <span>⚠️</span>
-              <span>Neste momento só temos previsão até <strong>${LAST_FORECAST_DATE_LABEL}</strong></span>
+              <span>Neste momento só temos previsão até <strong>${lastDateLabel}</strong></span>
             </div>
           </div>
         </div>
@@ -822,7 +921,7 @@
     window.attachDsySAInfiniteTouchScroll(
       viewport,
       state,
-      ALL_FORECAST_DAYS.length,
+      allDays.length,
       () => window.renderDsySAWindChart(containerEl, spotConfig),
       statusBar,
       endBanner
@@ -926,8 +1025,10 @@
     };
     containerEl.__energyChartState = state;
 
-    const visibleDays = ALL_FORECAST_DAYS.slice(0, state.loadedDaysCount);
-    const allDaysLoaded = state.loadedDaysCount >= ALL_FORECAST_DAYS.length;
+    const allDays = getDsySAFiniteDays(spotConfig);
+    const visibleDays = allDays.slice(0, state.loadedDaysCount);
+    const allDaysLoaded = state.loadedDaysCount >= allDays.length;
+    const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
     const modeMultipliers = {
       total:  { eMult: 1.0,  pDelta: 0,  dirOverride: null,    label: "Energia total (Potência Combinada)" },
@@ -946,22 +1047,54 @@
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
         const globalIdx = dIdx * 4 + hIdx;
-        const envelope = Math.sin((globalIdx / 20) * Math.PI) * 0.55 + 0.72;
-        const rawKj = Math.max(
-          65,
-          Math.min(1350, Math.round(baseEnergyKj * activeMod.eMult * envelope + (hIdx % 2 === 0 ? 25 : -20)))
-        );
-        const tier = window.getDsySAEnergyTier(rawKj);
-        const period = Math.max(5, Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.4) * 1.5)));
-        const dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
+        let rawKj, period, dirCode, angle;
 
+        if (day.points && day.points.length > 0) {
+          const targetHourInt = parseInt(hr, 10);
+          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
+            day.points[Math.min(day.points.length - 1, hIdx * 6)];
+
+          let h = pt.swell.totalHeightM || 1.1;
+          let p = pt.swell.primary.periodS || 9;
+          dirCode = pt.swell.primary.directionCardinal || "SE";
+          angle = pt.swell.primary.directionDeg !== null && pt.swell.primary.directionDeg !== undefined ? pt.swell.primary.directionDeg : 135;
+
+          if (state.subTab === "swellA") {
+            h = pt.swell.primary.heightM || 1.0;
+            p = pt.swell.primary.periodS || 9;
+          } else if (state.subTab === "swellB") {
+            h = pt.swell.secondary.heightM || 0.4;
+            p = pt.swell.secondary.periodS || 8;
+            dirCode = pt.swell.secondary.directionCardinal || "E";
+            angle = pt.swell.secondary.directionDeg !== null && pt.swell.secondary.directionDeg !== undefined ? pt.swell.secondary.directionDeg : 90;
+          } else if (state.subTab === "vagas") {
+            h = Math.max(0.2, Number((pt.swell.totalHeightM - (pt.swell.primary.heightM * 0.75)).toFixed(1)));
+            p = Math.max(4, Math.round((pt.swell.primary.periodS || 10) * 0.55));
+            dirCode = pt.wind.directionCardinal || "E";
+            angle = pt.wind.directionDeg !== null && pt.wind.directionDeg !== undefined ? pt.wind.directionDeg : 90;
+          }
+
+          rawKj = Math.round(h * h * p * 28);
+          period = p;
+        } else {
+          const envelope = Math.sin((globalIdx / 20) * Math.PI) * 0.55 + 0.72;
+          rawKj = Math.max(
+            65,
+            Math.min(1350, Math.round(baseEnergyKj * activeMod.eMult * envelope + (hIdx % 2 === 0 ? 25 : -20)))
+          );
+          period = Math.max(5, Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.4) * 1.5)));
+          dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
+          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300;
+        }
+
+        const tier = window.getDsySAEnergyTier(rawKj);
         slots.push({
           dayLabel: day.label,
           fullDate: day.fullDate,
           hour: hr,
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && hIdx === 2),
+          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
           kj: rawKj,
           displayVal: Math.round(rawKj * unitFactor),
           tierKey: tier.key,
@@ -969,7 +1102,7 @@
           color: tier.bg,
           period,
           dir: dirCode,
-          angle: DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300
+          angle: angle
         });
       });
     });
@@ -1107,7 +1240,7 @@
                       <span class="text-base mb-1">⏳</span>
                       <p class="text-[11px] font-semibold text-amber-200 leading-snug">
                         Neste momento só temos previsão até<br>
-                        <strong class="text-amber-300 underline decoration-amber-400/50">${LAST_FORECAST_DATE_LABEL}</strong>
+                        <strong class="text-amber-300 underline decoration-amber-400/50">${lastDateLabel}</strong>
                       </p>
                       <span class="mt-2 text-[9.5px] text-slate-400">Energia calculada via Swell</span>
                     </div>
@@ -1171,11 +1304,11 @@
           <div class="dsysa-scroll-status-bar ${state.reachedEnd ? "at-end" : ""}">
             <div class="flex items-center gap-2">
               <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-              <span>Exibindo <strong>${visibleDays.length} de ${ALL_FORECAST_DAYS.length} dias</strong> · Arraste com o dedo ou mouse</span>
+              <span>Exibindo <strong>${visibleDays.length} de ${allDays.length} dias</strong> · Arraste com o dedo ou mouse</span>
             </div>
             <div class="dsysa-end-banner ${state.reachedEnd ? "dsysa-end-forecast-msg" : "hidden"}">
               <span>⚠️</span>
-              <span>Neste momento só temos previsão até <strong>${LAST_FORECAST_DATE_LABEL}</strong></span>
+              <span>Neste momento só temos previsão até <strong>${lastDateLabel}</strong></span>
             </div>
           </div>
         </div>
@@ -1189,7 +1322,7 @@
     window.attachDsySAInfiniteTouchScroll(
       viewport,
       state,
-      ALL_FORECAST_DAYS.length,
+      allDays.length,
       () => window.renderDsySAWaveEnergyChart(containerEl, spotConfig),
       statusBar,
       endBanner
@@ -1294,31 +1427,57 @@
     };
     containerEl.__tideChartState = state;
 
-    const visibleDays = ALL_FORECAST_DAYS.slice(0, state.loadedDaysCount);
-    const allDaysLoaded = state.loadedDaysCount >= ALL_FORECAST_DAYS.length;
+    const allDays = getDsySAFiniteDays(spotConfig);
+    const visibleDays = allDays.slice(0, state.loadedDaysCount);
+    const allDaysLoaded = state.loadedDaysCount >= allDays.length;
+    const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
-    // Gera dados astronômicos e 4 extremos de maré (2 baixamares e 2 preamares) por dia
+    // Gera dados astronômicos e extremos de maré reais (Open-Meteo) ou fallback
     const dayTideData = visibleDays.map((day, dIdx) => {
-      const shiftMin = dIdx * 48; // Atraso lunar diário ~48 min
-      const fmtTime = (baseMinutes) => {
-        const total = (baseMinutes + shiftMin) % (24 * 60);
-        const hh = String(Math.floor(total / 60)).padStart(2, "0");
-        const mm = String(total % 60).padStart(2, "0");
-        return { str: `${hh}:${mm}h`, hourFloat: total / 60 };
-      };
+      let extrema = [];
+      if (day.points && day.points.length > 0) {
+        day.points.forEach((pt) => {
+          if (pt.tide && pt.tide.type) {
+            const h = parseInt(pt.timestamp.slice(11, 13), 10);
+            const m = parseInt(pt.timestamp.slice(14, 16), 10) || 0;
+            const hourFloat = h + m / 60;
+            const nauticalHeight = +(pt.tide.heightM + 1.2).toFixed(1);
+            extrema.push({
+              type: pt.tide.type === "HIGH" ? "high" : "low",
+              str: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}h`,
+              hourFloat,
+              height: Math.max(0.2, nauticalHeight)
+            });
+          }
+        });
+      }
 
-      const low1 = fmtTime(1 * 60 + 49);   // ex: 01:49h
-      const high1 = fmtTime(8 * 60 + 34);  // ex: 08:34h
-      const low2 = fmtTime(14 * 60 + 23);  // ex: 14:23h
-      const high2 = fmtTime(20 * 60 + 51); // ex: 20:51h
+      if (extrema.length === 0) {
+        const shiftMin = dIdx * 48; // Atraso lunar diário ~48 min
+        const fmtTime = (baseMinutes) => {
+          const total = (baseMinutes + shiftMin) % (24 * 60);
+          const hh = String(Math.floor(total / 60)).padStart(2, "0");
+          const mm = String(total % 60).padStart(2, "0");
+          return { str: `${hh}:${mm}h`, hourFloat: total / 60 };
+        };
 
-      const low1H = +(0.8 + Math.sin(dIdx) * 0.1).toFixed(1);
-      const high1H = +(1.7 + Math.cos(dIdx * 0.5) * 0.1).toFixed(1);
-      const low2H = +(1.0 - Math.sin(dIdx * 0.7) * 0.1).toFixed(1);
-      const high2H = +(1.8 + Math.sin(dIdx * 0.4) * 0.1).toFixed(1);
+        const low1 = fmtTime(1 * 60 + 49);
+        const high1 = fmtTime(8 * 60 + 34);
+        const low2 = fmtTime(14 * 60 + 23);
+        const high2 = fmtTime(20 * 60 + 51);
 
-      const moonRise = fmtTime(10 * 60 + 42);
-      const moonSet = fmtTime(23 * 60 + 35);
+        const low1H = +(0.8 + Math.sin(dIdx) * 0.1).toFixed(1);
+        const high1H = +(1.7 + Math.cos(dIdx * 0.5) * 0.1).toFixed(1);
+        const low2H = +(1.0 - Math.sin(dIdx * 0.7) * 0.1).toFixed(1);
+        const high2H = +(1.8 + Math.sin(dIdx * 0.4) * 0.1).toFixed(1);
+
+        extrema = [
+          { type: "low",  ...low1,  height: low1H },
+          { type: "high", ...high1, height: high1H },
+          { type: "low",  ...low2,  height: low2H },
+          { type: "high", ...high2, height: high2H }
+        ];
+      }
 
       const fullHeaderLabel = day.label
         .replace("TER ", "TERÇA ")
@@ -1335,31 +1494,34 @@
         sunrise: "4:57h",
         sunset: dIdx === 0 ? "17:40h" : "17:41h",
         moonPhaseLabel: dIdx === 1 ? "crescente" : dIdx >= 4 ? "cheia" : "",
-        moonRise: moonRise.str,
-        moonSet: moonSet.str,
-        extrema: [
-          { type: "low",  ...low1,  height: low1H },
-          { type: "high", ...high1, height: high1H },
-          { type: "low",  ...low2,  height: low2H },
-          { type: "high", ...high2, height: high2H }
-        ]
+        moonRise: "10:42h",
+        moonSet: "23:35h",
+        extrema
       };
     });
 
-    const dayWidthPx = 248; // Largura por dia para caberem 3 dias completos na janela inicial (como na referência)
+    const dayWidthPx = 248; // Largura por dia para caberem 3 dias completos na janela inicial
     const endCapWidthPx = allDaysLoaded ? 190 : 0;
     const totalTrackWidthPx = visibleDays.length * dayWidthPx + endCapWidthPx;
     const plotHeightPx = 138;
     const maxTideMeters = 2.4;
 
-    // Função matemática contínua da altura da maré (m) em função de (diaIdx + hora/24)
+    // Função de altura da maré (m): interpolação linear precisa da timeline Open-Meteo com conversão para cota náutica
+    const timeline = spotConfig?.forecastData?.timeline;
     const getTideHeightAt = (globalHours) => {
-      // Dois ciclos semidiurnos por dia (~12.42h de período)
+      if (timeline && timeline.length > 0) {
+        const h1 = Math.max(0, Math.min(timeline.length - 1, Math.floor(globalHours)));
+        const h2 = Math.max(0, Math.min(timeline.length - 1, Math.ceil(globalHours)));
+        const frac = globalHours - Math.floor(globalHours);
+        const m1 = (timeline[h1].tide?.heightM || 0) + 1.2;
+        const m2 = (timeline[h2].tide?.heightM || 0) + 1.2;
+        return +(m1 * (1 - frac) + m2 * frac).toFixed(2);
+      }
       const rad = ((globalHours - 2.1) / 12.42) * 2 * Math.PI;
       return +(1.32 - 0.48 * Math.cos(rad)).toFixed(2);
     };
     const isTideRisingAt = (globalHours) => {
-      return getTideHeightAt(globalHours + 0.15) >= getTideHeightAt(globalHours - 0.15);
+      return getTideHeightAt(globalHours + 0.25) >= getTideHeightAt(globalHours - 0.25);
     };
 
     // Constrói os polígonos SVG bicolores (Enchendo = #00E5FF | Vazante = #0284C7) ao longo dos dias visíveis
@@ -1563,7 +1725,7 @@
                       <span class="text-base mb-1">⏳</span>
                       <p class="text-[11px] font-semibold text-amber-200 leading-snug">
                         Neste momento só temos previsão até<br>
-                        <strong class="text-amber-300 underline decoration-amber-400/50">${LAST_FORECAST_DATE_LABEL}</strong>
+                        <strong class="text-amber-300 underline decoration-amber-400/50">${lastDateLabel}</strong>
                       </p>
                       <span class="mt-2 text-[9.5px] text-slate-400">Efemérides astronômicas</span>
                     </div>
@@ -1738,11 +1900,11 @@
           <div class="dsysa-scroll-status-bar ${state.reachedEnd ? "at-end" : ""}">
             <div class="flex items-center gap-2">
               <span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
-              <span>Exibindo <strong>${visibleDays.length} de ${ALL_FORECAST_DAYS.length} dias</strong> · Arraste com o dedo ou mouse</span>
+              <span>Exibindo <strong>${visibleDays.length} de ${allDays.length} dias</strong> · Arraste com o dedo ou mouse</span>
             </div>
             <div class="dsysa-end-banner ${state.reachedEnd ? "dsysa-end-forecast-msg" : "hidden"}">
               <span>⚠️</span>
-              <span>Neste momento só temos previsão até <strong>${LAST_FORECAST_DATE_LABEL}</strong></span>
+              <span>Neste momento só temos previsão até <strong>${lastDateLabel}</strong></span>
             </div>
           </div>
         </div>
@@ -1757,7 +1919,7 @@
       window.attachDsySAInfiniteTouchScroll(
         viewport,
         state,
-        ALL_FORECAST_DAYS.length,
+        allDays.length,
         () => window.renderDsySATideChart(containerEl, spotConfig),
         statusBar,
         endBanner

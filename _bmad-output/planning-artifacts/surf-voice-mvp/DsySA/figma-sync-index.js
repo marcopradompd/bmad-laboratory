@@ -506,7 +506,7 @@
     rightCol.layoutSizingVertical = "HUG";
   }
 
-  // 6. Torna a altura do card "SurfAgent Voice Assistant" flexível no Figma
+  // 6. Torna a altura do card "SurfAgent Voice Assistant" estritamente HUG (ajuste ao conteúdo interno) no Figma
   const voiceCard = (await figma.getNodeByIdAsync("15:252")) ||
     (rightCol && "children" in rightCol
       ? rightCol.children.find((c) => c.name.toLowerCase().includes("voice assistant") || c.name.toLowerCase().includes("surfagent voice"))
@@ -516,21 +516,26 @@
     if ("layoutSizingVertical" in voiceCard) {
       voiceCard.layoutSizingVertical = "HUG";
       voiceCard.layoutSizingHorizontal = "FILL";
-      if ("minHeight" in voiceCard) {
-        voiceCard.minHeight = null;
-      }
+      voiceCard.layoutGrow = 0;
+      voiceCard.minHeight = null;
+      voiceCard.maxHeight = null;
     }
     if ("children" in voiceCard) {
       for (const child of voiceCard.children) {
         if ("layoutSizingVertical" in child) {
           child.layoutSizingVertical = "HUG";
         }
-        if ("layoutSizingHorizontal" in child) {
-          child.layoutSizingHorizontal = "FILL";
+        if ("layoutGrow" in child) {
+          child.layoutGrow = 0;
         }
       }
     }
-    console.log("✅ Card 'SurfAgent Voice Assistant' atualizado para altura flexível (HUG / Auto-Layout) no Figma!");
+    console.log("✅ Card 'SurfAgent Voice Assistant' configurado como HUG vertical estrito (ajuste ao conteúdo interno) no Figma!");
+  }
+
+  if (rightCol) {
+    rightCol.primaryAxisAlignItems = "MIN";
+    rightCol.layoutSizingVertical = "HUG";
   }
 
   if (leftCol) leftCol.layoutSizingVertical = "HUG";
