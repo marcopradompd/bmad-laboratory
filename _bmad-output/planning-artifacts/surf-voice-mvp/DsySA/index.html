@@ -269,6 +269,11 @@
                 </span>
               </div>
 
+              <!-- ALL 10 MANDATORY SURF METRICS (4 Simplified Equal-Height Telemetry Cards — Positioned BEFORE Wave Period Chart) -->
+              <div class="dsysa-telemetry-grid" id="tenMetricsGrid">
+                <!-- Populated dynamically by renderActiveSpot() -->
+              </div>
+
               <!-- DsySA Wave Height, Primary Period & Direction Matrix (Reconstruído no padrão DsySA) -->
               <div id="dsysaWavePeriodChartRoot" class="w-full"></div>
 
@@ -281,10 +286,8 @@
               <!-- DsySA Tide Height & Astronomy Matrix (Porto, Horas dos Astros, Curva Senoidal Enchendo/Vazante, Preamar/Baixamar, Mini-Mapa e GRÁFICOS/TABELAS/MÊS) -->
               <div id="dsysaTideChartRoot" class="w-full"></div>
 
-              <!-- ALL 10 MANDATORY SURF METRICS (Organized in 4 Semantic Telemetry Cards) -->
-              <div class="grid gap-3 sm:grid-cols-2" id="tenMetricsGrid">
-                <!-- Populated dynamically by renderActiveSpot() -->
-              </div>
+              <!-- DsySA Functional Beach Compass Card (Último card da coluna dos gráficos: Bússola + Texto + Botão Ampliar Bússola em Modal) -->
+              <div id="dsysaCompassCardRoot" class="w-full"></div>
             </div>
 
             <!-- RIGHT (2 COLS): Condition Doughnut + AI Voice Assistant Panel -->
@@ -329,7 +332,7 @@
               </div>
 
               <!-- AI Voice Assistant Panel (Copied from Mira AI Expansion Assistant) -->
-              <div class="bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex-1 flex flex-col justify-between">
+              <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex-1 h-auto min-h-fit flex flex-col justify-between transition-all">
                 <div>
                   <div class="flex items-center justify-between">
                     <div>
@@ -472,7 +475,23 @@
               </button>
               <span class="dsysa-tab best-spot active">★ Aba Melhor Pico</span>
               <span class="dsysa-tab">🌊 Aba Salva</span>
+              <button type="button" onclick="window.openDsySACompassModal()" class="dsysa-btn-expand-compass">
+                🧭 Ampliar bússola (Modal DsySA)
+              </button>
             </div>
+          </div>
+        </div>
+
+        <!-- 4. Catálogo do Novo Componente: Bússola Funcional de Posicionamento da Praia -->
+        <div class="mt-10 pt-8 border-t border-white/10">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+            <div>
+              <h3 class="text-lg font-medium text-white">4. Componente DsySA — Bússola Funcional de Posicionamento da Praia & Modal</h3>
+              <p class="text-xs text-slate-400">Componente reutilizável (<code>renderDsySACompassCard</code> + <code>openDsySACompassModal</code>) com anel graduado 0°–350°, rosa dos ventos de 8 pontas, agulha bicolor e modal interativo.</p>
+            </div>
+            <button type="button" onclick="window.openDsySACompassModal()" class="dsysa-btn-expand-compass">
+              <span>🔍 Testar Modal da Bússola</span>
+            </button>
           </div>
         </div>
       </div>
@@ -913,88 +932,56 @@
         bestBadge.classList.add('hidden');
       }
 
-      // Renderiza todos os 10 indicadores obrigatórios em 4 cards semânticos DsySA
+      // Renderiza todos os 10 indicadores obrigatórios em 4 cards semânticos simplificados de mesma altura (antes do gráfico de ondas)
+      const tideShort = (spot.tidePhase || 'Enchendo (0.9m → 1.8m)').replace(/\s*às\s*\d{2}:\d{2}/i, '');
+      const moonShort = (spot.moonPhase || '🌕 Lua Cheia').replace(/\s*\(.*?\)/g, '');
+      const waterTempDeg = ((spot.waterTemp || '26 °C').match(/\d+\s*°C/) || ['26 °C'])[0] + ' Água';
+      const gearMatch = (spot.waterTemp || '').match(/\(([^)]+)\)/);
+      const gearLabel = gearMatch ? gearMatch[1].split('/')[0].trim() : 'Boardshort';
+      const windEffect = (spot.windRelation || '').toLowerCase().includes('terral')
+        ? 'Alisa a onda'
+        : 'Mexido na bancada';
+
       const grid = document.getElementById('tenMetricsGrid');
       grid.innerHTML = `
-        <!-- 1. ONDULAÇÃO: Tamanho, Período, Direção, Energia -->
-        <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] uppercase tracking-[0.16em] text-sky-300 font-semibold">1. Ondulação (Swell)</span>
-            <span class="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] text-sky-300">${spot.energy}</span>
+        <!-- 1. ONDULAÇÃO (SWELL) -->
+        <div class="dsysa-telemetry-card">
+          <div class="dsysa-telemetry-card-head">
+            <span class="dsysa-telemetry-card-cat">1. ONDULAÇÃO (SWELL)</span>
+            <span class="dsysa-telemetry-card-badge">⚡ ${spot.energy}</span>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Tamanho</p>
-              <p class="text-base font-semibold text-white mt-0.5">${spot.swellSize}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Período</p>
-              <p class="text-base font-semibold text-white mt-0.5">${spot.swellPeriod}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Direção Swell</p>
-              <p class="text-sm font-semibold text-sky-300 mt-0.5">↖ ${spot.swellDir}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Energia</p>
-              <p class="text-sm font-semibold text-emerald-300 mt-0.5">⚡ ${spot.energy}</p>
-            </div>
-          </div>
+          <p class="dsysa-telemetry-card-value">${spot.swellSize} · ${spot.swellPeriod} · ${spot.swellDir}</p>
+          <p class="dsysa-telemetry-card-sub">Tamanho + Período + Direção + Energia em kJ</p>
         </div>
 
-        <!-- 2. VENTO: Força e Direção -->
-        <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] uppercase tracking-[0.16em] text-cyan-300 font-semibold">2. Vento</span>
-            <span class="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300">${spot.windRelation}</span>
+        <!-- 2. VENTO -->
+        <div class="dsysa-telemetry-card">
+          <div class="dsysa-telemetry-card-head">
+            <span class="dsysa-telemetry-card-cat">2. VENTO</span>
+            <span class="dsysa-telemetry-card-badge">${spot.windRelation}</span>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Força do Vento</p>
-              <p class="text-base font-semibold text-white mt-0.5">💨 ${spot.windSpeed}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Direção do Vento</p>
-              <p class="text-base font-semibold text-cyan-300 mt-0.5">↘ ${spot.windDir}</p>
-            </div>
-          </div>
-          <p class="text-[11px] text-slate-400 mt-2">Classificação na bancada: <strong class="text-slate-200">${spot.windRelation}</strong></p>
+          <p class="dsysa-telemetry-card-value">${spot.windSpeed} · ${spot.windDir}</p>
+          <p class="dsysa-telemetry-card-sub">Força + Direção + Relação com a Praia (${windEffect})</p>
         </div>
 
-        <!-- 3. MARÉ & LUA: Fases da Maré e Fase da Lua -->
-        <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] uppercase tracking-[0.16em] text-indigo-300 font-semibold">3. Fases da Maré & Lua</span>
-            <span class="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] text-indigo-300">Astronomia</span>
+        <!-- 3. FASES DA MARÉ & LUA -->
+        <div class="dsysa-telemetry-card">
+          <div class="dsysa-telemetry-card-head">
+            <span class="dsysa-telemetry-card-cat">3. FASES DA MARÉ & LUA</span>
+            <span class="dsysa-telemetry-card-badge">${moonShort}</span>
           </div>
-          <div class="space-y-2 text-xs">
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Fase da Maré</p>
-              <p class="text-xs font-semibold text-white mt-0.5">🌊 ${spot.tidePhase}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Fase da Lua</p>
-              <p class="text-xs font-semibold text-indigo-200 mt-0.5">${spot.moonPhase}</p>
-            </div>
-          </div>
+          <p class="dsysa-telemetry-card-value">${tideShort}</p>
+          <p class="dsysa-telemetry-card-sub">Maré Viva · Preamar às 20:51h (Porto de Salvador)</p>
         </div>
 
-        <!-- 4. TEMPO & ÁGUA: Condições do Tempo e Temperatura da Água -->
-        <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] uppercase tracking-[0.16em] text-amber-300 font-semibold">4. Tempo & Temp. da Água</span>
-            <span class="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] text-sky-300">Clima</span>
+        <!-- 4. TEMPO & TEMP. DA ÁGUA -->
+        <div class="dsysa-telemetry-card">
+          <div class="dsysa-telemetry-card-head">
+            <span class="dsysa-telemetry-card-cat">4. TEMPO & TEMP. DA ÁGUA</span>
+            <span class="dsysa-telemetry-card-badge">${waterTempDeg}</span>
           </div>
-          <div class="space-y-2 text-xs">
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Condições do Tempo</p>
-              <p class="text-xs font-semibold text-white mt-0.5">${spot.weather}</p>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-lg border border-white/5">
-              <p class="text-[10px] text-slate-400">Temperatura da Água</p>
-              <p class="text-xs font-semibold text-cyan-300 mt-0.5">🌡️ ${spot.waterTemp}</p>
-            </div>
-          </div>
+          <p class="dsysa-telemetry-card-value">${spot.weather}</p>
+          <p class="dsysa-telemetry-card-sub">Condição Climática + Temp. da Água (${gearLabel})</p>
         </div>
       `;
 
@@ -1019,6 +1006,12 @@
       // Atualiza o Componente DsySA de Tábua de Marés e Horas dos Astros
       window.renderDsySATideChart(
         document.getElementById('dsysaTideChartRoot'),
+        spot
+      );
+
+      // Atualiza o Componente DsySA de Bússola Funcional de Posicionamento da Praia (Último card da coluna dos gráficos)
+      window.renderDsySACompassCard(
+        document.getElementById('dsysaCompassCardRoot'),
         spot
       );
 

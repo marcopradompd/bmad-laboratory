@@ -1950,6 +1950,580 @@
     return mode;
   };
 
+  /* ==========================================================================
+     10. COMPONENTE 5: BÚSSOLA FUNCIONAL DE POSICIONAMENTO DA PRAIA & MODAL
+     (Anel graduado 0°-350°, Rosa dos Ventos N/NE/E/SE/S/SW/W/NW, Agulha Bicolor
+      Vermelha/Azul, Arco Costeiro da Praia, Vetores de Swell/Vento e Modal Ampliado)
+     ========================================================================== */
+  function parseDegFromText(str, fallbackDeg) {
+    if (!str) return fallbackDeg;
+    const m = String(str).match(/(\d{1,3})\s*°/);
+    if (m) return parseInt(m[1], 10) % 360;
+    const tok = String(str).trim().split(/\s+/)[0].toUpperCase();
+    return DIR_ANGLES[tok] !== undefined ? (DIR_ANGLES[tok] + 180) % 360 : fallbackDeg;
+  }
+
+  function inferBeachOrientation(spotConfig) {
+    const name = (spotConfig?.name || "").toLowerCase();
+    const swellDeg = parseDegFromText(spotConfig?.swellDir, 135);
+    const windDeg = parseDegFromText(spotConfig?.windDir, 315);
+
+    let beachFaceDeg = 130;
+    let beachFaceCardinal = "SE (Sudeste)";
+    let coastlineNote = "A faixa de areia olha diretamente para o quadrante Sudeste (130°), recebendo em cheio as ondulações de SE/L-SE e ficando protegida pelo vento terral de Noroeste (315°).";
+
+    if (name.includes("stella")) {
+      beachFaceDeg = 140;
+      beachFaceCardinal = "SE (Sudeste)";
+      coastlineNote = "A bancada de Stella Maris está voltada para SE (140°), alinhada com ondulações de Sudeste e vento terral do quadrante Oeste/Noroeste.";
+    } else if (name.includes("guarajuba")) {
+      beachFaceDeg = 120;
+      beachFaceCardinal = "L-SE (Leste-Sudeste)";
+      coastlineNote = "Os recifes externos de Guarajuba abrem para L-SE (120°), filtrando a ondulação e criando uma piscina natural protegida.";
+    } else if (name.includes("pedra do sal")) {
+      beachFaceDeg = 148;
+      beachFaceCardinal = "S-SE (Sul-Sudeste)";
+      coastlineNote = "O pico da Pedra do Sal volta-se para S-SE (148°), próximo ao farol e às formações rochosas.";
+    } else if (name.includes("maresias")) {
+      beachFaceDeg = 165;
+      beachFaceCardinal = "S-SE (Sul-Sudeste)";
+      coastlineNote = "A enseada de Maresias está posicionada voltada para S-SE (165°), ideal para swells de Sul/Sudeste e terral de Norte.";
+    } else if (name.includes("arpoador")) {
+      beachFaceDeg = 200;
+      beachFaceCardinal = "S-SO (Sul-Sudoeste)";
+      coastlineNote = "Ao lado da ponta de pedra, o Arpoador olha para S-SO (200°), encaixando ondulações de Sul/Sudoeste com terral de Nordeste.";
+    } else if (name.includes("itamambuca")) {
+      beachFaceDeg = 140;
+      beachFaceCardinal = "SE (Sudeste)";
+      coastlineNote = "A foz do rio em Itamambuca abre para SE (140°), recebendo swells de Sudeste com vento terral de Noroeste.";
+    } else if (name.includes("pipeline")) {
+      beachFaceDeg = 315;
+      beachFaceCardinal = "NO (Noroeste)";
+      coastlineNote = "No North Shore de Oahu, a bancada de Pipeline olha para NO (315°), recebendo swells de inverno de O-NO e terral de Leste.";
+    }
+
+    return {
+      spotName: spotConfig?.name || "Itacimirim (A Espera)",
+      region: spotConfig?.region || "Litoral Norte · A 5,8 km de você",
+      beachFaceDeg,
+      beachFaceCardinal,
+      swellDeg,
+      swellLabel: spotConfig?.swellDir || "SE 135°",
+      windDeg,
+      windLabel: spotConfig?.windDir || "NO 315°",
+      windRelation: spotConfig?.windRelation || "Terral Liso",
+      coastlineNote
+    };
+  }
+
+  window.buildDsySACompassSvg = function (info, rotationDeg, sizePx, isDetailedModal) {
+    const rot = Number(rotationDeg) || 0;
+    const cx = 150;
+    const cy = 150;
+
+    // 1. Marcas de graduação (0° a 355° de 5 em 5 graus + rótulos de 10 em 10 graus como na referência)
+    const ticksHtml = [];
+    for (let deg = 0; deg < 360; deg += 2) {
+      const isTen = deg % 10 === 0;
+      const isFive = deg % 5 === 0;
+      if (!isDetailedModal && !isFive) continue;
+      const rOuter = 143;
+      const rInner = isTen ? 134 : isFive ? 137 : 139.5;
+      const strokeW = isTen ? 1.4 : isFive ? 0.9 : 0.55;
+      const strokeCol = isTen ? "#e2e8f0" : isFive ? "#94a3b8" : "#475569";
+      ticksHtml.push(
+        `<line x1="${cx}" y1="${cy - rOuter}" x2="${cx}" y2="${cy - rInner}" stroke="${strokeCol}" stroke-width="${strokeW}" transform="rotate(${deg} ${cx} ${cy})" />`
+      );
+      if (isTen) {
+        ticksHtml.push(
+          `<text x="${cx}" y="${cy - 122}" text-anchor="middle" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="7.2" font-weight="600" transform="rotate(${deg} ${cx} ${cy})">${deg}</text>`
+        );
+      }
+    }
+
+    // 2. Arco indicando a Face da Praia (Mar Aberto vs. Areia/Costa)
+    const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+      const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+      return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians)
+      };
+    };
+    const describeArc = (x, y, radius, startAngle, endAngle) => {
+      const start = polarToCartesian(x, y, radius, endAngle);
+      const end = polarToCartesian(x, y, radius, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return ["M", start.x.toFixed(1), start.y.toFixed(1), "A", radius, radius, 0, largeArcFlag, 0, end.x.toFixed(1), end.y.toFixed(1)].join(" ");
+    };
+
+    const seaArcPath = describeArc(cx, cy, 108, info.beachFaceDeg - 55, info.beachFaceDeg + 55);
+    const sandArcPath = describeArc(cx, cy, 108, info.beachFaceDeg + 125, info.beachFaceDeg + 235);
+
+    return `
+      <svg class="dsysa-compass-svg" width="${sizePx}" height="${sizePx}" viewBox="0 0 300 300" aria-label="Bússola de Posicionamento da Praia">
+        <defs>
+          <radialGradient id="dsysaCompassDialGrad" cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stop-color="#0f2942" />
+            <stop offset="65%" stop-color="#071324" />
+            <stop offset="100%" stop-color="#030712" />
+          </radialGradient>
+          <linearGradient id="dsysaCompassBezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55" />
+            <stop offset="50%" stop-color="#1e293b" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.45" />
+          </linearGradient>
+        </defs>
+
+        <!-- Anel Externo Fixo + Indicador Superior de Leitura -->
+        <circle cx="150" cy="150" r="147" fill="#020617" stroke="url(#dsysaCompassBezelGrad)" stroke-width="2.2" />
+        <polygon points="150,1 145,10 155,10" fill="#38bdf8" />
+
+        <!-- ROTOR DA BÚSSOLA (Gira conforme orientação/arraste do usuário) -->
+        <g class="dsysa-compass-rotor" style="transform: rotate(${rot}deg);">
+          <!-- Fundo do Mostrador -->
+          <circle cx="150" cy="150" r="143" fill="url(#dsysaCompassDialGrad)" stroke="rgba(255,255,255,0.18)" stroke-width="1" />
+          <circle cx="150" cy="150" r="133" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="0.8" />
+          <circle cx="150" cy="150" r="114" fill="rgba(2, 6, 23, 0.55)" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" />
+          <circle cx="150" cy="150" r="68" fill="none" stroke="rgba(148, 163, 184, 0.16)" stroke-width="0.9" stroke-dasharray="3 3" />
+
+          <!-- Graduação 0° a 350° -->
+          ${ticksHtml.join("")}
+
+          <!-- Setores Costeiros: Mar Aberto (Ciano) vs. Faixa de Areia/Costa (Âmbar) -->
+          <path d="${seaArcPath}" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-opacity="0.55" />
+          <path d="${sandArcPath}" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-opacity="0.4" stroke-dasharray="4 4" />
+
+          <!-- Rosa dos Ventos de 8 Pontas (Inspirada na referência clássica enviada) -->
+          <!-- 4 Pontas Intercardeais (NE, SE, SW, NW) -->
+          <g transform="rotate(45 150 150)">
+            <polygon points="150,66 157,143 150,150" fill="rgba(125, 211, 252, 0.35)" />
+            <polygon points="150,66 143,143 150,150" fill="rgba(56, 189, 248, 0.18)" />
+            <polygon points="150,234 157,157 150,150" fill="rgba(125, 211, 252, 0.35)" />
+            <polygon points="150,234 143,157 150,150" fill="rgba(56, 189, 248, 0.18)" />
+            <polygon points="66,150 143,143 150,150" fill="rgba(125, 211, 252, 0.35)" />
+            <polygon points="66,150 143,157 150,150" fill="rgba(56, 189, 248, 0.18)" />
+            <polygon points="234,150 157,143 150,150" fill="rgba(125, 211, 252, 0.35)" />
+            <polygon points="234,150 157,157 150,150" fill="rgba(56, 189, 248, 0.18)" />
+          </g>
+
+          <!-- Pontas Leste (E) e Oeste (W) da Rosa -->
+          <polygon points="244,150 150,141 150,150" fill="rgba(186, 230, 253, 0.52)" />
+          <polygon points="244,150 150,159 150,150" fill="rgba(125, 211, 252, 0.26)" />
+          <polygon points="56,150 150,141 150,150" fill="rgba(186, 230, 253, 0.52)" />
+          <polygon points="56,150 150,159 150,150" fill="rgba(125, 211, 252, 0.26)" />
+
+          <!-- Rótulos Cardeais (N, E, S, W) e Intercardeais (NE, SE, SW, NW) -->
+          <text x="150" y="54" text-anchor="middle" fill="#f8fafc" font-family="'Playfair Display', Georgia, serif" font-size="26" font-weight="700">N</text>
+          <text x="150" y="256" text-anchor="middle" fill="#f8fafc" font-family="'Playfair Display', Georgia, serif" font-size="25" font-weight="700">S</text>
+          <text x="249" y="158" text-anchor="middle" fill="#f8fafc" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700">E</text>
+          <text x="51" y="158" text-anchor="middle" fill="#f8fafc" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700">W</text>
+
+          <text x="204" y="98" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(45 204 94)">NE</text>
+          <text x="204" y="209" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(135 204 205)">SE</text>
+          <text x="96" y="209" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(-135 96 205)">SW</text>
+          <text x="96" y="98" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(-45 96 94)">NW</text>
+
+          <!-- Marcador de Direção do Swell (Onda) no anel -->
+          <g transform="rotate(${info.swellDeg} 150 150)">
+            <circle cx="150" cy="40" r="7.5" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.3" />
+            <polygon points="150,51 146,43 154,43" fill="#38bdf8" />
+            <text x="150" y="42.5" text-anchor="middle" fill="#020617" font-family="Inter, sans-serif" font-size="6.5" font-weight="800">🌊</text>
+          </g>
+
+          <!-- Marcador de Direção do Vento (Terral/Maral) no anel -->
+          <g transform="rotate(${info.windDeg} 150 150)">
+            <circle cx="150" cy="40" r="7.5" fill="#10b981" stroke="#d1fae5" stroke-width="1.3" />
+            <polygon points="150,51 146,43 154,43" fill="#34d399" />
+            <text x="150" y="42.5" text-anchor="middle" fill="#022c22" font-family="Inter, sans-serif" font-size="6.5" font-weight="800">💨</text>
+          </g>
+
+          <!-- AGULHA MAGNÉTICA PRINCIPAL BICOLOR (Vermelho Norte / Azul Sul exatamente como na imagem) -->
+          <!-- Metade Norte (Vermelha Facetada) -->
+          <polygon points="150,48 140,150 150,150" fill="#f43f5e" />
+          <polygon points="150,48 160,150 150,150" fill="#dc2626" />
+          <!-- Metade Sul (Azul Facetada) -->
+          <polygon points="150,252 140,150 150,150" fill="#38bdf8" />
+          <polygon points="150,252 160,150 150,150" fill="#2563eb" />
+          <!-- Pino Central -->
+          <circle cx="150" cy="150" r="5.5" fill="#f8fafc" stroke="#0f172a" stroke-width="2" />
+        </g>
+      </svg>
+    `;
+  };
+
+  function bindInteractiveCompassRotation(svgEl, stateObj, onRotate) {
+    if (!svgEl) return;
+    let dragging = false;
+    let startAngle = 0;
+    let initialRot = stateObj.rotationDeg || 0;
+
+    const getPointerAngle = (clientX, clientY) => {
+      const rect = svgEl.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      return (Math.atan2(clientY - cy, clientX - cx) * 180) / Math.PI;
+    };
+
+    const startDrag = (clientX, clientY) => {
+      dragging = true;
+      startAngle = getPointerAngle(clientX, clientY);
+      initialRot = stateObj.rotationDeg || 0;
+      const rotor = svgEl.querySelector(".dsysa-compass-rotor");
+      if (rotor) rotor.classList.add("dragging");
+    };
+
+    const moveDrag = (clientX, clientY) => {
+      if (!dragging) return;
+      const currentAngle = getPointerAngle(clientX, clientY);
+      const delta = currentAngle - startAngle;
+      let nextRot = Math.round((initialRot + delta) % 360);
+      if (nextRot < 0) nextRot += 360;
+      stateObj.rotationDeg = nextRot;
+      const rotor = svgEl.querySelector(".dsysa-compass-rotor");
+      if (rotor) {
+        rotor.style.transform = `rotate(${nextRot}deg)`;
+      }
+      if (onRotate) onRotate(nextRot);
+    };
+
+    const stopDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      const rotor = svgEl.querySelector(".dsysa-compass-rotor");
+      if (rotor) rotor.classList.remove("dragging");
+    };
+
+    svgEl.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      startDrag(e.clientX, e.clientY);
+    });
+    window.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
+    window.addEventListener("mouseup", stopDrag);
+
+    svgEl.addEventListener(
+      "touchstart",
+      (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        startDrag(e.touches[0].clientX, e.touches[0].clientY);
+      },
+      { passive: true }
+    );
+    svgEl.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+      },
+      { passive: true }
+    );
+    svgEl.addEventListener("touchend", stopDrag, { passive: true });
+  }
+
+  window.renderDsySACompassCard = function (containerEl, spotConfig) {
+    if (!containerEl) return;
+    window.__lastCompassSpotConfig = spotConfig;
+
+    const info = inferBeachOrientation(spotConfig);
+    const state = containerEl.__compassState || {
+      rotationDeg: 0,
+      collapsed: false
+    };
+    containerEl.__compassState = state;
+
+    containerEl.innerHTML = `
+      <div class="dsysa-wave-panel mt-4" style="--border-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.32), rgba(16, 185, 129, 0.08)); --border-radius-before: 16px;">
+        <!-- TOP HEADER: BÚSSOLA DE POSICIONAMENTO DA PRAIA -->
+        <div class="dsysa-wave-topbar">
+          <div class="dsysa-wave-topbar-title">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+            <span>BÚSSOLA DE POSICIONAMENTO DA PRAIA</span>
+            <span class="text-[11px] font-inter font-normal text-sky-300/90 ml-2 hidden sm:inline">
+              · Orientação Costeira (${info.beachFaceCardinal})
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="dsysa-compass-angle-readout text-[11px] font-mono text-emerald-300">
+              Azimute: ${state.rotationDeg}° · Face: ${info.beachFaceDeg}°
+            </span>
+            <button type="button" class="dsysa-CompassCollapseBtn flex h-6 w-6 items-center justify-center rounded bg-slate-800/90 border border-white/10 text-slate-200 hover:text-white text-xs">
+              ${state.collapsed ? "▼" : "▲"}
+            </button>
+          </div>
+        </div>
+
+        <div class="${state.collapsed ? "hidden" : "block"}">
+          <div class="dsysa-compass-body">
+            <!-- ESQUERDA: Bússola Funcional Interativa -->
+            <div class="dsysa-compass-dial-wrap">
+              ${window.buildDsySACompassSvg(info, state.rotationDeg, 188, false)}
+              <span class="mt-1.5 text-[10px] text-slate-400 font-mono">
+                Arraste o disco p/ girar (${state.rotationDeg}°)
+              </span>
+            </div>
+
+            <!-- DIREITA: Texto Explicativo + Indicadores + Botão "Ampliar bússola" -->
+            <div class="dsysa-compass-info">
+              <div class="inline-flex items-center gap-2 self-start rounded-full bg-sky-500/15 border border-sky-400/30 px-2.5 py-0.5 text-[10px] font-semibold text-sky-300">
+                <span>🧭 ${info.spotName}</span>
+                <span>·</span>
+                <span>Face Costeira: ${info.beachFaceDeg}°</span>
+              </div>
+
+              <h3 class="dsysa-compass-headline">
+                Veja a posição da praia onde você está.
+              </h3>
+
+              <p class="dsysa-compass-desc">
+                ${info.coastlineNote}
+              </p>
+
+              <div class="dsysa-compass-badges">
+                <span class="dsysa-compass-pill">
+                  <span class="h-2 w-2 rounded-full bg-sky-400"></span>
+                  <span>Mar Aberto: <strong>${info.beachFaceCardinal} (${info.beachFaceDeg}°)</strong></span>
+                </span>
+                <span class="dsysa-compass-pill">
+                  <span>🌊 Swell: <strong class="text-sky-300">${info.swellLabel}</strong></span>
+                </span>
+                <span class="dsysa-compass-pill">
+                  <span>💨 Vento: <strong class="text-emerald-300">${info.windLabel} (${info.windRelation})</strong></span>
+                </span>
+              </div>
+
+              <div class="pt-1 flex flex-wrap items-center gap-2.5">
+                <button type="button" class="dsysa-btn-expand-compass" data-open-compass-modal="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Ampliar bússola</span>
+                </button>
+
+                <button type="button" data-reset-compass="0" class="px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-white/10 text-[11px] font-medium text-slate-300 transition-colors">
+                  Norte (0°)
+                </button>
+                <button type="button" data-align-beach="${(360 - info.beachFaceDeg) % 360}" class="px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-white/10 text-[11px] font-medium text-sky-300 transition-colors">
+                  Alinhar c/ o Mar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const svgEl = containerEl.querySelector(".dsysa-compass-svg");
+    const readoutEl = containerEl.querySelector(".dsysa-compass-angle-readout");
+    const captionEl = containerEl.querySelector(".dsysa-compass-dial-wrap span");
+
+    bindInteractiveCompassRotation(svgEl, state, (deg) => {
+      if (readoutEl) readoutEl.textContent = `Azimute: ${deg}° · Face: ${info.beachFaceDeg}°`;
+      if (captionEl) captionEl.textContent = `Arraste o disco p/ girar (${deg}°)`;
+    });
+
+    const openBtn = containerEl.querySelector("[data-open-compass-modal]");
+    if (openBtn) {
+      openBtn.addEventListener("click", () => {
+        window.openDsySACompassModal(spotConfig, state.rotationDeg);
+      });
+    }
+
+    const resetBtn = containerEl.querySelector("[data-reset-compass]");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        state.rotationDeg = 0;
+        window.renderDsySACompassCard(containerEl, spotConfig);
+      });
+    }
+
+    const alignBtn = containerEl.querySelector("[data-align-beach]");
+    if (alignBtn) {
+      alignBtn.addEventListener("click", () => {
+        state.rotationDeg = parseInt(alignBtn.getAttribute("data-align-beach"), 10) || 0;
+        window.renderDsySACompassCard(containerEl, spotConfig);
+      });
+    }
+
+    const collapseBtn = containerEl.querySelector(".dsysa-CompassCollapseBtn");
+    if (collapseBtn) {
+      collapseBtn.addEventListener("click", () => {
+        state.collapsed = !state.collapsed;
+        window.renderDsySACompassCard(containerEl, spotConfig);
+      });
+    }
+  };
+
+  window.openDsySACompassModal = function (spotConfig, initialRotationDeg) {
+    const activeSpot = spotConfig || window.__lastCompassSpotConfig || {};
+    const info = inferBeachOrientation(activeSpot);
+
+    let modalEl = document.getElementById("dsysaCompassModal");
+    if (!modalEl) {
+      modalEl = document.createElement("div");
+      modalEl.id = "dsysaCompassModal";
+      modalEl.className = "dsysa-compass-modal-backdrop";
+      document.body.appendChild(modalEl);
+
+      modalEl.addEventListener("click", (ev) => {
+        if (ev.target === modalEl) {
+          window.closeDsySACompassModal();
+        }
+      });
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape" && modalEl.classList.contains("open")) {
+          window.closeDsySACompassModal();
+        }
+      });
+    }
+
+    const modalState = {
+      rotationDeg: initialRotationDeg !== undefined ? initialRotationDeg : 0
+    };
+
+    const renderModalContent = () => {
+      modalEl.innerHTML = `
+        <div class="dsysa-compass-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="dsysaCompassModalTitle">
+          <!-- Cabeçalho do Modal com Botão Fechar -->
+          <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-slate-950/90">
+            <div class="flex items-center gap-2.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]"></span>
+              <div>
+                <h3 id="dsysaCompassModalTitle" class="text-sm sm:text-base font-semibold text-white tracking-tight">
+                  Bússola de Posicionamento da Praia — ${info.spotName}
+                </h3>
+                <p class="text-[11px] text-slate-400">
+                  Veja a posição da praia onde você está · Rosa dos Ventos 360° de Alta Precisão
+                </p>
+              </div>
+            </div>
+
+            <button type="button" class="dsysa-btn-close-modal" id="dsysaCloseCompassModalBtn">
+              <span>✕</span>
+              <span>Fechar</span>
+            </button>
+          </div>
+
+          <!-- Corpo do Modal -->
+          <div class="p-5 sm:p-6 grid gap-6 md:grid-cols-12 items-center">
+            <!-- Bússola Ampliada 320x320 -->
+            <div class="md:col-span-7 flex flex-col items-center justify-center bg-slate-950/80 border border-white/5 rounded-2xl p-4">
+              <div id="dsysaModalCompassSvgHost">
+                ${window.buildDsySACompassSvg(info, modalState.rotationDeg, 310, true)}
+              </div>
+
+              <!-- Slider de Rotação 0° a 360° -->
+              <div class="w-full mt-4 px-2 space-y-2">
+                <div class="flex items-center justify-between text-[11px] text-slate-300 font-mono">
+                  <span>Girar Rosa dos Ventos:</span>
+                  <strong id="dsysaModalAngleLabel" class="text-sky-300">${modalState.rotationDeg}°</strong>
+                </div>
+                <input type="range" id="dsysaModalRotateSlider" min="0" max="359" value="${modalState.rotationDeg}"
+                       class="w-full accent-sky-400 cursor-pointer" />
+                <div class="flex flex-wrap justify-center gap-2 pt-1">
+                  <button type="button" data-modal-rot="0" class="px-3 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-white/10 text-[11px] text-slate-200">
+                    🧭 Norte no Topo (0°)
+                  </button>
+                  <button type="button" data-modal-rot="${(360 - info.beachFaceDeg) % 360}" class="px-3 py-1 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-[11px] text-sky-300 font-medium">
+                    🌊 Olhar de Frente p/ o Mar (${info.beachFaceDeg}°)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel Lateral de Posicionamento Costeiro -->
+            <div class="md:col-span-5 space-y-3.5 text-left">
+              <div class="rounded-xl bg-slate-900/75 border border-white/10 p-3.5">
+                <span class="text-[10px] uppercase tracking-[0.16em] text-sky-300 font-semibold">Posicionamento da Praia</span>
+                <p class="text-sm font-semibold text-white mt-1">
+                  Veja a posição da praia onde você está.
+                </p>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                  ${info.coastlineNote}
+                </p>
+              </div>
+
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center justify-between rounded-xl bg-slate-950/90 border border-white/5 px-3.5 py-2.5">
+                  <span class="text-slate-400">🏖️ Face da Praia (Mar Aberto)</span>
+                  <strong class="text-sky-300 font-mono">${info.beachFaceCardinal} · ${info.beachFaceDeg}°</strong>
+                </div>
+                <div class="flex items-center justify-between rounded-xl bg-slate-950/90 border border-white/5 px-3.5 py-2.5">
+                  <span class="text-slate-400">🌊 Entrada da Ondulação (Swell)</span>
+                  <strong class="text-cyan-300 font-mono">${info.swellLabel}</strong>
+                </div>
+                <div class="flex items-center justify-between rounded-xl bg-slate-950/90 border border-white/5 px-3.5 py-2.5">
+                  <span class="text-slate-400">💨 Direção do Vento</span>
+                  <strong class="text-emerald-300 font-mono">${info.windLabel} (${info.windRelation})</strong>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-[11px] text-emerald-200 leading-relaxed">
+                <strong>Leitura Rápida na Bússola:</strong> A agulha <span class="text-rose-400 font-semibold">vermelha</span> aponta sempre para o <strong>Norte (N 0°)</strong> e a <span class="text-sky-300 font-semibold">azul</span> para o <strong>Sul (S 180°)</strong>. O arco ciano mostra para onde a areia da praia está olhando.
+              </div>
+
+              <button type="button" id="dsysaCloseCompassModalBottomBtn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/15 text-xs font-semibold text-white transition-colors">
+                Fechar Modal da Bússola
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const closeTop = modalEl.querySelector("#dsysaCloseCompassModalBtn");
+      const closeBottom = modalEl.querySelector("#dsysaCloseCompassModalBottomBtn");
+      if (closeTop) closeTop.addEventListener("click", window.closeDsySACompassModal);
+      if (closeBottom) closeBottom.addEventListener("click", window.closeDsySACompassModal);
+
+      const modalSvg = modalEl.querySelector(".dsysa-compass-svg");
+      const angleLabel = modalEl.querySelector("#dsysaModalAngleLabel");
+      const slider = modalEl.querySelector("#dsysaModalRotateSlider");
+
+      const syncRotationUI = (deg) => {
+        if (angleLabel) angleLabel.textContent = `${deg}°`;
+        if (slider) slider.value = String(deg);
+        const mainCardEl = document.getElementById("dsysaCompassCardRoot");
+        if (mainCardEl && mainCardEl.__compassState) {
+          mainCardEl.__compassState.rotationDeg = deg;
+          window.renderDsySACompassCard(mainCardEl, activeSpot);
+        }
+      };
+
+      bindInteractiveCompassRotation(modalSvg, modalState, syncRotationUI);
+
+      if (slider) {
+        slider.addEventListener("input", () => {
+          const deg = parseInt(slider.value, 10) || 0;
+          modalState.rotationDeg = deg;
+          const rotor = modalEl.querySelector(".dsysa-compass-rotor");
+          if (rotor) rotor.style.transform = `rotate(${deg}deg)`;
+          syncRotationUI(deg);
+        });
+      }
+
+      modalEl.querySelectorAll("[data-modal-rot]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          modalState.rotationDeg = parseInt(btn.getAttribute("data-modal-rot"), 10) || 0;
+          renderModalContent();
+          syncRotationUI(modalState.rotationDeg);
+        });
+      });
+    };
+
+    renderModalContent();
+    requestAnimationFrame(() => {
+      modalEl.classList.add("open");
+    });
+  };
+
+  window.closeDsySACompassModal = function () {
+    const modalEl = document.getElementById("dsysaCompassModal");
+    if (modalEl) {
+      modalEl.classList.remove("open");
+    }
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     window.mountDsySAWeatherStage();
     window.initDsySAAnimations();

@@ -68,8 +68,14 @@ O background do aplicativo muda automaticamente conforme a condição climática
 
 ---
 
-## 5. Gráficos, Radar & Visualizações de Dados
+## 5. Cards de Telemetria, Gráficos & Visualizações de Dados
 
+0. **Grid 2×2 de Cards de Telemetria Simplificados e de Mesma Altura (`.dsysa-telemetry-grid` / `.dsysa-telemetry-card`):**
+   - **Posicionamento:** Exibido logo abaixo do cabeçalho do pico ativo e **imediatamente antes** do gráfico `ALTURA E PERÍODO DAS ONDAS`.
+   - **Layout Simplificado & Altura Uniforme (`86px`):** 4 caixas em grade 2×2 (`1. ONDULAÇÃO (SWELL)`, `2. VENTO`, `3. FASES DA MARÉ & LUA`, `4. TEMPO & TEMP. DA ÁGUA`), todas com exatamente a mesma altura (`86px`), fundo `#05080F`, borda `rgba(255,255,255,0.08)` e 3 linhas diretas:
+     1. Cabeçalho (`Categoria` em `#38BDF8` à esquerda + `Badge` em `#34D399` monospace à direita).
+     2. Valor Principal consolidado em destaque (`1.7 m · 13 s · SE 135°`, `7 km/h · NO 315°`, `Enchendo (0.9m → 1.8m)`, `☀️ Ensolarado (29 °C)`).
+     3. Subtítulo descritivo em linha única (`#94A3B8`).
 1. **Gráfico DsySA de Altura, Período e Direção Primária das Ondas (`renderDsySAWavePeriodChart`):**
    - **Decomposição Espectral em 4 Sub-Abas Interativas:** `Altura total`, `Vagas`, `Swell A` e `Swell B`.
    - **Linha do Tempo Multi-Dias + Faixas Diurnas/Noturnas:** Cabeçalhos de dias (`Ontem`, `TER 17`, `QUA 18`, `QUI 19`, `SEX 20`, `SÁB 21`, `DOM 22`) com marcador luminoso `AGORA` e sombreamento de colunas por turno.
@@ -101,5 +107,12 @@ O background do aplicativo muda automaticamente conforme a condição climática
    - **Caixas Escalonadas de Preamar e Baixamar:** Duas linhas abaixo do eixo horário (`0h 3h 6h 9h 12h 15h 18h 21h`) destacando todas as marés cheias (`#00E5FF`) e marés secas (`#0284C7`).
    - **Mini-Mapa Panorâmico de 8 Dias + Modos `GRÁFICOS | TABELAS | MÊS`:** Barra panorâmica inferior para salto rápido entre dias e alternância entre visualização gráfica, tabela completa de marés/astros e visão lunar mensal.
    - **Scroll Horizontal Infinito por Toque/Mouse:** Mesmo comportamento progressivo até o limite da previsão (**"Neste momento só temos previsão até sexta 27/11"**).
-5. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
+5. **Componente DsySA de Bússola Funcional de Posicionamento da Praia & Modal (`renderDsySACompassCard` / `openDsySACompassModal`):**
+   - **Posicionamento:** Exibido como o **último card da coluna esquerda (coluna dos gráficos)**, logo abaixo da Tábua de Marés.
+   - **Mostrador Funcional 360° (`.dsysa-compass-svg`):** Anel graduado de `0°` a `350°` (de 10 em 10 graus com subdivisões de 2°/5°), Rosa dos Ventos clássica de 8 pontas (`N`, `NE`, `E`, `SE`, `S`, `SW`, `W`, `NW`), **agulha magnética bicolor** (Norte em vermelho `#F43F5E` / `#DC2626` e Sul em azul `#38BDF8` / `#2563EB`), arco costeiro de orientação da praia (Mar Aberto vs. Faixa de Areia) e marcadores orbitais de **Swell (`🌊`)** e **Vento (`💨`)**.
+   - **Layout Lado a Lado:** Bússola interativa à esquerda (arrastável com mouse ou toque para girar o disco) e painel explicativo à direita com o título ***"Veja a posição da praia onde você está."***, resumo geográfico da bancada, badges de azimute e o botão **`Ampliar bússola`** (`.dsysa-btn-expand-compass`).
+   - **Modal de Bússola Ampliada (`#dsysaCompassModal`):** Ao clicar em **`Ampliar bússola`**, abre um modal `DsySA` com `backdrop-blur`, bússola de alta precisão (`310×310px`), controle deslizante de rotação (`0°–359°`), botões de alinhamento rápido (`Norte no Topo 0°` e `Olhar de Frente p/ o Mar`) e botão **`✕ Fechar`** (`.dsysa-btn-close-modal`).
+6. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
+7. **Card Flexível do SurfAgent Voice Assistant (`.dsysa-voice-assistant-card` / Node Figma `15:252`):**
+   - **Altura Flexível & Fluida (`h-auto` / `flex: 1 1 auto` / `layoutSizingVertical = "HUG"`):** O card do assistente adapta sua dimensão vertical dinamicamente ao volume de perguntas rápidas, histórico de diálogo por voz, sugestões de picos e redimensionamento de janela sem sobreposição ou corte interno.
 

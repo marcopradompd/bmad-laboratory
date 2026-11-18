@@ -247,6 +247,81 @@
   box-shadow: 0 8px 28px rgba(16, 185, 129, 0.45);
 }
 
+/* 4.1 DsySA Simplified Equal-Height Telemetry Cards (2x2 Grid Before Wave Chart) */
+.dsysa-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+@media (min-width: 640px) {
+  .dsysa-telemetry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dsysa-telemetry-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 86px;
+  min-height: 86px;
+  max-height: 86px;
+  padding: 12px 15px;
+  background: #05080F;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.dsysa-telemetry-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  line-height: 1;
+}
+.dsysa-telemetry-card-cat {
+  font-family: var(--dsysa-font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dsysa-telemetry-card-badge {
+  font-family: var(--dsysa-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #34d399;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.dsysa-telemetry-card-value {
+  font-family: var(--dsysa-font-geist);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dsysa-telemetry-card-sub {
+  font-family: var(--dsysa-font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  color: #94a3b8;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ==========================================================================
    5. DSYSA WAVE HEIGHT, PERIOD & PRIMARY DIRECTION CHART
    (Reconstruído em DsySA a partir do modelo Altura e Período das Ondas)
@@ -1236,4 +1311,177 @@
 .dsysa-tide-mode-btn.active {
   color: #020617;
   background: #f8fafc;
+}
+
+/* ==========================================================================
+   10. DSYSA FUNCTIONAL BEACH COMPASS CARD & MODAL ("BÚSSOLA DA PRAIA")
+   (Anel graduado 0°-350°, Rosa dos Ventos N/NE/E/SE/S/SW/W/NW, Agulha Bicolor
+    Vermelha/Azul, Arco de Posicionamento da Praia e Modal Ampliado)
+   ========================================================================== */
+.dsysa-compass-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 18px;
+  align-items: center;
+  background: radial-gradient(circle at 22% 50%, rgba(56, 189, 248, 0.08), rgba(5, 8, 15, 0.96) 70%);
+}
+@media (min-width: 640px) {
+  .dsysa-compass-body {
+    grid-template-columns: 205px minmax(0, 1fr);
+  }
+}
+.dsysa-compass-dial-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  user-select: none;
+}
+.dsysa-compass-svg {
+  display: block;
+  cursor: grab;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.14));
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsysa-compass-svg:active {
+  cursor: grabbing;
+}
+.dsysa-compass-rotor {
+  transform-origin: 150px 150px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsysa-compass-rotor.dragging {
+  transition: none;
+}
+.dsysa-compass-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dsysa-compass-headline {
+  font-family: var(--dsysa-font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #f8fafc;
+  line-height: 1.3;
+}
+.dsysa-compass-desc {
+  font-family: var(--dsysa-font-sans);
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+.dsysa-compass-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dsysa-compass-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+.dsysa-btn-expand-compass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #38bdf8, #3b82f6);
+  color: #020617;
+  font-family: var(--dsysa-font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.38);
+  transition: all 0.2s ease;
+}
+.dsysa-btn-expand-compass:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 34px rgba(56, 189, 248, 0.52);
+}
+
+/* Modal da Bússola Ampliada */
+.dsysa-compass-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(2, 6, 23, 0.84);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.dsysa-compass-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.dsysa-compass-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #070B14 0%, #020617 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 20px;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.88), 0 0 40px rgba(56, 189, 248, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsysa-compass-modal-backdrop.open .dsysa-compass-modal-dialog {
+  transform: scale(1);
+}
+.dsysa-btn-close-modal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(244, 63, 94, 0.16);
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  color: #fda4af;
+  font-family: var(--dsysa-font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dsysa-btn-close-modal:hover {
+  background: rgba(244, 63, 94, 0.28);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Card Flexível: SurfAgent Voice Assistant
+   ========================================================================== */
+.dsysa-voice-assistant-card {
+  height: auto !important;
+  min-height: fit-content;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
