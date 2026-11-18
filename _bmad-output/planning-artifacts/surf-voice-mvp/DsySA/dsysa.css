@@ -124,70 +124,11 @@
 }
 
 /* ==========================================================================
-   2. KEYFRAME ANIMATIONS & SCROLL TRANSITIONS (Copied from Mira)
+   2. TRANSIÇÕES E ANIMAÇÕES CLEAN (Sem efeito cascata ou flashes da v1)
    ========================================================================== */
-@keyframes fadeSlideIn {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-.animate-on-scroll {
-  animation-play-state: paused !important;
-  will-change: opacity, transform;
-}
-.animate-on-scroll.animate {
-  animation-play-state: running !important;
-}
-
-@keyframes aura-bar {
-  0%, 10% { transform: scaleX(0); }
-  40%, 90% { transform: scaleX(1); }
-  100% { transform: scaleX(0); }
-}
-
-@keyframes aura-spark {
-  0%, 20% { stroke-dashoffset: 150; }
-  50%, 90% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 150; }
-}
-
-@keyframes aura-fade {
-  0%, 30% { opacity: 0; }
-  50%, 90% { opacity: 0.4; }
-  100% { opacity: 0; }
-}
-
-@keyframes aura-dot {
-  0%, 40% { opacity: 0; }
-  50%, 90% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes aura-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
 @keyframes marquee-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes translate-y {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-25%); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes translate-y-up {
-  0% { transform: translateY(-20%); }
-  50% { transform: translateY(0); }
-  100% { transform: translateY(-20%); }
 }
 
 /* ==========================================================================
@@ -689,7 +630,6 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   box-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
-  animation: fadeSlideIn 0.35s ease-out both;
 }
 .dsysa-end-cap-col {
   width: 190px;

@@ -21,9 +21,7 @@ O **DsySA (Design System SurfAgent)** é o sistema de design oficial do **SurfAg
 | `--dsysa-bg-canvas` / `bg-black` | `#000000` | Fundo global absoluto com contraste máximo. |
 | `--dsysa-bg-midnight` / `bg-[#02010A]` | `#02010A` | Containers principais de seção com glow radial indigo/blue no topo. |
 | `--dsysa-bg-telemetry` / `bg-[#05080F]` | `#05080F` | Painéis internos de radar GPS, gráficos de ondulação, feixes SVG e barras de score. |
-| `--dsysa-bg-glass-dark` / `bg-[#0A0A10]/90` | `#0A0A10` | Cards flutuantes com `backdrop-blur-xl` (Alertas de Swell, Resumo de Voz da IA, Score Breakdown). |
-| `Aura WebGL Shader` | `UnicornStudio (bcBYZIStYXwiogchBNHO)` | Background interativo no Hero com máscara vertical (`mask-image: linear-gradient(transparent, black 0%, black 80%, transparent)`). |
-| `Dot Matrix Grid` | `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 0)` | Grade pontilhada `16px × 16px` para fundos de órbita de IA e sensores oceânicos. |
+| `--dsysa-bg-glass-dark` / `bg-[#0A0A10]/90` | `#0A0A10` | Cards flutuantes com `backdrop-blur-xl` (Resumo de Voz da IA, Score Breakdown). |
 
 ### 1.1-B Background Dinâmico Reativo ao Clima (`DsySA Weather Aura` — `setDsySAWeatherBackground`)
 O background do aplicativo muda automaticamente conforme a condição climática da praia aberta na aba ativa (ou via seletor de simulação):
@@ -104,9 +102,4 @@ O background do aplicativo muda automaticamente conforme a condição climática
    - **Mini-Mapa Panorâmico de 8 Dias + Modos `GRÁFICOS | TABELAS | MÊS`:** Barra panorâmica inferior para salto rápido entre dias e alternância entre visualização gráfica, tabela completa de marés/astros e visão lunar mensal.
    - **Scroll Horizontal Infinito por Toque/Mouse:** Mesmo comportamento progressivo até o limite da previsão (**"Neste momento só temos previsão até sexta 27/11"**).
 5. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
-3. **Anel Multi-Segmento SVG (`Spot Condition Score 0–100`):** 4 arcos concêntricos coloridos (`#10b981`, `#06b6d4`, `#8b5cf6`, `#f43f5e`) com rotação suave de `1000ms` no hover.
-4. **Barras de Telemetria Animadas (`@keyframes aura-bar`):** Barras horizontais com glow neon para Tamanho da Ondulação (`m`), Período (`s`), Energia (`kJ`) e Força do Vento (`km/h`).
-5. **Curva SVG Animada (`@keyframes aura-spark`):** Sparkline contínua com preenchimento em gradiente e ponto luminoso pulsante para representar **Fases da Maré (Enchendo/Vazante)** e trem de ondas.
-6. **Radar GPS Conic Sweep (`4 Picos Mais Próximos`):** Radar circular com varredura cônica (`animate-[spin_6s_linear_infinite]`) e pontos pulsantes (`animate-ping`) representando os 4 picos próximos ao usuário e destacando a janela ideal.
-7. **Hub de Feixes SVG (`#beam-glow`):** Feixes animados (`stroke-dashoffset`) conectando os 6 sinais oceânicos (**Ondulação, Período, Energia, Vento, Maré & Lua, Temp. da Água**) ao núcleo de IA do **SurfAgent**.
 

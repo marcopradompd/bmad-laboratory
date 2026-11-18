@@ -1,50 +1,12 @@
 /**
- * DsySA — Design System SurfAgent v1.3
- * Motor JS completo: Matriz de Ondas/Período + Gráfico de Vento de Superfície Médio
+ * DsySA — Design System SurfAgent v1.4 (Clean Edition)
+ * Motor JS: Ondas/Período + Energia das Ondas + Vento de Superfície + Tábua de Marés + Background Climático
  * Com Scroll Horizontal Infinito (Toque Mobile + Mouse Drag + Wheel)
  */
 
 (function () {
-  /* 1. IntersectionObserver para animações de entrada (.animate-on-scroll) */
-  const once = true;
-  if (!window.__inViewIO) {
-    window.__inViewIO = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate");
-            if (once) window.__inViewIO.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
-    );
-  }
-
-  window.initDsySAAnimations = function (selector = ".animate-on-scroll") {
-    document.querySelectorAll(selector).forEach((el) => {
-      window.__inViewIO.observe(el);
-    });
-  };
-
-  /* 2. Inicializador do WebGL Aura Background (UnicornStudio) */
-  window.initDsySAAuraBackground = function () {
-    function initUnicornStudio() {
-      if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-        window.UnicornStudio.init();
-        window.UnicornStudio.isInitialized = true;
-      }
-    }
-    if (!window.UnicornStudio || !window.UnicornStudio.init) {
-      window.UnicornStudio = window.UnicornStudio || { isInitialized: false };
-      const s = document.createElement("script");
-      s.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js";
-      s.onload = initUnicornStudio;
-      (document.head || document.body).appendChild(s);
-    } else {
-      initUnicornStudio();
-    }
-  };
+  window.initDsySAAnimations = function () {};
+  window.initDsySAAuraBackground = function () {};
 
   /* 3. Calendário Compartilhado de Previsão (Até sexta 27/11) */
   const ALL_FORECAST_DAYS = [

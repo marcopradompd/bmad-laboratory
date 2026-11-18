@@ -22,7 +22,7 @@
   <!-- =====================================================================
        NAVIGATION HEADER (DsySA Navbar)
        ===================================================================== -->
-  <header class="z-30 [animation:fadeSlideIn_0.8s_ease-out_0.1s_both] sticky top-0 bg-black/80 backdrop-blur-xl border-b border-white/5">
+  <header class="z-30 sticky top-0 bg-black/80 backdrop-blur-xl border-b border-white/5">
     <div class="flex lg:px-8 w-full max-w-6xl mx-auto py-4 px-4 items-center justify-between">
       <!-- Brand Logo -->
       <a href="#top" class="inline-flex items-center gap-3 group">
@@ -36,7 +36,7 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-sm font-semibold tracking-tight text-white">SurfAgent</span>
-            <span class="rounded-full bg-sky-500/15 border border-sky-400/30 px-2 py-0.5 text-[10px] font-semibold text-sky-300 tracking-wider">DsySA v1.0</span>
+            <span class="rounded-full bg-sky-500/15 border border-sky-400/30 px-2 py-0.5 text-[10px] font-semibold text-sky-300 tracking-wider">DsySA Clean</span>
           </div>
           <p class="text-[10px] text-slate-400 tracking-tight">Design System & Voice AI Surf Console</p>
         </div>
@@ -46,8 +46,8 @@
       <div class="hidden lg:flex items-center gap-8">
         <nav class="flex items-center gap-7">
           <a href="#console" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE & ABAS</a>
-          <a href="#telemetry" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">TELEMETRIA & IA</a>
-          <a href="#radar-signals" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">RADAR 4 PICOS & SINAIS</a>
+          <a href="#dsysaWavePeriodChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS & ENERGIA</a>
+          <a href="#dsysaWindChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO & MARÉ</a>
           <a href="#tokens" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">TOKENS & COMPONENTES</a>
         </nav>
 
@@ -55,7 +55,7 @@
 
         <div class="flex items-center gap-3">
           <button onclick="refreshSavedTabs()" class="text-[11px] font-semibold text-white tracking-tight bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors px-4 py-2 inline-flex items-center gap-1.5">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
             ABAS ATUALIZADAS (<span id="navSyncTime">AGORA</span>)
           </button>
           <button onclick="toggleVoiceMute()" id="navMuteBtn" class="text-[11px] font-semibold text-black tracking-tight bg-white hover:bg-white/90 transition-colors px-4 py-2">
@@ -69,21 +69,15 @@
   <main id="top" class="z-10 pb-20 relative">
 
     <!-- ===================================================================
-         HERO + INTERACTIVE SURFAGENT VOICE & TABS CONSOLE
+         HERO + INTERACTIVE SURFAGENT VOICE & TABS CONSOLE (CLEAN VISUAL)
          =================================================================== -->
-    <section class="flex flex-col max-w-6xl mx-auto pt-12 px-4 lg:px-8 lg:pt-20 relative isolate overflow-hidden">
-      <!-- Aura WebGL Background Component (copied from mira-growth.aura.build) -->
-      <div class="aura-background-component pointer-events-none absolute inset-0 z-0 w-full h-full overflow-hidden saturate-150 bg-gradient-to-br from-blue-500/10 to-blue-500/0 rounded-none"
-           style="position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0; -webkit-mask-image: linear-gradient(transparent, black 0%, black 80%, transparent); mask-image: linear-gradient(transparent, black 0%, black 80%, transparent);">
-        <div data-us-project="bcBYZIStYXwiogchBNHO" class="absolute inset-0 z-0 w-full h-full"></div>
-      </div>
-
+    <section class="flex flex-col max-w-6xl mx-auto pt-10 px-4 lg:px-8 lg:pt-14 relative isolate">
       <!-- Hero Copy & Voice Trigger -->
       <div class="text-center max-w-3xl mx-auto relative z-10">
         <!-- Surfers Strip -->
-        <div class="flex flex-col [animation:fadeSlideIn_0.8s_ease-out_0.2s_both] mb-5 items-center">
+        <div class="flex flex-col mb-5 items-center">
           <div class="flex items-center space-x-3 bg-slate-950/70 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-md">
-            <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
             <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-200/90">
               DSYSA DESIGN SYSTEM · ABERTO PARA TODAS AS PRAIAS · VOICE-FIRST AI
             </p>
@@ -92,10 +86,10 @@
 
         <!-- Headline (Inter + Playfair Display Italic) -->
         <div class="space-y-2">
-          <h1 class="sm:text-5xl lg:text-6xl [animation:fadeSlideIn_0.8s_ease-out_0.3s_both] text-3xl font-semibold text-slate-50 tracking-tight">
+          <h1 class="sm:text-5xl lg:text-6xl text-3xl font-semibold text-slate-50 tracking-tight">
             Pergunte por voz. Encontre
           </h1>
-          <div class="flex flex-col sm:flex-row sm:justify-center [animation:fadeSlideIn_0.8s_ease-out_0.4s_both] gap-x-2 gap-y-1 items-center">
+          <div class="flex flex-col sm:flex-row sm:justify-center gap-x-2 gap-y-1 items-center">
             <p class="sm:text-5xl lg:text-6xl text-3xl italic text-sky-200 tracking-tight font-playfair">
               ondas perfeitas
             </p>
@@ -106,12 +100,12 @@
         </div>
 
         <!-- Subheadline -->
-        <p class="sm:text-base [animation:fadeSlideIn_0.8s_ease-out_0.5s_both] text-sm font-normal text-slate-200/80 max-w-xl mt-4 mx-auto">
+        <p class="sm:text-base text-sm font-normal text-slate-200/80 max-w-xl mt-4 mx-auto">
           Pergunte sobre uma praia específica ou descubra qual dos <strong>4 picos mais próximos</strong> está melhor hoje — de acordo com seu nível de surfe ou buscando uma onda boa, bem formada e forte.
         </p>
 
         <!-- Primary Laser-Edge Glow Voice CTA + Quick Voice Prompts -->
-        <div class="flex flex-col [animation:fadeSlideIn_0.8s_ease-out_0.6s_both] mt-7 gap-4 items-center">
+        <div class="flex flex-col mt-7 gap-4 items-center">
           <div class="flex flex-wrap justify-center gap-4 items-center">
             <!-- Signature Laser-Edge Glow Button -->
             <button id="heroMicBtn" onclick="startVoiceRecognition()" class="dsysa-btn-laser focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80">
@@ -133,7 +127,7 @@
               </div>
               <div class="laser-radial-glow"></div>
               <span class="relative z-10 inline-flex items-center gap-2 text-xs font-semibold tracking-wider">
-                <span class="h-2 w-2 rounded-full bg-sky-400 animate-ping"></span>
+                <span class="h-2 w-2 rounded-full bg-sky-400"></span>
                 <span id="heroMicLabel">🎙️ FALAR COM O SURFAGENT</span>
               </span>
             </button>
@@ -162,7 +156,7 @@
         <div id="levelQuestionAlert" class="hidden mt-6 max-w-2xl mx-auto bg-[#0A0A10]/95 backdrop-blur-xl border border-sky-400/40 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] text-left transition-all">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
               <span class="text-[10px] font-semibold text-sky-300 uppercase tracking-[0.18em]">SURFAGENT VOICE AI · PERGUNTA DE NÍVEL</span>
             </div>
             <span class="text-[10px] text-slate-400">📍 GPS: 4 picos mais próximos identificados</span>
@@ -188,9 +182,9 @@
       </div>
 
       <!-- =================================================================
-           SURFAGENT CONSOLE (Adapted from Mira Growth Console)
+           SURFAGENT CONSOLE (Clean Edition)
            ================================================================= -->
-      <div id="console" class="[animation:fadeSlideIn_0.8s_ease-out_0.7s_both] w-full mt-10 relative z-10">
+      <div id="console" class="w-full mt-10 relative z-10">
         <div class="sm:px-4 bg-gradient-to-br from-blue-500/10 to-black/40 max-w-5xl rounded-3xl mx-auto py-4 px-2 relative shadow-[0_24px_80px_rgba(0,0,0,0.8)] backdrop-blur space-y-4"
              style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.02)); --border-radius-before: 24px;">
 
@@ -207,7 +201,7 @@
               </div>
               <div class="flex items-center gap-2 text-[11px] text-slate-400">
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-800/90 px-3 py-1 text-[10px] font-medium text-slate-100 border border-white/5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-sky-400 animate-ping"></span>
+                  <span class="h-1.5 w-1.5 rounded-full bg-sky-400"></span>
                   Live Voice + Telemetry
                 </span>
               </div>
@@ -241,7 +235,7 @@
 
           <!-- Voice Transcript Banner -->
           <div class="flex items-center gap-3 rounded-xl bg-black/50 border border-white/10 px-4 py-2.5 shadow-inner">
-            <div class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] animate-pulse shrink-0"></div>
+            <div class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></div>
             <div class="flex-1 font-mono text-xs text-sky-300 truncate" id="voiceTranscriptBar">
               <span class="opacity-60">SurfAgent Voz:</span> "Itacimirim é o melhor pico agora com 1.7m, 13s de período, 640 kJ de energia e vento terral liso."
             </div>
@@ -340,7 +334,7 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <h3 class="text-sm font-medium tracking-tight text-slate-50 flex items-center gap-1.5">
-                        <span class="h-2 w-2 rounded-full bg-sky-400 animate-pulse"></span>
+                        <span class="h-2 w-2 rounded-full bg-sky-400"></span>
                         SurfAgent Voice Assistant
                       </h3>
                       <p class="mt-1 text-[11px] text-slate-300">
@@ -389,551 +383,12 @@
           </div>
         </div>
       </div>
-
-      <!-- Infinite Marquee Ticker (Adapted from Mira Logo Marquee) -->
-      <div class="[animation:fadeSlideIn_0.8s_ease-out_0.1s_both] animate-on-scroll w-full pt-16 pb-4 px-6 relative z-10">
-        <div class="text-center">
-          <p class="uppercase text-[11px] font-medium text-zinc-400 tracking-[0.2em]">
-            MONITORAMENTO CONTÍNUO DE BOIAS OCEÂNICAS E PICOS GLOBAIS EM TEMPO REAL
-          </p>
-        </div>
-
-        <div class="mt-6 flex overflow-hidden relative w-full dsysa-mask-marquee">
-          <div class="flex items-center min-w-max gap-10 pr-10 text-xs text-slate-400 font-medium" style="animation: marquee-scroll 38s linear infinite;">
-            <span>🌊 ITACIMIRIM · 1.7m 13s SE · 640 kJ (TERRAL)</span>
-            <span>🌊 STELLA MARIS · 1.2m 11s SE · 380 kJ (TERRAL)</span>
-            <span>🌊 GUARAJUBA · 0.8m 10s L-SE · 195 kJ (TERRAL)</span>
-            <span>🌊 MARESIAS · 1.6m 12s S-SE · 530 kJ (TERRAL)</span>
-            <span>🌊 ARPOADOR · 1.3m 11s S-SO · 390 kJ (TERRAL)</span>
-            <span>🌊 ITAMAMBUCA · 1.5m 12s SE · 470 kJ (TERRAL)</span>
-            <span>🌊 SAQUAREMA · 2.1m 14s S · 890 kJ (TERRAL)</span>
-            <!-- Duplicate Set for Seamless Loop -->
-            <span>🌊 ITACIMIRIM · 1.7m 13s SE · 640 kJ (TERRAL)</span>
-            <span>🌊 STELLA MARIS · 1.2m 11s SE · 380 kJ (TERRAL)</span>
-            <span>🌊 GUARAJUBA · 0.8m 10s L-SE · 195 kJ (TERRAL)</span>
-            <span>🌊 MARESIAS · 1.6m 12s S-SE · 530 kJ (TERRAL)</span>
-            <span>🌊 ARPOADOR · 1.3m 11s S-SO · 390 kJ (TERRAL)</span>
-            <span>🌊 ITAMAMBUCA · 1.5m 12s SE · 470 kJ (TERRAL)</span>
-            <span>🌊 SAQUAREMA · 2.1m 14s S · 890 kJ (TERRAL)</span>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- ===================================================================
-         SECTION 2: COMPONENTES ANIMADOS DSYSA (ÓRBITA IA, STREAM ABAS, ALERTAS, GAUGE & QUERY)
+         TOKENS DSYSA (CORES, TIPOGRAFIA, BOTÕES, BORDAS & ESPAÇAMENTOS)
          =================================================================== -->
-    <section id="telemetry" class="flex flex-col [animation:fadeSlideIn_0.8s_ease-out_0.1s_both] animate-on-scroll lg:px-8 lg:pt-24 max-w-6xl mx-auto pt-16 px-6 items-center">
-      <div class="overflow-hidden sm:px-8 sm:py-10 bg-[#02010A] text-slate-50 w-full pt-8 px-4 pb-8 relative font-geist"
-           style="position: relative; --border-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(59, 130, 246, 0));">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-500/10 blur-[120px] pointer-events-none rounded-full"></div>
-
-        <div class="flex border-white/10 border-b pb-4 gap-4 items-center justify-between relative z-10">
-          <span class="text-[11px] uppercase font-semibold text-cyan-400 tracking-[0.2em]">
-            DsySA · Componentes de Telemetria, Voz & Alertas
-          </span>
-          <span class="text-[11px] font-medium text-slate-400">
-            Adaptado de mira-growth.aura.build para SurfAgent
-          </span>
-        </div>
-
-        <div class="mt-8 grid gap-6 md:grid-cols-[minmax(0,2.2fr)_minmax(0,1.4fr)] items-start relative z-10">
-          <div class="text-left">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
-              Você pergunta por voz.
-              <br>
-              O SurfAgent cruza os sinais.
-            </h2>
-          </div>
-          <p class="sm:text-sm md:text-right md:ml-auto text-xs text-slate-400 max-w-sm leading-relaxed">
-            Todos os componentes visuais abaixo fazem parte do Design System <strong>DsySA</strong>: órbitas de IA, stream de abas salvas, alertas de swell, gauge multi-anel e terminal de filtros por nível.
-          </p>
-        </div>
-
-        <!-- 3-Col Feature Cards (Orbit, Vertical Stream, Spike Alert) -->
-        <div class="grid gap-5 md:grid-cols-3 mt-10 relative z-10">
-          <!-- Card 1: Orbiting Voice AI Core -->
-          <div class="flex flex-col overflow-hidden p-6 bg-gradient-to-br from-indigo-500/5 to-transparent border border-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] h-[360px] relative hover:bg-indigo-500/10 transition-all duration-500 group">
-            <div class="flex flex-col h-full relative gap-4">
-              <div class="relative flex items-center justify-center h-48 w-full shrink-0 overflow-hidden rounded-lg bg-black/20 border border-white/5">
-                <div class="absolute inset-0 opacity-40 dsysa-dot-matrix"></div>
-                <div class="relative w-full h-full flex items-center justify-center">
-                  <div class="relative z-20 w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-600 p-[1px] shadow-[0_0_50px_rgba(99,102,241,0.5)]">
-                    <div class="w-full h-full rounded-full bg-[#05030F] flex items-center justify-center shadow-[inset_0_4px_10px_rgba(255,255,255,0.2)]">
-                      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 blur-[2px] animate-pulse"></div>
-                    </div>
-                  </div>
-                  <div class="absolute inset-0 z-10 animate-[spin_20s_linear_infinite]">
-                    <div class="absolute top-[20%] left-[20%] w-11 h-11 -ml-5 -mt-5 rounded-full bg-gradient-to-br from-emerald-400/20 to-emerald-600/20 backdrop-blur-md border border-emerald-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] flex items-center justify-center animate-[spin_20s_linear_infinite_reverse]">
-                      <span class="text-[9px] font-bold text-emerald-300">SWELL</span>
-                    </div>
-                    <div class="absolute bottom-[20%] right-[20%] w-11 h-11 -mr-5 -mb-5 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-600/20 backdrop-blur-md border border-cyan-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] flex items-center justify-center animate-[spin_20s_linear_infinite_reverse]">
-                      <span class="text-[9px] font-bold text-cyan-300">VENTO</span>
-                    </div>
-                    <div class="absolute top-[20%] right-[20%] w-10 h-10 -mr-4 -mt-4 rounded-full bg-gradient-to-br from-rose-400/20 to-pink-600/20 backdrop-blur-md border border-rose-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] flex items-center justify-center animate-[spin_20s_linear_infinite_reverse]">
-                      <span class="text-[9px] font-bold text-rose-300">MARÉ</span>
-                    </div>
-                  </div>
-                  <svg class="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 200 200">
-                    <circle cx="100" cy="100" r="60" fill="none" stroke="#38bdf8" stroke-width="1" stroke-dasharray="4 4"></circle>
-                  </svg>
-                </div>
-              </div>
-              <div class="relative mt-auto">
-                <h3 class="text-lg font-medium text-white">Agente Multimodal por Voz</h3>
-                <p class="text-sm text-slate-400 mt-1.5 leading-relaxed">
-                  Ouve sua pergunta, identifica se é uma praia específica ou busca os 4 picos mais próximos falando e exibindo os dados.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2: Persistent Auto-Updating Tabs Stream -->
-          <div class="flex flex-col overflow-hidden p-6 bg-gradient-to-br from-cyan-500/5 to-transparent border border-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] h-[360px] relative hover:bg-cyan-500/10 transition-all duration-500 group">
-            <div class="flex flex-col h-full relative gap-4">
-              <div class="flex overflow-hidden h-48 rounded-lg bg-black/20 border border-white/5 relative w-full shrink-0">
-                <div class="grid grid-cols-2 w-full h-full gap-3 p-3 opacity-85" style="mask-image: linear-gradient(180deg, transparent, black 25%, black 75%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 25%, black 75%, transparent);">
-                  <div class="flex flex-col gap-3" style="animation: translate-y 12s linear infinite;">
-                    <div class="h-16 rounded-md bg-white/5 border border-white/10 backdrop-blur-sm p-3 flex flex-col justify-center gap-1">
-                      <span class="text-[10px] text-emerald-300 font-semibold">★ Aba 1: Itacimirim</span>
-                      <span class="text-[11px] text-white font-bold">1.7m · 13s · 640 kJ</span>
-                    </div>
-                    <div class="h-16 rounded-md bg-white/5 border border-white/10 backdrop-blur-sm p-3 flex flex-col justify-center gap-1">
-                      <span class="text-[10px] text-sky-300 font-semibold">Aba 2: Stella Maris</span>
-                      <span class="text-[11px] text-white font-bold">1.2m · 11s · 380 kJ</span>
-                    </div>
-                    <div class="h-16 rounded-md bg-white/5 border border-white/10 backdrop-blur-sm p-3 flex flex-col justify-center gap-1">
-                      <span class="text-[10px] text-cyan-300 font-semibold">Aba 3: Guarajuba</span>
-                      <span class="text-[11px] text-white font-bold">0.8m · 10s · 195 kJ</span>
-                    </div>
-                  </div>
-                  <div class="flex flex-col gap-3" style="animation: translate-y-up 14s linear infinite;">
-                    <div class="h-16 rounded-md bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-sm p-3 flex flex-col justify-center gap-1 relative overflow-hidden">
-                      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full" style="animation: shimmer 2s infinite;"></div>
-                      <span class="text-[10px] text-emerald-300 font-semibold">Auto-Sync Ativo</span>
-                      <span class="text-[10px] text-slate-300">Maré Enchendo · 26°C</span>
-                    </div>
-                    <div class="h-16 rounded-md bg-white/5 border border-white/10 backdrop-blur-sm p-3 flex flex-col justify-center gap-1">
-                      <span class="text-[10px] text-slate-400 font-semibold">Aba 4: Pedra do Sal</span>
-                      <span class="text-[11px] text-white font-bold">1.1m · 9s · 240 kJ</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="relative mt-auto">
-                <h3 class="text-lg font-medium text-white">Abas Distintas & Persistentes</h3>
-                <p class="text-sm text-slate-400 mt-1.5 leading-relaxed">
-                  Os picos abrem em abas separadas, ficam salvos e atualizam automaticamente toda vez que você acessa o app.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Floating Glass Alert Card (Swell Spike / Best Condition) -->
-          <div class="flex flex-col overflow-hidden p-6 bg-gradient-to-br from-rose-500/5 to-transparent border border-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] h-[360px] relative hover:bg-rose-500/10 transition-all duration-500 group">
-            <div class="flex flex-col h-full relative gap-4">
-              <div class="relative flex items-center justify-center h-48 rounded-lg bg-black/20 border border-white/5 overflow-hidden w-full shrink-0">
-                <div class="absolute inset-0 bg-rose-500/10 blur-2xl rounded-full scale-150"></div>
-                <div class="relative z-10 w-[88%] bg-[#0A0A10]/90 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] transform hover:-translate-y-1 transition-transform duration-300">
-                  <div class="flex justify-between items-start mb-2">
-                    <div class="flex items-center gap-2">
-                      <div class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
-                      <span class="text-[10px] font-semibold text-rose-400 uppercase tracking-wider">Swell Spike · 640 kJ</span>
-                    </div>
-                    <span class="text-[10px] text-slate-500">Agora</span>
-                  </div>
-                  <p class="text-sm font-medium text-white mb-1">Itacimirim entrou no pico de energia</p>
-                  <p class="text-xs text-slate-400 mb-3">1.7m · 13s SE · Vento Terral 7 km/h</p>
-                  <div class="flex items-center justify-between border-t border-white/5 pt-2.5">
-                    <span class="text-[10px] text-emerald-400 font-medium">★ Onda Forte & Bem Formada</span>
-                    <button onclick="selectTab('itacimirim')" class="bg-rose-500 hover:bg-rose-400 text-white text-[10px] font-medium px-3 py-1 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-colors">
-                      Abrir Aba
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="relative mt-auto">
-                <h3 class="text-lg font-medium text-white">Alertas de Energia & Vento</h3>
-                <p class="text-sm text-slate-400 mt-1.5 leading-relaxed">
-                  Cards translúcidos de alto contraste destacam picos de energia (kJ), entrada de vento terral e virada de maré.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2-Col Deep Analytics (Multi-Ring Radial Score Gauge + Terminal Level Filter) -->
-        <div class="grid md:grid-cols-2 mt-5 gap-5 relative z-10">
-          <!-- Multi-Ring Radial Score Gauge -->
-          <div class="overflow-hidden p-6 lg:p-8 bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] relative hover:bg-white/[0.05] transition-all duration-300 group">
-            <div class="flex flex-col gap-6 justify-between h-full">
-              <div class="flex flex-col md:flex-row items-center justify-center md:justify-around gap-8 py-2">
-                <div class="relative w-[170px] h-[170px]">
-                  <svg viewBox="0 0 36 36" class="w-[170px] h-[170px] -rotate-90 transform transition-transform duration-1000 ease-out group-hover:rotate-0">
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#1e293b" stroke-width="3" class="opacity-50"></circle>
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 100" stroke-dashoffset="0"></circle>
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" stroke-dasharray="22 100" stroke-dashoffset="-15"></circle>
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linecap="round" stroke-dasharray="26 100" stroke-dashoffset="-40"></circle>
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-dasharray="32 100" stroke-dashoffset="-70"></circle>
-                  </svg>
-                  <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-1">SURF SCORE</span>
-                    <span class="text-4xl font-light text-white tracking-tighter">97</span>
-                  </div>
-                </div>
-
-                <div class="w-full max-w-[230px] rounded-lg bg-[#0A0A10]/90 backdrop-blur-xl border border-white/10 shadow-[0_18px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.05)] p-4">
-                  <div class="text-xs font-medium text-white mb-3 border-b border-white/5 pb-2">
-                    Adequação por Perfil (4 Picos)
-                  </div>
-                  <div class="space-y-2.5 text-[12px] font-medium">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2.5">
-                        <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
-                        <span class="text-slate-300">Onda Forte (Geral)</span>
-                      </div>
-                      <span class="text-white">Itacimirim (97)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2.5">
-                        <span class="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#06b6d4]"></span>
-                        <span class="text-slate-300">Intermediário</span>
-                      </div>
-                      <span class="text-white">Stella Maris (95)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2.5">
-                        <span class="h-2 w-2 rounded-full bg-indigo-500 shadow-[0_0_8px_#8b5cf6]"></span>
-                        <span class="text-slate-300">Iniciante</span>
-                      </div>
-                      <span class="text-white">Guarajuba (96)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2.5">
-                        <span class="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]"></span>
-                        <span class="text-slate-300">Mar Mexido</span>
-                      </div>
-                      <span class="text-white">Pedra do Sal (68)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 class="text-xl font-medium text-white">Gauge Multi-Anel de Condição</h3>
-                <p class="mt-1.5 text-sm text-slate-400 leading-relaxed">
-                  Avalia os 4 picos mais próximos de acordo com o nível do surfista ou priorizando onda boa, bem formada e forte.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Terminal Query & Level Intent Matcher -->
-          <div class="overflow-hidden p-6 lg:p-8 bg-gradient-to-br from-emerald-500/5 to-transparent border border-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] relative hover:bg-emerald-500/10 transition-all duration-300 group">
-            <div class="absolute top-1/2 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
-            <div class="flex flex-col gap-6 relative justify-between h-full">
-              <div class="py-2 space-y-4">
-                <div class="flex items-center gap-3 rounded-lg bg-black/40 border border-white/10 px-4 py-3 shadow-inner">
-                  <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                  <div class="flex-1 font-mono text-xs text-emerald-300">
-                    <span class="opacity-50">Query:</span>
-                    <span class="border-r border-emerald-400 pr-1 animate-[pulse_1s_infinite]">
-                      Pergunta = "Melhor Pico Hoje" → Checar Nível?
-                    </span>
-                  </div>
-                </div>
-
-                <div class="space-y-3 relative">
-                  <div class="absolute left-4 top-4 bottom-4 w-px bg-gradient-to-b from-emerald-500/50 to-transparent"></div>
-
-                  <div class="relative pl-10 flex items-center justify-between">
-                    <div class="absolute left-[13px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></div>
-                    <div class="flex-1 flex items-center justify-between rounded-lg bg-white/5 border border-white/5 hover:border-emerald-500/30 px-4 py-3 backdrop-blur-sm transition-all">
-                      <div>
-                        <p class="text-sm font-medium text-white flex items-center gap-2">
-                          Sem Nível Informado (Onda Forte)
-                          <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Match #1</span>
-                        </p>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Itacimirim · 1.7m · 13s · 640 kJ · Terral</p>
-                      </div>
-                      <button onclick="applyLevelRecommendation('sem_nivel', true)" class="bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 text-[10px] font-medium px-3 py-1.5 rounded transition-colors">
-                        Testar Regra
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="relative pl-10 flex items-center justify-between">
-                    <div class="absolute left-[13px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-sky-400"></div>
-                    <div class="flex-1 flex items-center justify-between rounded-lg bg-white/5 border border-white/5 hover:border-sky-500/30 px-4 py-3 backdrop-blur-sm transition-all">
-                      <div>
-                        <p class="text-sm font-medium text-white flex items-center gap-2">
-                          Com Nível de Surfe (Iniciante)
-                          <span class="px-1.5 py-0.5 rounded text-[9px] bg-sky-500/20 text-sky-300 border border-sky-500/30">Seguro</span>
-                        </p>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Guarajuba · 0.8m · 10s · 195 kJ · Suave</p>
-                      </div>
-                      <button onclick="applyLevelRecommendation('iniciante', true)" class="bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 border border-sky-500/30 text-[10px] font-medium px-3 py-1.5 rounded transition-colors">
-                        Testar Nível
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 class="text-xl font-medium text-white">Árvore de Decisão por Nível</h3>
-                <p class="mt-1.5 text-sm text-slate-400 leading-relaxed">
-                  Quando o usuário pede o melhor pico hoje, o SurfAgent pergunta se deseja filtrar pelo nível; para pico específico, exibe direto as condições.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================================================================
-         SECTION 3: FEIXES SVG, BARRAS AURA-BAR, SPARKLINE DE MARÉ & RADAR GPS 4 PICOS
-         =================================================================== -->
-    <section id="radar-signals" class="flex flex-col [animation:fadeSlideIn_0.8s_ease-out_0.1s_both] animate-on-scroll lg:px-8 lg:pt-24 max-w-6xl mx-auto pt-16 px-6 items-center">
-      <div class="overflow-hidden sm:px-8 sm:py-10 bg-[#02010A] text-slate-50 w-full pt-8 px-4 pb-8 relative font-geist"
-           style="position: relative; --border-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(59, 130, 246, 0));">
-        <div class="flex border-white/10 border-b pb-4 items-center justify-between relative z-10">
-          <span class="text-[11px] uppercase font-semibold text-cyan-400 tracking-[0.2em]">
-            DsySA · Gráficos SVG Animados, Sparklines & Radar GPS
-          </span>
-        </div>
-
-        <div class="grid md:grid-cols-2 max-w-5xl z-10 mt-8 mx-auto relative gap-6">
-
-          <!-- Card 1: SVG Beam Hub (6 Ocean Signals -> SurfAgent Core) -->
-          <div class="group overflow-hidden transition-all duration-500 bg-gradient-to-br from-blue-500/10 to-blue-500/0 p-5 relative shadow-xl"
-               style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
-            <div class="w-full h-[270px] relative border border-white/5 bg-[#05080F] flex items-center justify-center overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_60%)]"></div>
-
-              <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 280" fill="none">
-                <defs>
-                  <filter id="beam-glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"></feGaussianBlur>
-                    <feMerge>
-                      <feMergeNode in="blur"></feMergeNode>
-                      <feMergeNode in="SourceGraphic"></feMergeNode>
-                    </feMerge>
-                  </filter>
-                </defs>
-                <path d="M 120 50 C 160 50, 180 140, 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 120 50 C 160 50, 180 140, 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="0s" repeatCount="indefinite"></animate>
-                </path>
-                <path d="M 120 140 L 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 120 140 L 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="1s" repeatCount="indefinite"></animate>
-                </path>
-                <path d="M 120 230 C 160 230, 180 140, 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 120 230 C 160 230, 180 140, 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="2s" repeatCount="indefinite"></animate>
-                </path>
-                <path d="M 280 50 C 240 50, 220 140, 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 280 50 C 240 50, 220 140, 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="0.5s" repeatCount="indefinite"></animate>
-                </path>
-                <path d="M 280 140 L 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 280 140 L 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="1.5s" repeatCount="indefinite"></animate>
-                </path>
-                <path d="M 280 230 C 240 230, 220 140, 200 140" stroke="rgba(56,189,248,0.15)" stroke-width="2"></path>
-                <path d="M 280 230 C 240 230, 220 140, 200 140" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 240" filter="url(#beam-glow)">
-                  <animate attributeName="stroke-dashoffset" values="40;-240" dur="3s" begin="2.5s" repeatCount="indefinite"></animate>
-                </path>
-              </svg>
-
-              <div class="absolute left-3 top-[12%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">🌊 Swell & Período</div>
-              <div class="absolute left-3 top-[45%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">⚡ Energia (kJ)</div>
-              <div class="absolute left-3 top-[78%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">💨 Vento & Direção</div>
-
-              <div class="absolute right-3 top-[12%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">🌙 Maré & Lua</div>
-              <div class="absolute right-3 top-[45%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">🌡️ Temp. da Água</div>
-              <div class="absolute right-3 top-[78%] px-3 py-1.5 border border-white/10 bg-[#0F172A] text-xs font-medium text-slate-300">☀️ Clima & Tempo</div>
-
-              <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-24 h-24 z-10">
-                <div class="absolute inset-0 bg-blue-500/30 blur-xl"></div>
-                <svg class="absolute inset-0 w-full h-full text-[#0B0F19] drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]" viewBox="0 0 100 100">
-                  <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="currentColor" stroke="rgba(96,165,250,0.8)" stroke-width="1.5"></polygon>
-                </svg>
-                <div class="relative z-10 flex flex-col items-center">
-                  <span class="text-[10px] font-bold text-sky-300 tracking-wider">SURF</span>
-                  <span class="text-[10px] font-medium text-blue-50">AGENT</span>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-medium text-slate-50">Fusão de 10 Variáveis Costeiras</h3>
-              <p class="text-xs text-slate-400 mt-1">Feixes animados (`#beam-glow`) convergem todos os indicadores obrigatórios do pico em uma resposta de voz única.</p>
-            </div>
-          </div>
-
-          <!-- Card 2: Animated Progress Bars (aura-bar) + Tide Sparkline (aura-spark) -->
-          <div class="group overflow-hidden transition-all duration-500 bg-gradient-to-br from-blue-500/10 to-blue-500/0 p-5 relative shadow-xl"
-               style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
-            <div class="w-full h-[270px] border border-white/5 bg-[#05080F] p-5 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] relative z-10">
-              <div>
-                <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3.5">
-                  <span class="text-sm font-medium text-slate-200">Telemetria da Onda (Ao Vivo)</span>
-                  <div class="flex items-center gap-2">
-                    <div class="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">97</div>
-                    <span class="text-xs font-medium text-emerald-400">Onda Forte</span>
-                  </div>
-                </div>
-
-                <div class="flex flex-col gap-3">
-                  <div class="flex items-center gap-3">
-                    <span class="text-xs font-medium text-slate-300 w-28">Ondulação (1.7m)</span>
-                    <div class="flex-1 h-1.5 bg-slate-800 overflow-hidden">
-                      <div class="h-full bg-sky-400 w-[88%] shadow-[0_0_8px_rgba(56,189,248,0.6)] origin-left" style="animation: aura-bar 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;"></div>
-                    </div>
-                    <span class="text-xs font-medium text-slate-300 w-10 text-right">1.7m</span>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <span class="text-xs font-medium text-slate-300 w-28">Período (13s)</span>
-                    <div class="flex-1 h-1.5 bg-slate-800 overflow-hidden">
-                      <div class="h-full bg-blue-500 w-[82%] shadow-[0_0_8px_rgba(59,130,246,0.6)] origin-left" style="animation: aura-bar 6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s infinite backwards;"></div>
-                    </div>
-                    <span class="text-xs font-medium text-slate-300 w-10 text-right">13s</span>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <span class="text-xs font-medium text-slate-300 w-28">Energia (640 kJ)</span>
-                    <div class="flex-1 h-1.5 bg-slate-800 overflow-hidden">
-                      <div class="h-full bg-indigo-400 w-[90%] shadow-[0_0_8px_rgba(129,140,248,0.6)] origin-left" style="animation: aura-bar 6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s infinite backwards;"></div>
-                    </div>
-                    <span class="text-xs font-medium text-slate-300 w-10 text-right">640kJ</span>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <span class="text-xs font-medium text-slate-300 w-28">Vento Terral</span>
-                    <div class="flex-1 h-1.5 bg-slate-800 overflow-hidden">
-                      <div class="h-full bg-emerald-400 w-[95%] shadow-[0_0_8px_rgba(16,185,129,0.6)] origin-left" style="animation: aura-bar 6s cubic-bezier(0.4, 0, 0.2, 1) 0.45s infinite backwards;"></div>
-                    </div>
-                    <span class="text-xs font-medium text-emerald-300 w-10 text-right">7km/h</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Animated Tide Sparkline -->
-              <div class="flex items-end justify-between mt-4 pt-2 border-t border-white/5">
-                <span class="text-xs font-medium text-slate-400">Curva da Maré (Enchendo 0.9m → 1.8m)</span>
-                <div class="w-32 h-9 relative">
-                  <svg class="w-full h-full overflow-visible" viewBox="0 0 100 30" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="1"></stop>
-                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"></stop>
-                      </linearGradient>
-                    </defs>
-                    <path d="M 0 24 C 15 22, 25 14, 45 16 C 60 18, 75 8, 100 4 L 100 30 L 0 30 Z" fill="url(#sparkline-grad)" opacity="0.4" style="animation: aura-fade 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;"></path>
-                    <path d="M 0 24 C 15 22, 25 14, 45 16 C 60 18, 75 8, 100 4" fill="none" stroke="#60A5FA" stroke-width="2" stroke-dasharray="150" stroke-dashoffset="150" style="animation: aura-spark 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;"></path>
-                    <circle cx="100" cy="4" r="3" fill="#93C5FD" class="drop-shadow-[0_0_6px_#60A5FA]" style="animation: aura-dot 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;"></circle>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-medium text-slate-50">Barras `aura-bar` & Sparkline `aura-spark`</h3>
-              <p class="text-xs text-slate-400 mt-1">Animações contínuas de progresso com brilho neon e curva vetorial de maré.</p>
-            </div>
-          </div>
-
-          <!-- Card 3: Conic Sweep GPS Radar (4 Nearest Surf Spots) -->
-          <div class="group overflow-hidden transition-all duration-500 bg-gradient-to-br from-blue-500/10 to-blue-500/0 p-5 relative shadow-xl"
-               style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
-            <div class="w-full h-[270px] relative border border-white/5 bg-[#05080F] flex items-center justify-center overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_60%)]">
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[230px] h-[230px] rounded-full animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,rgba(56,189,248,0.18)_25%,transparent_50%)]"></div>
-              </div>
-
-              <div class="absolute w-[220px] h-[220px] rounded-full border border-white/5"></div>
-              <div class="absolute w-[150px] h-[150px] rounded-full border border-white/10"></div>
-              <div class="absolute w-[76px] h-[76px] rounded-full border border-sky-400/25 bg-sky-500/5"></div>
-
-              <!-- Center GPS User Node -->
-              <div class="absolute w-11 h-11 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.3)] z-10">
-                <i data-lucide="navigation" class="w-4 h-4 text-sky-300"></i>
-              </div>
-
-              <!-- 4 Nearest Spots on Radar -->
-              <div class="absolute left-[calc(50%+68px)] top-[calc(50%-24px)] w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_12px_#10b981] z-10 animate-pulse"></div>
-              <span class="absolute left-[calc(50%+45px)] top-[calc(50%-52px)] text-[10px] font-semibold text-emerald-300 whitespace-nowrap">
-                ★ 1. Itacimirim (5.8km)
-              </span>
-
-              <div class="absolute left-[calc(50%-95px)] top-[calc(50%-15px)] w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] z-10"></div>
-              <span class="absolute left-[calc(50%-130px)] top-[calc(50%-38px)] text-[10px] font-medium text-slate-300 whitespace-nowrap">
-                2. Stella Maris (8.2km)
-              </span>
-
-              <div class="absolute left-[calc(50%+35px)] top-[calc(50%+68px)] w-2 h-2 rounded-full bg-cyan-400 z-10"></div>
-              <span class="absolute left-[calc(50%+15px)] top-[calc(50%+82px)] text-[10px] font-medium text-slate-300 whitespace-nowrap">
-                3. Guarajuba (9.5km)
-              </span>
-
-              <div class="absolute left-[calc(50%-65px)] top-[calc(50%+65px)] w-2 h-2 rounded-full bg-purple-400 z-10"></div>
-              <span class="absolute left-[calc(50%-105px)] top-[calc(50%+80px)] text-[10px] font-medium text-slate-400 whitespace-nowrap">
-                4. Pedra do Sal (11km)
-              </span>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-medium text-slate-50">Radar GPS Conic Sweep (4 Picos Próximos)</h3>
-              <p class="text-xs text-slate-400 mt-1">Varredura rotativa identificando a localização do usuário e destacando o melhor pico ao redor.</p>
-            </div>
-          </div>
-
-          <!-- Card 4: Voice-to-Tabs Pipeline -->
-          <div class="group overflow-hidden transition-all duration-500 bg-gradient-to-br from-blue-500/10 to-blue-500/0 p-5 relative shadow-xl"
-               style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
-            <div class="w-full h-[270px] relative border border-white/5 bg-[#05080F] p-5 overflow-hidden flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-              <div class="relative z-10 flex justify-between px-2 w-full text-[11px] font-medium text-slate-300 text-center">
-                <span>1. Pergunta Voz</span>
-                <span>2. Nível / GPS</span>
-                <span>3. Abre 4 Abas</span>
-                <span class="text-emerald-400">4. Resposta IA</span>
-              </div>
-
-              <div class="relative flex-1 my-4 w-full">
-                <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
-                  <path d="M 10 30 L 40 30 L 70 30 C 82 30, 80 50, 92 50" stroke="rgba(56,189,248,0.2)" stroke-width="0.8" fill="none"></path>
-                  <path d="M 10 70 L 40 70 L 70 70 C 82 70, 80 50, 92 50" stroke="rgba(129,140,248,0.2)" stroke-width="0.8" fill="none"></path>
-                  <path d="M 10 30 L 40 30 L 70 30 C 82 30, 80 50, 92 50" stroke="rgba(56,189,248,0.9)" stroke-width="0.8" fill="none" stroke-dasharray="2 4">
-                    <animate attributeName="stroke-dashoffset" from="6" to="0" dur="1s" repeatCount="indefinite"></animate>
-                  </path>
-                  <path d="M 10 70 L 40 70 L 70 70 C 82 70, 80 50, 92 50" stroke="rgba(16,185,129,0.9)" stroke-width="0.8" fill="none" stroke-dasharray="2 4">
-                    <animate attributeName="stroke-dashoffset" from="6" to="0" dur="1.2s" repeatCount="indefinite"></animate>
-                  </path>
-                </svg>
-              </div>
-
-              <div class="mx-auto px-4 py-1.5 border border-blue-500/30 bg-blue-500/10 text-xs text-blue-300 font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center gap-2">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full bg-blue-400 opacity-75"></span>
-                  <span class="relative inline-flex h-2 w-2 bg-blue-500"></span>
-                </span>
-                <span>PIPELINE MULTIMODAL LIVE</span>
-              </div>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-medium text-slate-50">Fluxo Contínuo Voz + Abas Salvas</h3>
-              <p class="text-xs text-slate-400 mt-1">Linhas tracejadas animadas (`stroke-dashoffset`) representando o processamento em tempo real.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================================================================
-         SECTION 4: TOKENS DSYSA (CORES, TIPOGRAFIA, BOTÕES, BORDAS & ESPAÇAMENTOS)
-         =================================================================== -->
-    <section id="tokens" class="flex flex-col [animation:fadeSlideIn_0.8s_ease-out_0.1s_both] animate-on-scroll lg:px-8 lg:pt-24 max-w-6xl mx-auto pt-16 px-6">
+    <section id="tokens" class="flex flex-col lg:px-8 lg:pt-16 max-w-6xl mx-auto pt-12 px-6">
       <div class="sm:px-10 sm:py-10 bg-gradient-to-br from-blue-500/0 via-blue-500/10 to-blue-500/0 p-6 relative"
            style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0)); --border-radius-before: 0">
         <div class="flex items-center justify-between border-b border-white/10 pb-4">
