@@ -25,6 +25,13 @@ O **DsySA (Design System SurfAgent)** é o sistema de design oficial do **SurfAg
 | `Aura WebGL Shader` | `UnicornStudio (bcBYZIStYXwiogchBNHO)` | Background interativo no Hero com máscara vertical (`mask-image: linear-gradient(transparent, black 0%, black 80%, transparent)`). |
 | `Dot Matrix Grid` | `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 0)` | Grade pontilhada `16px × 16px` para fundos de órbita de IA e sensores oceânicos. |
 
+### 1.1-B Background Dinâmico Reativo ao Clima (`DsySA Weather Aura` — `setDsySAWeatherBackground`)
+O background do aplicativo muda automaticamente conforme a condição climática da praia aberta na aba ativa (ou via seletor de simulação):
+- **☀️ Ensolarado (`.weather-sunny`):** Background azulado oceânico luminoso (`#031B38` → `#073B6B`) junto com um grande **sol amarelo/dourado** (`#FACC15` / `#F59E0B`) com pulso suave (`@keyframes dsysa-sun-pulse`).
+- **⛅ Parcialmente Nublado (`.weather-partly_cloudy`):** Background mesclando tons azulados suaves (`#0B2545` → `#1E3A5F`), brilho solar amarelo difuso e camadas de nuvens translúcidas em movimento (`@keyframes dsysa-cloud-drift`).
+- **🌧️ Chuvoso (`.weather-rainy`):** Background **acinzentado atmosférico** (`#273244` → `#334155` → `#111827`) com véu de chuva diagonal contínuo (`@keyframes dsysa-rain-fall`).
+- **⛈️ Chuva com Raios (`.weather-thunderstorm`):** Background **acinzentado escuro de tempestade** (`#111827` → `#1E293B` → `#090D16`) com chuva densa e **efeito de piscar de raios (`@keyframes dsysa-lightning-flash`) + feixe de relâmpago no céu (`@keyframes dsysa-bolt-strike`)**.
+
 ### 1.2 Cores Semânticas do SurfAgent
 - **Sky & Blue (`#38BDF8` / `#3B82F6`):** Ondulação (Swell), Energia da Onda (kJ), Período (s) e voz ativa do Agente IA.
 - **Emerald (`#10B981` / `#34D399` + `shadow-[0_0_8px_#10b981]`):** **Melhor Pico Agora**, **Vento Terral Liso** e **Match de Nível de Surfe**.
@@ -83,7 +90,20 @@ O **DsySA (Design System SurfAgent)** é o sistema de design oficial do **SurfAg
      - **`cruzado`** (`#EA580C` — Laranja/Âmbar)
      - **`maral`** (`#991B1B` — Vermelho/Carmesim)
    - **Scroll Horizontal Infinito por Toque/Mouse:** Mesmo comportamento progressivo do gráfico de ondas, exibindo ***"Neste momento só temos previsão até sexta 27/11"*** ao chegar ao final.
-3. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
+3. **Gráfico DsySA de Previsão de Energia das Ondas (`renderDsySAWaveEnergyChart`):**
+   - **Decomposição Espectral em 4 Sub-Abas:** `Energia total`, `Vagas`, `Swell A` e `Swell B`, além de seletor rápido de unidade (`kJ` vs. `J/m²`) e botão de ajuda `?` explicando a relação física $E \propto H^2 \cdot T$.
+   - **Eixo Y Duplo (Esquerda e Direita em `kJ` / `J/m²`):** Linhas tracejadas horizontais de `200 kJ` a `1200 kJ`.
+   - **Barras Coloridas por Intensidade Hidrodinâmica + Valores no Topo:** Cada barra exibe o valor numérico de energia e recebe a cor correspondente da escala de potência DsySA (`100 Fraca`, `200 Suave`, `350 Moderada`, `500 Boa`, `750 Forte`, `1000 Pesada`, `1500 Grande`, `2000+ Extrema`).
+   - **Linha de Direção Primária + Scroll Horizontal Infinito por Toque/Mouse:** Suporta arrastar com o dedo em celulares e mouse no desktop até o limite da previsão (**"Neste momento só temos previsão até sexta 27/11"**).
+4. **Componente DsySA de Tábua de Marés e Horas dos Astros (`renderDsySATideChart` — `ALTURA DA MARÉ`):**
+   - **Pino de Porto de Referência (`📍 porto de salvador`):** Identifica automaticamente o porto astronômico de referência da praia ativa.
+   - **Seção Superior `Horas dos astros`:** Exibe para cada dia o nascer do sol (`4:57h` ▲), pôr do sol (`17:41h` ▼), fase da lua (`crescente` / `cheia`), nascer da lua (`10:42h` ▲) e pôr da lua (`23:35h` ▼).
+   - **Curva Senoidal Bicolor Contínua (`Enchendo` vs. `Vazante`):** Área preenchida em Ciano Luminoso (`#00E5FF`) durante a maré enchendo e Azul Oceano (`#0284C7`) durante a maré vazante, com escala vertical de `0 m`, `1 m` e `2 m`.
+   - **Marcador Interativo de Hora e Altura Atual (`20:30h | 1.7 m`):** Badge em carmesim (`#BE123C`) com linha tracejada vertical e ponteiro triangular sobre a curva (clicável para inspecionar qualquer horário).
+   - **Caixas Escalonadas de Preamar e Baixamar:** Duas linhas abaixo do eixo horário (`0h 3h 6h 9h 12h 15h 18h 21h`) destacando todas as marés cheias (`#00E5FF`) e marés secas (`#0284C7`).
+   - **Mini-Mapa Panorâmico de 8 Dias + Modos `GRÁFICOS | TABELAS | MÊS`:** Barra panorâmica inferior para salto rápido entre dias e alternância entre visualização gráfica, tabela completa de marés/astros e visão lunar mensal.
+   - **Scroll Horizontal Infinito por Toque/Mouse:** Mesmo comportamento progressivo até o limite da previsão (**"Neste momento só temos previsão até sexta 27/11"**).
+5. **Gráfico Doughnut (Chart.js — Balanço das Condições):** `cutout: "70%"` mostrando o peso de Ondulação/Energia, Vento e Maré.
 3. **Anel Multi-Segmento SVG (`Spot Condition Score 0–100`):** 4 arcos concêntricos coloridos (`#10b981`, `#06b6d4`, `#8b5cf6`, `#f43f5e`) com rotação suave de `1000ms` no hover.
 4. **Barras de Telemetria Animadas (`@keyframes aura-bar`):** Barras horizontais com glow neon para Tamanho da Ondulação (`m`), Período (`s`), Energia (`kJ`) e Força do Vento (`km/h`).
 5. **Curva SVG Animada (`@keyframes aura-spark`):** Sparkline contínua com preenchimento em gradiente e ponto luminoso pulsante para representar **Fases da Maré (Enchendo/Vazante)** e trem de ondas.

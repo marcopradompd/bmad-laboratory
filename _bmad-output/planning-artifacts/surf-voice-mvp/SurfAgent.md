@@ -146,8 +146,9 @@ Cada aba de pico deve exibir de forma limpa, leve e visualmente escaneável os s
 | | **Direção do Vento** | Ponto cardeal + graus + classificação em relação ao pico (**Terral**, **Maral** ou **Lateral/Cruzado**). |
 | **3. Maré e Lua** | **Fases da Maré** | Estado atual (**Enchendo** ou **Vazante/Secando**), altura atual (`m`) e horários/alturas das próximas marés (cheia/seca). |
 | | **Fase da Lua** | Fase lunar atual (Nova, Crescente, Cheia, Minguante) com ícone representativo (influência na amplitude da maré). |
-| **4. Tempo e Água** | **Condições do Tempo** | Estado climático atual (Sol, Parcialmente Nublado, Chuva, etc.) + Temperatura do ar (`°C`). |
+| **4. Tempo e Água** | **Condições do Tempo** | Estado climático atual (Sol, Parcialmente Nublado, Chuva, Tempestade com Raios) + Temperatura do ar (`°C`). |
 | | **Temperatura da Água** | Temperatura superficial do mar em graus Celsius (`ex: 24 °C`) + sugestão rápida (ex: *Água quente / Lycra* ou *Wetsuit 2mm*). |
+| **5. Atmosfera Visual** | **Background Reativo ao Clima** | O background do app muda automaticamente conforme o clima do pico ativo: **Ensolarado** (azulado com amarelo sol), **Parcialmente Nublado** (azul suave com nuvens difusas e sol parcial), **Chuvoso** (acinzentado com efeito de chuva) e **Chuva com Raios** (acinzentado escuro com efeito de piscar de raios). |
 
 ---
 
@@ -159,7 +160,8 @@ Cada aba de pico deve exibir de forma limpa, leve e visualmente escaneável os s
 - Diálogo inteligente de recomendação com pergunta opcional sobre nível de surfe.
 - Identificação automática dos 4 picos mais próximos via GPS.
 - Interface baseada em abas persistentes com atualização automática ao abrir o app.
-- Exibição completa de todos os 10 indicadores obrigatórios (tamanho, período, direção do swell, energia, força e direção do vento, fases da maré, fases da lua, condições do tempo e temperatura da água).
+- Exibição completa de todos os 10 indicadores obrigatórios (tamanho, período, direção do swell, energia, força e direção do vento, fases da maré, fases da lua, condições do tempo e temperatura da água) + gráficos interativos com scroll horizontal infinito por toque/mouse.
+- **Background dinâmico reativo ao clima** do pico ativo (Ensolarado, Parcialmente Nublado, Chuvoso e Chuva com Raios).
 
 ### 7.2 Fora do Escopo do MVP (Out-of-Scope)
 - Câmeras ao vivo próprias.
@@ -181,6 +183,11 @@ Cada aba de pico deve exibir de forma limpa, leve e visualmente escaneável os s
 - **RF-06 (Abertura dos 4 Picos em Abas Distintas):** Na recomendação por proximidade, o app deve abrir os 4 picos mais próximos em 4 abas separadas, destacando visualmente o melhor pico.
 - **RF-07 (Persistência e Auto-Atualização de Abas):** As abas abertas devem ficar salvas localmente e atualizar todos os seus indicadores automaticamente toda vez que o usuário abrir o aplicativo.
 - **RF-08 (Painel Completo de Indicadores):** Cada aba deve exibir tamanho da ondulação, período, direção da ondulação, energia, força e direção do vento, fases da maré, fases da lua, condições do tempo e temperatura da água.
+- **RF-09 (Background Dinâmico de Acordo com o Clima):** O background do aplicativo deve reagir automaticamente à condição climática da praia ativa:
+  - **Ensolarado:** Background azulado oceânico combinado com brilho amarelo sol;
+  - **Parcialmente Nublado:** Background condizente mesclando tons azulados suaves, nuvens translúcidas em movimento e luz solar parcial;
+  - **Chuvoso:** Background acinzentado com atmosfera de chuva;
+  - **Chuva com Raios:** Background acinzentado de tempestade com efeito visual de piscar de raios (relâmpagos).
 
 ---
 
@@ -188,7 +195,7 @@ Cada aba de pico deve exibir de forma limpa, leve e visualmente escaneável os s
 
 - **RNF-01 (Leveza e Simplicidade):** O aplicativo deve ser extremamente leve, carregar em menos de 1,5s e funcionar perfeitamente em conexões móveis.
 - **RNF-02 (Baixa Latência de Voz):** Tempo de resposta entre a fala do usuário e o retorno do Agente inferior a 3 segundos.
-- **RNF-03 (Usabilidade Hands-Free e Visual Claro):** Tanto a resposta por voz quanto os cartões visuais das abas devem ser compreendidos em poucos segundos, com alto contraste para leitura sob luz do sol.
+- **RNF-03 (Usabilidade Hands-Free e Visual Claro):** Tanto a resposta por voz quanto os cartões visuais das abas devem ser compreendidos em poucos segundos, com alto contraste sobre qualquer variação de background climático.
 
 ---
 
@@ -222,4 +229,13 @@ Cada aba de pico deve exibir de forma limpa, leve e visualmente escaneável os s
 **Critérios de Aceite:**
 - As abas permanecem salvas ao fechar e reabrir o app.
 - Ao abrir o app, todas as abas salvas atualizam seus dados automaticamente.
+
+### US-05: Percepção visual imediata do clima pelo Background
+> **Como** surfista, **quero** que o background do aplicativo mude de acordo com o clima da praia selecionada **para** sentir instantaneamente se o pico está ensolarado, parcialmente nublado, chuvoso ou com tempestade de raios.
+
+**Critérios de Aceite:**
+- **Ensolarado:** Exibe background azulado junto com brilho amarelo sol.
+- **Parcialmente Nublado:** Exibe transição equilibrada entre céu azulado, nuvens suaves e brilho solar difuso.
+- **Chuvoso:** Exibe background acinzentado com efeito sutil de chuva.
+- **Chuva com Raios:** Exibe background acinzentado escuro com efeito de piscar de raios.
 

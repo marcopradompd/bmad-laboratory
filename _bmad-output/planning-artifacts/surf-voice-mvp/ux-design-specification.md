@@ -96,9 +96,24 @@ O **SurfAgent** foi projetado sob o princípio **"Pergunte falando, decida olhan
 
 ---
 
-## 5. Diretrizes Visuais e de Áudio
+## 5. Diretrizes Visuais (DsySA), Background Reativo ao Clima e Áudio
 
-- **Paleta Oceânica de Alto Contraste:** Azul profundo (`#0A2540`), Turquesa vibrante (`#00B4D8`), Verde Terral/Melhor Pico (`#10B981`) e fundo claro limpo (`#F4F8FB`) para leitura fácil sob sol forte na praia.
-- **Voz do Agente (TTS):** Respostas curtas (máximo de 2 frases), diretas e naturais, usando vocabulário real de surfista (*terral, maré enchendo, série, energia*).
-- **Microinterações:** Indicador visual de pulso quando o Agente está ouvindo ou falando, e transição instantânea entre abas.
+### 5.1 Sistema de Background Dinâmico de Acordo com o Clima (`DsySA Weather Aura`)
+O background do **SurfAgent** é uma superfície viva que muda automaticamente de acordo com as condições meteorológicas da praia selecionada na aba ativa, comunicando o clima de forma sensorial antes mesmo de o usuário ler os números:
+
+| Condição Climática | Comportamento Visual do Background (`DsySA`) | Paleta & Efeitos Atmosféricos |
+| :--- | :--- | :--- |
+| **☀️ Ensolarado (`sunny`)** | Background **azulado oceânico luminoso** combinado com **brilho amarelo sol** irradiando no topo direito/central. | Gradiente azul celeste/oceano (`#041E42` → `#0284C7`) + Orbe solar amarelo/dourado (`#FACC15` / `#F59E0B`) com pulso suave (`@keyframes dsysa-sun-pulse`). |
+| **⛅ Parcialmente Nublado (`partly_cloudy`)** | Background condizente que equilibra **tons azulados suaves**, **feixe solar amarelo difuso** e **camadas de nuvens translúcidas** flutuando lentamente. | Azul-ardósia suave (`#0B2545` → `#334155`) + halo solar ameno (`rgba(250, 204, 21, 0.22)`) + camadas nebulosas (`@keyframes dsysa-cloud-drift`). |
+| **🌧️ Chuvoso (`rainy`)** | Background **acinzentado atmosférico** com véu de chuva diagonal contínuo e suave. | Cinza-chumbo / ardósia (`#1E293B` → `#334155` → `#0F172A`) + feixes diagonais de chuva (`@keyframes dsysa-rain-fall`). |
+| **⛈️ Chuva com Raios (`thunderstorm`)** | Background **acinzentado escuro de tempestade** com chuva intensa e **efeito de piscar de raios (clarões elétricos / relâmpagos)** no céu. | Cinza-tempestade profundo (`#090D16` → `#1E293B`) + chuva + **animação de clarão e raio (`@keyframes dsysa-lightning-flash`)** iluminando momentaneamente o céu. |
+
+### 5.2 Gráficos Costeiros com Scroll Horizontal Infinito por Toque (Mobile-First)
+- **Gráfico de Altura, Período e Direção Primária das Ondas:** 4 sub-abas (`Altura total`, `Vagas`, `Swell A`, `Swell B`), barras coloridas pelo período primário (`2s` a `21+s`), eixo Y duplo em metros e setas de direção primária.
+- **Gráfico de Vento de Superfície Médio:** Seletor `COSTEIRO` | `MARÍTIMO`, conversão dinâmica entre `Nós (KT)`, `Km/H`, `M/S` e `MPH`, barras empilhadas (`Vento` amarelo + `Rajadas` laranja) e setas coloridas (`fraco`, `terral`, `cruzado`, `maral`).
+- **Scroll Horizontal Infinito por Toque (Dedo):** Ambos os gráficos e a barra de abas permitem arrastar com o dedo em celulares (`touch-action: pan-x`), carregando mais dias até o limite da previsão e exibindo ***"Neste momento só temos previsão até sexta 27/11"***.
+
+### 5.3 Voz do Agente (TTS) e Microinterações
+- **Voz do Agente (TTS):** Respostas curtas, diretas e naturais, usando vocabulário real de surfista (*terral, maré enchendo, série, energia*).
+- **Microinterações (`DsySA`):** Botão de voz *Laser-Edge Glow*, indicador de pulso durante escuta/fala e transição suave de `700ms` no background climático ao alternar entre abas de picos.
 

@@ -215,6 +215,28 @@
 
             <!-- PERSISTENT SURF SPOT TABS BAR (Com suporte a Touch/Finger Drag) -->
             <div id="tabsBar" class="dsysa-touch-scroll flex items-center gap-2 overflow-x-auto pt-1 pb-0.5"></div>
+
+            <!-- BARRA INTERATIVA DE BACKGROUND REATIVO AO CLIMA (DsySA Weather Aura) -->
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/10 text-[11px]">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">Background Reativo ao Clima:</span>
+                <span id="activeWeatherBgLabel" class="font-semibold text-amber-300">☀️ Ensolarado (BG Azulado + Amarelo Sol)</span>
+              </div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button type="button" data-weather-btn="sunny" onclick="window.setDsySAWeatherBackground('sunny')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
+                  ☀️ Ensolarado
+                </button>
+                <button type="button" data-weather-btn="partly_cloudy" onclick="window.setDsySAWeatherBackground('partly_cloudy')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
+                  ⛅ Parcialmente Nublado
+                </button>
+                <button type="button" data-weather-btn="rainy" onclick="window.setDsySAWeatherBackground('rainy')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
+                  🌧️ Chuvoso
+                </button>
+                <button type="button" data-weather-btn="thunderstorm" onclick="window.setDsySAWeatherBackground('thunderstorm')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
+                  ⛈️ Chuva com Raios
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Voice Transcript Banner -->
@@ -256,8 +278,14 @@
               <!-- DsySA Wave Height, Primary Period & Direction Matrix (Reconstruído no padrão DsySA) -->
               <div id="dsysaWavePeriodChartRoot" class="w-full"></div>
 
+              <!-- DsySA Wave Energy Forecast Matrix (Energia total / Vagas / Swell A / Swell B em kJ & Joules) -->
+              <div id="dsysaWaveEnergyChartRoot" class="w-full"></div>
+
               <!-- DsySA Surface Wind & Gusts Forecast Matrix (Costeiro/Marítimo + KT/KmH/MS/MPH + Cores das Setas) -->
               <div id="dsysaWindChartRoot" class="w-full"></div>
+
+              <!-- DsySA Tide Height & Astronomy Matrix (Porto, Horas dos Astros, Curva Senoidal Enchendo/Vazante, Preamar/Baixamar, Mini-Mapa e GRÁFICOS/TABELAS/MÊS) -->
+              <div id="dsysaTideChartRoot" class="w-full"></div>
 
               <!-- ALL 10 MANDATORY SURF METRICS (Organized in 4 Semantic Telemetry Cards) -->
               <div class="grid gap-3 sm:grid-cols-2" id="tenMetricsGrid">
@@ -1016,7 +1044,7 @@
         windRelation: 'Terral Liso',
         tidePhase: 'Enchendo (0.9m → 1.8m às 15:10)',
         moonPhase: '🌕 Lua Cheia (Maré Viva)',
-        weather: '☀️ Sol entre nuvens (28 °C)',
+        weather: '☀️ Ensolarado (29 °C)',
         waterTemp: '26 °C (Boardshort / Lycra)',
         hourlyEnergy: [390, 450, 540, 640, 600, 510, 430, 360],
         peakHourIndex: 3,
@@ -1042,7 +1070,7 @@
         windRelation: 'Terral Fraco',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:05)',
         moonPhase: '🌕 Lua Cheia',
-        weather: '☀️ Ensolarado (29 °C)',
+        weather: '⛅ Parcialmente nublado (27 °C)',
         waterTemp: '26 °C (Lycra)',
         hourlyEnergy: [260, 310, 350, 380, 360, 320, 290, 250],
         peakHourIndex: 3,
@@ -1068,7 +1096,7 @@
         windRelation: 'Terral Fraco',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:12)',
         moonPhase: '🌕 Lua Cheia',
-        weather: '☀️ Sol (28 °C)',
+        weather: '🌧️ Chuvoso (25 °C)',
         waterTemp: '26 °C (Água Quente)',
         hourlyEnergy: [140, 165, 180, 195, 185, 170, 150, 130],
         peakHourIndex: 3,
@@ -1094,7 +1122,7 @@
         windRelation: 'Lateral / Maral',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:00)',
         moonPhase: '🌕 Lua Cheia',
-        weather: '⛅ Parcialmente nublado (27 °C)',
+        weather: '⛈️ Chuva com raios (24 °C)',
         waterTemp: '25 °C (Confortável)',
         hourlyEnergy: [190, 210, 225, 240, 230, 215, 200, 180],
         peakHourIndex: 3,
@@ -1409,6 +1437,11 @@
       const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
       if (!spot) return;
 
+      // Atualiza automaticamente o Background Reativo ao Clima do Pico Ativo (Ensolarado | Parcialmente Nublado | Chuvoso | Chuva com Raios)
+      if (window.setDsySAWeatherBackground) {
+        window.setDsySAWeatherBackground(spot.weather);
+      }
+
       document.getElementById('spotTitle').textContent = spot.name;
       document.getElementById('spotRegion').textContent = `${spot.region} · Curva horária de Energia da Ondulação (kJ)`;
       document.getElementById('spotScorePill').textContent = `Score ${spot.displayScore || 92}/100`;
@@ -1516,9 +1549,21 @@
         spot
       );
 
+      // Atualiza o Componente DsySA de Previsão de Energia das Ondas (kJ / Joules)
+      window.renderDsySAWaveEnergyChart(
+        document.getElementById('dsysaWaveEnergyChartRoot'),
+        spot
+      );
+
       // Atualiza o Gráfico DsySA de Vento de Superfície Médio, Rajadas e Direção Média
       window.renderDsySAWindChart(
         document.getElementById('dsysaWindChartRoot'),
+        spot
+      );
+
+      // Atualiza o Componente DsySA de Tábua de Marés e Horas dos Astros
+      window.renderDsySATideChart(
+        document.getElementById('dsysaTideChartRoot'),
         spot
       );
 

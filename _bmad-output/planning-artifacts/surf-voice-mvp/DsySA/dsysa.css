@@ -905,3 +905,395 @@
 .dsysa-wind-arrow-key.terral { background: #16a34a; }
 .dsysa-wind-arrow-key.cruzado { background: #ea580c; }
 .dsysa-wind-arrow-key.maral { background: #991b1b; }
+
+/* ==========================================================================
+   7. DSYSA WEATHER-REACTIVE AMBIENT BACKGROUND ENGINE
+   (Ensolarado | Parcialmente Nublado | Chuvoso | Chuva com Raios)
+   ========================================================================== */
+@keyframes dsysa-sun-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.92; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes dsysa-cloud-drift {
+  0% { transform: translateX(-6%); }
+  50% { transform: translateX(6%); }
+  100% { transform: translateX(-6%); }
+}
+
+@keyframes dsysa-rain-fall {
+  0% { background-position: 0 0; }
+  100% { background-position: -90px 420px; }
+}
+
+@keyframes dsysa-lightning-flash {
+  0%, 84%, 88%, 92%, 100% { opacity: 0; }
+  85% { opacity: 0.55; }
+  86% { opacity: 0.12; }
+  89% { opacity: 0.85; }
+  90% { opacity: 0; }
+}
+
+@keyframes dsysa-bolt-strike {
+  0%, 84%, 91%, 100% { opacity: 0; transform: scaleY(0.95); }
+  85%, 89% { opacity: 1; transform: scaleY(1); }
+  87% { opacity: 0.2; }
+}
+
+.dsysa-weather-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: background 0.8s ease;
+}
+
+/* 7.1 ENSOLARADO (Sunny: Azulado Oceânico + Amarelo Sol Radiante) */
+.dsysa-weather-stage.weather-sunny {
+  background: linear-gradient(180deg, #031B38 0%, #073B6B 45%, #020813 100%);
+}
+.dsysa-weather-stage .dsysa-sun-orb {
+  position: absolute;
+  top: -70px;
+  right: 8%;
+  width: 440px;
+  height: 440px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(254, 240, 138, 0.95) 0%,
+    rgba(250, 204, 21, 0.72) 22%,
+    rgba(245, 158, 11, 0.28) 48%,
+    rgba(56, 189, 248, 0) 72%
+  );
+  filter: blur(8px);
+  opacity: 0;
+  transition: all 0.8s ease;
+}
+.dsysa-weather-stage .dsysa-sun-core {
+  position: absolute;
+  top: 48px;
+  right: calc(8% + 140px);
+  width: 110px;
+  height: 110px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fef9c3 0%, #facc15 65%, #f59e0b 100%);
+  box-shadow: 0 0 80px 30px rgba(250, 204, 21, 0.55), 0 0 160px 60px rgba(56, 189, 248, 0.35);
+  opacity: 0;
+  transition: all 0.8s ease;
+}
+.dsysa-weather-stage.weather-sunny .dsysa-sun-orb,
+.dsysa-weather-stage.weather-sunny .dsysa-sun-core {
+  opacity: 1;
+  animation: dsysa-sun-pulse 6s ease-in-out infinite;
+}
+
+/* 7.2 PARCIALMENTE NUBLADO (Partly Cloudy: Azulado Suave + Sol Difuso + Nuvens Translúcidas) */
+.dsysa-weather-stage.weather-partly_cloudy {
+  background: linear-gradient(180deg, #0B2545 0%, #1E3A5F 48%, #0B1120 100%);
+}
+.dsysa-weather-stage.weather-partly_cloudy .dsysa-sun-orb {
+  opacity: 0.62;
+  top: -40px;
+  right: 12%;
+  filter: blur(18px);
+}
+.dsysa-weather-stage.weather-partly_cloudy .dsysa-sun-core {
+  opacity: 0.75;
+  top: 62px;
+  right: calc(12% + 130px);
+  width: 86px;
+  height: 86px;
+  filter: blur(2px);
+}
+.dsysa-weather-stage .dsysa-clouds-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.dsysa-weather-stage .dsysa-cloud-blob {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(203, 213, 225, 0.32), rgba(148, 163, 184, 0.12), transparent);
+  filter: blur(16px);
+}
+.dsysa-weather-stage.weather-partly_cloudy .dsysa-clouds-layer {
+  opacity: 1;
+  animation: dsysa-cloud-drift 18s ease-in-out infinite;
+}
+
+/* 7.3 CHUVOSO (Rainy: Background Acinzentado + Véu de Chuva Diagonal) */
+.dsysa-weather-stage.weather-rainy {
+  background: linear-gradient(180deg, #273244 0%, #334155 45%, #111827 100%);
+}
+.dsysa-weather-stage.weather-rainy .dsysa-clouds-layer {
+  opacity: 0.9;
+  animation: dsysa-cloud-drift 22s ease-in-out infinite;
+}
+.dsysa-weather-stage .dsysa-rain-layer {
+  position: absolute;
+  inset: -40px;
+  opacity: 0;
+  background-image: repeating-linear-gradient(
+    108deg,
+    transparent 0px,
+    transparent 18px,
+    rgba(203, 213, 225, 0.22) 19px,
+    transparent 20px,
+    transparent 46px
+  );
+  background-size: 180px 420px;
+  transition: opacity 0.6s ease;
+}
+.dsysa-weather-stage.weather-rainy .dsysa-rain-layer {
+  opacity: 0.85;
+  animation: dsysa-rain-fall 0.85s linear infinite;
+}
+
+/* 7.4 CHUVA COM RAIOS (Thunderstorm: Acinzentado Escuro + Efeito de Piscar de Raios) */
+.dsysa-weather-stage.weather-thunderstorm {
+  background: linear-gradient(180deg, #111827 0%, #1E293B 45%, #090D16 100%);
+}
+.dsysa-weather-stage.weather-thunderstorm .dsysa-clouds-layer {
+  opacity: 1;
+}
+.dsysa-weather-stage.weather-thunderstorm .dsysa-rain-layer {
+  opacity: 1;
+  animation: dsysa-rain-fall 0.65s linear infinite;
+}
+.dsysa-weather-stage .dsysa-lightning-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at 65% 18%, rgba(224, 242, 254, 0.85), rgba(148, 163, 184, 0.35) 55%, rgba(15, 23, 42, 0.1) 100%);
+  mix-blend-mode: screen;
+}
+.dsysa-weather-stage .dsysa-lightning-svg {
+  position: absolute;
+  top: 0;
+  right: 18%;
+  width: 220px;
+  height: 360px;
+  opacity: 0;
+  filter: drop-shadow(0 0 18px #7dd3fc) drop-shadow(0 0 35px #e0f2fe);
+}
+.dsysa-weather-stage.weather-thunderstorm .dsysa-lightning-overlay {
+  animation: dsysa-lightning-flash 4.8s infinite;
+}
+.dsysa-weather-stage.weather-thunderstorm .dsysa-lightning-svg {
+  animation: dsysa-bolt-strike 4.8s infinite;
+}
+
+/* ==========================================================================
+   8. DSYSA WAVE ENERGY FORECAST CHART ("ENERGIA DAS ONDAS")
+   (Energia total | Vagas | Swell A | Swell B + Escala kJ / Joules + Scroll Infinito)
+   ========================================================================== */
+.dsysa-energy-bar {
+  width: 86%;
+  border-radius: 3px 3px 0 0;
+  position: relative;
+  z-index: 2;
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, filter 0.2s ease;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.dsysa-wave-slot-col:hover .dsysa-energy-bar {
+  filter: brightness(1.2);
+}
+.dsysa-energy-val-tag {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 2px;
+  letter-spacing: -0.02em;
+  opacity: 0.85;
+  z-index: 3;
+}
+.dsysa-energy-scale-bar {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  max-width: 680px;
+  margin: 0 auto;
+}
+.dsysa-energy-cell {
+  padding: 4px 2px;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-align: center;
+  color: #020617;
+  user-select: none;
+  transition: transform 0.15s ease;
+  line-height: 1.15;
+}
+.dsysa-energy-cell.light-text {
+  color: #f8fafc;
+}
+.dsysa-energy-cell span {
+  display: block;
+  font-size: 8px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   9. DSYSA TIDE TABLE & ASTRONOMY CHART ("ALTURA DA MARÉ")
+   (Porto de Referência, Horas dos Astros, Curva Senoidal Bicolor, Badges de
+    Preamar/Baixamar, Mini-Mapa Multi-Dias e Seletores GRÁFICOS | TABELAS | MÊS)
+   ========================================================================== */
+.dsysa-tide-harbor-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px 8px;
+  background: rgba(2, 6, 23, 0.78);
+}
+.dsysa-tide-harbor-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--dsysa-font-oswald);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #38bdf8;
+  text-transform: lowercase;
+}
+.dsysa-tide-matrix-wrap {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: stretch;
+  background: #05080F;
+  position: relative;
+}
+.dsysa-tide-yaxis {
+  display: flex;
+  flex-direction: column;
+  background: rgba(2, 6, 23, 0.94);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  user-select: none;
+  z-index: 5;
+}
+.dsysa-tide-astro-label {
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.dsysa-tide-astro-label span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.15;
+}
+.dsysa-tide-meters-ticks {
+  height: 138px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 6px 4px;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+.dsysa-tide-day-col {
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  user-select: none;
+}
+.dsysa-tide-badge-high {
+  background: #00e5ff;
+  color: #020617;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+  white-space: nowrap;
+}
+.dsysa-tide-badge-low {
+  background: #0284c7;
+  color: #f8fafc;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.35);
+  white-space: nowrap;
+}
+.dsysa-tide-now-callout {
+  background: #be123c;
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+/* Mini-Map Overview Strip (ONTEM | TER 17 | QUA 18 | QUI 19 | SEX 20 | SAB 21 | DOM 22 | SEG 23) */
+.dsysa-tide-ministrip-wrap {
+  margin: 10px 14px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #05080F;
+}
+
+/* Bottom View Mode Switcher: GRÁFICOS | TABELAS | MÊS */
+.dsysa-tide-mode-bar {
+  display: flex;
+  justify-content: center;
+  padding: 10px 14px 12px;
+  background: rgba(2, 6, 23, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.dsysa-tide-mode-group {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.9);
+}
+.dsysa-tide-mode-btn {
+  padding: 8px 20px;
+  font-family: var(--dsysa-font-oswald);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dsysa-tide-mode-btn:last-child {
+  border-right: none;
+}
+.dsysa-tide-mode-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+.dsysa-tide-mode-btn.active {
+  color: #020617;
+  background: #f8fafc;
+}
