@@ -34,7 +34,7 @@ export default async function handler(request) {
   const lat = parseFloat(searchParams.get('lat') || '-12.95');
   const lon = parseFloat(searchParams.get('lon') || '-38.35');
   const timezone = searchParams.get('timezone') || 'America/Sao_Paulo';
-  const forecastDays = parseInt(searchParams.get('forecast_days') || '7', 10);
+  const forecastDays = parseInt(searchParams.get('forecast_days') || '14', 10);
 
   // Chave de cache normalizada (arredonda lat/lon para 2 casas decimais = raio de ~1km no mar)
   const cacheKey = `${lat.toFixed(2)}:${lon.toFixed(2)}:${timezone}:${forecastDays}`;

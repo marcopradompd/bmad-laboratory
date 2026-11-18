@@ -2,8 +2,29 @@
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
-  <title>DsySA — Design System SurfAgent & Console Interativo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SurfAgent — Sua consulta de praias mais prática e por voz</title>
+  <meta name="description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://marcoprado.com.br/surfagent/">
+  <meta property="og:site_name" content="SurfAgent">
+  <meta property="og:title" content="SurfAgent — Sua consulta de praias mais prática e por voz">
+  <meta property="og:description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta property="og:image" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
+  <meta property="og:image:secure_url" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SurfAgent — Sua consulta de praias mais prática e por voz">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://marcoprado.com.br/surfagent/">
+  <meta name="twitter:title" content="SurfAgent — Sua consulta de praias mais prática e por voz">
+  <meta name="twitter:description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta name="twitter:image" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -121,7 +142,7 @@
               </span>
             </button>
 
-            <button onclick="triggerBestSpotFlow()" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all">
+            <button onclick="triggerBestSpotFlow()" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all w-full sm:w-auto text-center">
               🗣️ "QUAL O MELHOR PICO HOJE?"
             </button>
           </div>
@@ -177,30 +198,9 @@
         <div class="sm:px-4 bg-gradient-to-br from-blue-500/10 to-black/40 max-w-5xl rounded-3xl mx-auto py-4 px-2 relative shadow-[0_24px_80px_rgba(0,0,0,0.8)] backdrop-blur space-y-4"
              style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.02)); --border-radius-before: 24px;">
 
-          <!-- Window Header + Persistent Spot Tabs -->
-          <div class="flex flex-col gap-3 bg-slate-900/85 rounded-2xl px-4 py-3 border border-white/5">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <div class="flex items-center space-x-2">
-                <span class="h-2.5 w-2.5 rounded-full bg-rose-400/80"></span>
-                <span class="h-2.5 w-2.5 rounded-full bg-amber-300/80"></span>
-                <span class="h-2.5 w-2.5 rounded-full bg-sky-400/80"></span>
-                <span class="ml-3 text-[11px] font-medium tracking-tight text-slate-200">
-                  SurfAgent Multimodal Console · Abas Persistentes Auto-Atualizáveis
-                </span>
-              </div>
-              <div class="flex items-center gap-2 text-[11px] text-slate-400">
-                <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-800/90 px-3 py-1 text-[10px] font-medium text-slate-100 border border-white/5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-sky-400"></span>
-                  Live Voice + Telemetry
-                </span>
-              </div>
-            </div>
-
-            <!-- PERSISTENT SURF SPOT TABS BAR (Com suporte a Touch/Finger Drag) -->
-            <div id="tabsBar" class="dsysa-touch-scroll flex items-center gap-2 overflow-x-auto pt-1 pb-0.5"></div>
-
-            <!-- BARRA INTERATIVA DE BACKGROUND REATIVO AO CLIMA (DsySA Weather Aura) -->
-            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/10 text-[11px]">
+          <!-- Card: Background Reativo ao Clima (DsySA Weather Aura) -->
+          <div class="bg-slate-900/85 rounded-2xl px-4 py-3 border border-white/5">
+            <div class="flex items-center justify-between flex-wrap gap-2 text-[11px]">
               <div class="flex items-center gap-2">
                 <span class="text-slate-400">Background Reativo ao Clima:</span>
                 <span id="activeWeatherBgLabel" class="font-semibold text-amber-300">☀️ Ensolarado (BG Azulado + Amarelo Sol)</span>
@@ -222,13 +222,32 @@
             </div>
           </div>
 
-          <!-- Voice Transcript Banner -->
-          <div class="flex items-center gap-3 rounded-xl bg-black/50 border border-white/10 px-4 py-2.5 shadow-inner">
-            <div class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></div>
-            <div class="flex-1 font-mono text-xs text-sky-300 truncate" id="voiceTranscriptBar">
-              <span class="opacity-60">SurfAgent Voz:</span> "Itacimirim é o melhor pico agora com 1.7m, 13s de período, 640 kJ de energia e vento terral liso."
+          <!-- Window Header + Persistent Spot Tabs -->
+          <div class="flex flex-col gap-3 bg-slate-900/85 rounded-2xl px-4 py-3 border border-white/5">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-400/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-300/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-sky-400/80"></span>
+                <span class="ml-3 text-[11px] font-medium tracking-tight text-slate-200">
+                  Aqui estão os 4 picos mais próximos ou mais pesquisados por você.
+                </span>
+              </div>
             </div>
-            <span id="activeFilterBadge" class="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+
+            <!-- PERSISTENT SURF SPOT TABS BAR (Com suporte a Touch/Finger Drag) -->
+            <div id="tabsBar" class="dsysa-touch-scroll flex items-center gap-2 overflow-x-auto pt-1 pb-0.5"></div>
+          </div>
+
+          <!-- Voice Transcript Banner -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 rounded-xl bg-black/50 border border-white/10 px-4 py-2.5 shadow-inner">
+            <div class="flex items-center gap-2.5 flex-1 min-w-0">
+              <div class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></div>
+              <div class="font-mono text-xs text-sky-300 truncate" id="voiceTranscriptBar">
+                <span class="opacity-60">SurfAgent Voz:</span> "Itacimirim é o melhor pico agora com 1.7m, 13s de período, 640 kJ de energia e vento terral liso."
+              </div>
+            </div>
+            <span id="activeFilterBadge" class="self-start sm:self-auto px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
               Onda Boa, Bem Formada e Forte
             </span>
           </div>
@@ -359,13 +378,13 @@
                 </div>
 
                 <!-- Voice / Text Input Pill -->
-                <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5">
+                <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5 min-w-0">
                   <i data-lucide="sparkles" class="mr-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
                   <input id="consoleQueryInput"
                          onkeydown="if(event.key==='Enter') handleConsoleInput()"
-                         class="flex-1 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
+                         class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
                          placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
-                  <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950">
+                  <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
                     <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
                   </button>
                 </div>
@@ -381,6 +400,9 @@
 
   <!-- Open-Meteo Surf & Marine Ingestion Service -->
   <script src="./open-meteo-service.js"></script>
+
+  <!-- DsySA Compass Service (Mobile Sensors & Real-time Live Compass) -->
+  <script src="./compass-service.js"></script>
 
   <!-- DsySA Core JS -->
   <script src="./dsysa.js"></script>
@@ -821,9 +843,9 @@
           lat: spot.lat,
           lon: spot.lon,
           timezone: 'America/Sao_Paulo',
-          forecastDays: 7
+          forecastDays: 14
         });
-        console.log(`✅ [Open-Meteo] Previsão de 7 dias recebida com sucesso para ${spot.name}! (${data.timeline.length} horas normalizadas)`);
+        console.log(`✅ [Open-Meteo] Previsão de 14 dias recebida com sucesso para ${spot.name}! (${data.timeline.length} horas normalizadas)`);
         spotForecastCache.set(spot.id, data);
         spot.forecastData = data;
         updateSpotMetricsFromForecast(spot);
@@ -836,7 +858,11 @@
     function updateSpotMetricsFromForecast(spot) {
       if (!spot.forecastData || !spot.forecastData.timeline || spot.forecastData.timeline.length === 0) return;
       const timeline = spot.forecastData.timeline;
-      const nowIdx = Math.min(timeline.length - 1, new Date().getHours());
+      
+      const todayIso = new Date().toLocaleDateString('en-CA');
+      const currentHourInt = new Date().getHours();
+      let nowIdx = timeline.findIndex(p => p.timestamp.startsWith(todayIso) && parseInt(p.timestamp.slice(11, 13), 10) === currentHourInt);
+      if (nowIdx < 0) nowIdx = 0;
       const now = timeline[nowIdx] || timeline[0];
 
       if (now.swell) {
@@ -866,14 +892,25 @@
         spot.waterTemp = `${temp} °C (${temp >= 24 ? 'Boardshort' : 'Wetsuit'})`;
       }
 
+      const spotNameLower = (spot.name || '').toLowerCase();
+      let harborName = 'Porto de Salvador';
+      if (spotNameLower.includes('maresias') || spotNameLower.includes('sebasti')) {
+        harborName = 'Porto de São Sebastião';
+      } else if (spotNameLower.includes('arpoador') || spotNameLower.includes('rio')) {
+        harborName = 'Porto do Rio de Janeiro';
+      } else if (spotNameLower.includes('itamambuca') || spotNameLower.includes('ubatuba')) {
+        harborName = 'Porto de Ubatuba';
+      }
+
       const nextExtrema = timeline.slice(nowIdx).find(p => p.tide && p.tide.type);
       if (nextExtrema) {
         const extType = nextExtrema.tide.type === 'HIGH' ? 'Preia-mar' : 'Baixa-mar';
-        const extH = +(nextExtrema.tide.heightM + 1.2).toFixed(1);
-        const extTime = nextExtrema.timestamp.slice(11, 16);
-        const curH = +(now.tide.heightM + 1.2).toFixed(1);
+        const extH = nextExtrema.tide.peakNauticalHeightM || +(nextExtrema.tide.heightM + 1.25).toFixed(1);
+        const extTime = nextExtrema.tide.exactTime || (nextExtrema.timestamp.slice(11, 16) + 'h');
+        const curH = now.tide?.nauticalHeightM || +(now.tide?.heightM + 1.25).toFixed(1);
         const isRising = nextExtrema.tide.type === 'HIGH';
-        spot.tidePhase = `${isRising ? 'Enchendo' : 'Vazante'} (${curH}m → ${extH}m às ${extTime}h)`;
+        spot.tidePhase = `${isRising ? 'Enchendo' : 'Vazante'} (${curH}m → ${extH}m)`;
+        spot.tideSub = `Próxima ${extType} às ${extTime} · ${harborName}`;
       }
     }
 
@@ -937,8 +974,8 @@
             <span class="dsysa-telemetry-card-cat">3. FASES DA MARÉ & LUA</span>
             <span class="dsysa-telemetry-card-badge">${moonShort}</span>
           </div>
-          <p class="dsysa-telemetry-card-value">${tideShort}</p>
-          <p class="dsysa-telemetry-card-sub">Maré Viva · Preamar (Porto de Salvador)</p>
+          <p class="dsysa-telemetry-card-value">${spot.tidePhase || tideShort}</p>
+          <p class="dsysa-telemetry-card-sub">${spot.tideSub || 'Maré Viva · Porto de Salvador'}</p>
         </div>
 
         <!-- 4. TEMPO & TEMP. DA ÁGUA -->

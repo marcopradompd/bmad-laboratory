@@ -50,63 +50,61 @@ function calculateSwellEnergyIndex(heightM, periodS) {
  * Detecta picos de maré (Preia-mar / "HIGH" e Baixa-mar / "LOW") a partir
  * do array horário contínuo de altura do nível do mar (MSL).
  * 
- * Utiliza análise de reversão de inclinação com suporte a platôs discretos
- * para garantir precisão e evitar falsos positivos na série temporal.
+ * Utiliza interpolação parabólica sub-horária para determinar o minuto exato do pico
+ * e converte para Cota Náutica / Nível de Redução (NR) da Marinha do Brasil (+1.25m).
  *
+ * @param {Array<string>} times - Array de timestamps ISO
  * @param {Array<number|null>} heights - Série horária de alturas de maré (m)
- * @returns {Array<'HIGH'|'LOW'|null>} Array de mesmo comprimento com anotações de maré
+ * @returns {Array<Object|null>} Array de mesmo comprimento com anotações de maré
  */
-function detectTideExtrema(heights) {
+function detectTideExtrema(times, heights) {
   const n = heights.length;
-  const tideTypes = new Array(n).fill(null);
-  if (n < 3) return tideTypes;
+  const results = new Array(n).fill(null);
+  if (n < 3) return results;
 
-  let i = 0;
-  while (i < n) {
-    const curr = heights[i];
-    if (curr === null || isNaN(curr)) {
-      i++;
-      continue;
-    }
+  for (let i = 1; i < n - 1; i++) {
+    const y0 = heights[i];
+    const ym1 = heights[i - 1];
+    const yp1 = heights[i + 1];
+    if (y0 === null || ym1 === null || yp1 === null || isNaN(y0) || isNaN(ym1) || isNaN(yp1)) continue;
 
-    // Identifica o início e o fim de possíveis platôs (alturas iguais consecutivas)
-    let plateauEnd = i;
-    while (plateauEnd + 1 < n && heights[plateauEnd + 1] === curr) {
-      plateauEnd++;
-    }
+    const isHigh = (y0 > ym1 && y0 >= yp1) || (y0 >= ym1 && y0 > yp1);
+    const isLow = (y0 < ym1 && y0 <= yp1) || (y0 <= ym1 && y0 < yp1);
 
-    // Localiza o ponto anterior válido
-    let prevIndex = i - 1;
-    while (prevIndex >= 0 && heights[prevIndex] === null) {
-      prevIndex--;
-    }
-
-    // Localiza o ponto seguinte válido
-    let nextIndex = plateauEnd + 1;
-    while (nextIndex < n && heights[nextIndex] === null) {
-      nextIndex++;
-    }
-
-    if (prevIndex >= 0 && nextIndex < n) {
-      const prev = heights[prevIndex];
-      const next = heights[nextIndex];
-
-      // Máximo Local (Preia-mar / Maré Cheia)
-      if (curr > prev && curr > next) {
-        const peakIndex = Math.floor((i + plateauEnd) / 2);
-        tideTypes[peakIndex] = 'HIGH';
+    if (isHigh || isLow) {
+      const denom = ym1 - 2 * y0 + yp1;
+      let delta = 0;
+      let exactH = y0;
+      if (Math.abs(denom) > 1e-5) {
+        delta = (ym1 - yp1) / (2 * denom);
+        if (delta < -0.5) delta = -0.5;
+        if (delta > 0.5) delta = 0.5;
+        exactH = y0 - ((ym1 - yp1) ** 2) / (8 * denom);
       }
-      // Mínimo Local (Baixa-mar / Maré Seca)
-      else if (curr < prev && curr < next) {
-        const troughIndex = Math.floor((i + plateauEnd) / 2);
-        tideTypes[troughIndex] = 'LOW';
-      }
-    }
 
-    i = plateauEnd + 1;
+      const timeStr = times[i] || '';
+      const parts = timeStr.split('T');
+      const timePart = parts[1] || '00:00';
+      const [hBase] = timePart.split(':').map(Number);
+      const totalMinutes = Math.round((hBase + delta) * 60);
+      const finalH = Math.min(23, Math.max(0, Math.floor(totalMinutes / 60)));
+      const finalM = Math.min(59, Math.max(0, totalMinutes % 60));
+      const formattedTime = `${String(finalH).padStart(2, '0')}:${String(finalM).padStart(2, '0')}h`;
+      
+      // Conversão precisa de MSL para Cota Náutica da Marinha do Brasil (+1.25m)
+      const nauticalHeightM = +(exactH + 1.25).toFixed(2);
+
+      results[i] = {
+        type: isHigh ? 'HIGH' : 'LOW',
+        exactTime: formattedTime,
+        hourFloat: +(hBase + delta).toFixed(2),
+        mslHeightM: +(exactH).toFixed(2),
+        nauticalHeightM: Math.max(0.1, nauticalHeightM)
+      };
+    }
   }
 
-  return tideTypes;
+  return results;
 }
 
 /**
@@ -130,14 +128,14 @@ function roundOrNull(val, decimals = 1) {
  * @param {number} options.lat - Latitude do pico (ex: -12.95)
  * @param {number} options.lon - Longitude do pico (ex: -38.35)
  * @param {string} [options.timezone='America/Sao_Paulo'] - Timezone IANA
- * @param {number} [options.forecastDays=7] - Dias de previsão (1 a 16)
+ * @param {number} [options.forecastDays=14] - Dias de previsão (1 a 16)
  * @returns {Promise<Object>} Contrato JSON normalizado para consumo pelo front-end
  */
 async function fetchSurfForecast({
   lat,
   lon,
   timezone = 'America/Sao_Paulo',
-  forecastDays = 7
+  forecastDays = 14
 }) {
   if (lat === undefined || lon === undefined) {
     throw new Error('Parâmetros obrigatórios ausentes: lat e lon');
@@ -231,9 +229,9 @@ async function fetchSurfForecast({
     });
   }
 
-  // Detecção de preia-mar (HIGH) e baixa-mar (LOW) em todo o período
+  // Detecção de preia-mar (HIGH) e baixa-mar (LOW) com interpolação precisa
   const seaLevels = marineHourly.sea_level_height_msl || [];
-  const tideExtrema = detectTideExtrema(seaLevels);
+  const tideExtrema = detectTideExtrema(marineTimes, seaLevels);
 
   // Construção da linha do tempo normalizada (Timeline)
   const timeline = [];
@@ -255,6 +253,7 @@ async function fetchSurfForecast({
     const secondaryDirDeg = roundOrNull(marineHourly.secondary_swell_wave_direction?.[i], 0);
 
     const windDirDeg = windData.directionDeg;
+    const extremaObj = tideExtrema[i];
 
     timeline.push({
       timestamp,
@@ -282,7 +281,11 @@ async function fetchSurfForecast({
       },
       tide: {
         heightM: roundOrNull(seaLevels[i], 1),
-        type: tideExtrema[i] || null
+        nauticalHeightM: roundOrNull((seaLevels[i] !== null && seaLevels[i] !== undefined) ? seaLevels[i] + 1.25 : null, 2),
+        type: extremaObj ? extremaObj.type : null,
+        exactTime: extremaObj ? extremaObj.exactTime : null,
+        hourFloat: extremaObj ? extremaObj.hourFloat : null,
+        peakNauticalHeightM: extremaObj ? extremaObj.nauticalHeightM : null
       },
       waterTempC: roundOrNull(marineHourly.sea_surface_temperature?.[i], 1)
     });

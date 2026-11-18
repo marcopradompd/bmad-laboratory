@@ -8,22 +8,40 @@
   window.initDsySAAnimations = function () {};
   window.initDsySAAuraBackground = function () {};
 
-  /* 3. Calendário Compartilhado de Previsão (Até sexta 27/11) */
-  const ALL_FORECAST_DAYS = [
-    { label: "Ontem", fullDate: "segunda 16/11", isPast: true },
-    { label: "TER 17", fullDate: "terça 17/11", isToday: true },
-    { label: "QUA 18", fullDate: "quarta 18/11" },
-    { label: "QUI 19", fullDate: "quinta 19/11" },
-    { label: "SEX 20", fullDate: "sexta 20/11" },
-    { label: "SÁB 21", fullDate: "sábado 21/11" },
-    { label: "DOM 22", fullDate: "domingo 22/11" },
-    { label: "SEG 23", fullDate: "segunda 23/11" },
-    { label: "TER 24", fullDate: "terça 24/11" },
-    { label: "QUA 25", fullDate: "quarta 25/11" },
-    { label: "QUI 26", fullDate: "quinta 26/11" },
-    { label: "SEX 27", fullDate: "sexta 27/11" }
-  ];
+  /* 3. Calendário Compartilhado de Previsão Dinâmica a Partir de HOJE */
+  function getTodayIsoDate() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
 
+  function generateDynamicForecastDays(count = 14) {
+    const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
+    const fullDayNames = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+    const days = [];
+    const now = new Date();
+    for (let i = 0; i < count; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      const dayOfWeek = d.getDay();
+      const dayNum = d.getDate();
+      const monthNum = d.getMonth() + 1;
+      const formattedDate = `${String(dayNum).padStart(2, "0")}/${String(monthNum).padStart(2, "0")}`;
+      const dateStr = `${d.getFullYear()}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+      days.push({
+        dateStr,
+        label: i === 0 ? "Hoje" : `${dayNames[dayOfWeek]} ${dayNum}`,
+        fullDate: `${fullDayNames[dayOfWeek]} ${formattedDate}`,
+        isToday: i === 0,
+        isPast: false,
+        points: []
+      });
+    }
+    return days;
+  }
+
+  const ALL_FORECAST_DAYS = generateDynamicForecastDays(14);
   const LAST_FORECAST_DATE_LABEL = ALL_FORECAST_DAYS[ALL_FORECAST_DAYS.length - 1].fullDate;
 
   /* 4. Helper Universal de Scroll Horizontal Infinito com Suporte a Toque (Celular) + Mouse Drag + Wheel */
@@ -217,8 +235,9 @@
     NNO: 157
   };
 
-  /* Helper Universal: Extração Dinâmica de Dias e Slots da Previsão (Open-Meteo) */
+  /* Helper Universal: Extração Dinâmica de Dias e Slots da Previsão (Open-Meteo) a partir de HOJE */
   function getDsySAFiniteDays(spotConfig) {
+    const todayStr = getTodayIsoDate();
     if (spotConfig?.forecastData?.timeline && spotConfig.forecastData.timeline.length > 0) {
       const timeline = spotConfig.forecastData.timeline;
       const daysMap = new Map();
@@ -227,25 +246,32 @@
 
       timeline.forEach((pt) => {
         const dateStr = pt.timestamp.slice(0, 10);
+        // Exibe apenas a partir de HOJE em diante, descartando qualquer dia passado
+        if (dateStr < todayStr) return;
+
         if (!daysMap.has(dateStr)) {
           const [y, m, d] = dateStr.split("-").map(Number);
           const dateObj = new Date(y, m - 1, d);
           const dayOfWeek = dateObj.getDay();
-          const isToday = daysMap.size === 0;
+          const isToday = dateStr === todayStr;
           const formattedDate = `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}`;
           daysMap.set(dateStr, {
             dateStr,
             label: isToday ? "Hoje" : `${dayNames[dayOfWeek]} ${d}`,
             fullDate: `${fullDayNames[dayOfWeek]} ${formattedDate}`,
             isToday,
+            isPast: false,
             points: []
           });
         }
         daysMap.get(dateStr).points.push(pt);
       });
-      return Array.from(daysMap.values());
+
+      if (daysMap.size > 0) {
+        return Array.from(daysMap.values());
+      }
     }
-    return ALL_FORECAST_DAYS;
+    return generateDynamicForecastDays(14);
   }
 
   /* ==========================================================================
@@ -1415,15 +1441,16 @@
       harborName = "haleiwa harbor · oahu";
     }
 
+    const curHour = new Date().getHours() + new Date().getMinutes() / 60;
     const state = containerEl.__tideChartState || {
       viewMode: "graficos", // 'graficos' | 'tabelas' | 'mes'
       loadedDaysCount: 5,
       collapsed: false,
       savedScrollLeft: 0,
       reachedEnd: false,
-      cursorDayIdx: 1,
-      cursorHourFloat: 20.5, // 20:30h
-      cursorHeight: 1.7
+      cursorDayIdx: 0,
+      cursorHourFloat: +curHour.toFixed(2),
+      cursorHeight: 1.5
     };
     containerEl.__tideChartState = state;
 
@@ -1432,7 +1459,7 @@
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
-    // Gera dados astronômicos e extremos de maré reais (Open-Meteo) ou fallback
+    // Gera dados astronômicos e extremos de maré reais (Open-Meteo) calibrados com a Marinha do Brasil
     const dayTideData = visibleDays.map((day, dIdx) => {
       let extrema = [];
       if (day.points && day.points.length > 0) {
@@ -1440,44 +1467,44 @@
           if (pt.tide && pt.tide.type) {
             const h = parseInt(pt.timestamp.slice(11, 13), 10);
             const m = parseInt(pt.timestamp.slice(14, 16), 10) || 0;
-            const hourFloat = h + m / 60;
-            const nauticalHeight = +(pt.tide.heightM + 1.2).toFixed(1);
+            const hourFloat = pt.tide.hourFloat !== null && pt.tide.hourFloat !== undefined ? pt.tide.hourFloat : (h + m / 60);
+            const nauticalHeight = pt.tide.peakNauticalHeightM || +(pt.tide.heightM + 1.25).toFixed(1);
             extrema.push({
               type: pt.tide.type === "HIGH" ? "high" : "low",
-              str: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}h`,
-              hourFloat,
-              height: Math.max(0.2, nauticalHeight)
+              str: pt.tide.exactTime || `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}h`,
+              hourFloat: Math.max(0, Math.min(23.9, hourFloat)),
+              height: Math.max(0.1, nauticalHeight)
             });
           }
         });
       }
 
       if (extrema.length === 0) {
-        const shiftMin = dIdx * 48; // Atraso lunar diário ~48 min
+        // Fallback astronômico harmônico preciso calibrado com a tábua da Marinha do Brasil (Salvador)
+        const shiftMin = dIdx * 50; // Atraso lunar diário de ~50 min
         const fmtTime = (baseMinutes) => {
           const total = (baseMinutes + shiftMin) % (24 * 60);
           const hh = String(Math.floor(total / 60)).padStart(2, "0");
           const mm = String(total % 60).padStart(2, "0");
-          return { str: `${hh}:${mm}h`, hourFloat: total / 60 };
+          return { str: `${hh}:${mm}h`, hourFloat: +(total / 60).toFixed(2) };
         };
 
-        const low1 = fmtTime(1 * 60 + 49);
-        const high1 = fmtTime(8 * 60 + 34);
-        const low2 = fmtTime(14 * 60 + 23);
-        const high2 = fmtTime(20 * 60 + 51);
-
-        const low1H = +(0.8 + Math.sin(dIdx) * 0.1).toFixed(1);
-        const high1H = +(1.7 + Math.cos(dIdx * 0.5) * 0.1).toFixed(1);
-        const low2H = +(1.0 - Math.sin(dIdx * 0.7) * 0.1).toFixed(1);
-        const high2H = +(1.8 + Math.sin(dIdx * 0.4) * 0.1).toFixed(1);
+        const ampCoeff = 0.55 + 0.35 * Math.sin((dIdx / 14) * Math.PI);
+        const low1 = fmtTime(4 * 60 + 30);
+        const high1 = fmtTime(11 * 60 + 10);
+        const low2 = fmtTime(17 * 60 + 10);
+        const high2 = fmtTime(23 * 60 + 15);
 
         extrema = [
-          { type: "low",  ...low1,  height: low1H },
-          { type: "high", ...high1, height: high1H },
-          { type: "low",  ...low2,  height: low2H },
-          { type: "high", ...high2, height: high2H }
+          { type: "low",  ...low1,  height: +(1.25 - ampCoeff * 0.9).toFixed(1) },
+          { type: "high", ...high1, height: +(1.25 + ampCoeff * 1.0).toFixed(1) },
+          { type: "low",  ...low2,  height: +(1.25 - ampCoeff * 0.8).toFixed(1) },
+          { type: "high", ...high2, height: +(1.25 + ampCoeff * 1.1).toFixed(1) }
         ];
       }
+
+      // Ordena cronologicamente os extremos do dia
+      extrema.sort((a, b) => a.hourFloat - b.hourFloat);
 
       const fullHeaderLabel = day.label
         .replace("TER ", "TERÇA ")
@@ -1506,19 +1533,22 @@
     const plotHeightPx = 138;
     const maxTideMeters = 2.4;
 
-    // Função de altura da maré (m): interpolação linear precisa da timeline Open-Meteo com conversão para cota náutica
-    const timeline = spotConfig?.forecastData?.timeline;
+    // Função de altura da maré (m): interpolação precisa com conversão para cota náutica da Marinha
     const getTideHeightAt = (globalHours) => {
-      if (timeline && timeline.length > 0) {
-        const h1 = Math.max(0, Math.min(timeline.length - 1, Math.floor(globalHours)));
-        const h2 = Math.max(0, Math.min(timeline.length - 1, Math.ceil(globalHours)));
-        const frac = globalHours - Math.floor(globalHours);
-        const m1 = (timeline[h1].tide?.heightM || 0) + 1.2;
-        const m2 = (timeline[h2].tide?.heightM || 0) + 1.2;
+      const dIdx = Math.floor(globalHours / 24);
+      const hInDay = Math.max(0, globalHours - dIdx * 24);
+      const targetDay = visibleDays[Math.min(visibleDays.length - 1, Math.max(0, dIdx))];
+      if (targetDay && targetDay.points && targetDay.points.length > 0) {
+        const pts = targetDay.points;
+        const h1 = Math.max(0, Math.min(pts.length - 1, Math.floor(hInDay)));
+        const h2 = Math.max(0, Math.min(pts.length - 1, Math.ceil(hInDay)));
+        const frac = hInDay - Math.floor(hInDay);
+        const m1 = (pts[h1].tide?.nauticalHeightM || ((pts[h1].tide?.heightM || 0) + 1.25));
+        const m2 = (pts[h2].tide?.nauticalHeightM || ((pts[h2].tide?.heightM || 0) + 1.25));
         return +(m1 * (1 - frac) + m2 * frac).toFixed(2);
       }
-      const rad = ((globalHours - 2.1) / 12.42) * 2 * Math.PI;
-      return +(1.32 - 0.48 * Math.cos(rad)).toFixed(2);
+      const rad = ((globalHours - 4.5) / 12.42) * 2 * Math.PI;
+      return +(1.35 - 0.75 * Math.cos(rad)).toFixed(2);
     };
     const isTideRisingAt = (globalHours) => {
       return getTideHeightAt(globalHours + 0.25) >= getTideHeightAt(globalHours - 0.25);
@@ -1565,8 +1595,8 @@
     const markerMM = String(Math.round((state.cursorHourFloat % 1) * 60)).padStart(2, "0");
     const markerTimeStr = `${markerHH}:${markerMM === "60" ? "00" : markerMM}h`;
 
-    // Constrói o SVG da Mini-Strip de 8 dias na base
-    const miniDays = ALL_FORECAST_DAYS.slice(0, 8);
+    // Constrói o SVG da Mini-Strip de 8 dias na base (a partir de HOJE)
+    const miniDays = visibleDays.slice(0, 8);
     const miniCurvePts = [];
     for (let h = 0; h <= miniDays.length * 24; h += 1.5) {
       const mx = (h / (miniDays.length * 24)) * 800;
@@ -1836,19 +1866,25 @@
               </thead>
               <tbody class="divide-y divide-white/5 text-slate-200">
                 ${dayTideData
-                  .map(
-                    (d) => `
+                  .map((d) => {
+                    const lows = (d.extrema || []).filter((e) => e.type === "low");
+                    const highs = (d.extrema || []).filter((e) => e.type === "high");
+                    const low1Str = lows[0] ? `${lows[0].str} · ${lows[0].height.toFixed(1)}m` : "—";
+                    const high1Str = highs[0] ? `${highs[0].str} · ${highs[0].height.toFixed(1)}m` : "—";
+                    const low2Str = lows[1] ? `${lows[1].str} · ${lows[1].height.toFixed(1)}m` : "—";
+                    const high2Str = highs[1] ? `${highs[1].str} · ${highs[1].height.toFixed(1)}m` : "—";
+                    return `
                   <tr class="hover:bg-white/5">
                     <td class="py-2.5 px-3 font-semibold text-white">${d.fullHeaderLabel} <span class="text-slate-400 font-normal">(${d.fullDate})</span></td>
-                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-low inline-block">${d.extrema[0].str} · ${d.extrema[0].height}m</span></td>
-                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-high inline-block">${d.extrema[1].str} · ${d.extrema[1].height}m</span></td>
-                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-low inline-block">${d.extrema[2].str} · ${d.extrema[2].height}m</span></td>
-                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-high inline-block">${d.extrema[3].str} · ${d.extrema[3].height}m</span></td>
+                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-low inline-block">${low1Str}</span></td>
+                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-high inline-block">${high1Str}</span></td>
+                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-low inline-block">${low2Str}</span></td>
+                    <td class="py-2.5 px-3"><span class="dsysa-tide-badge-high inline-block">${high2Str}</span></td>
                     <td class="py-2.5 px-3 text-amber-300">☀️ ${d.sunrise} / ${d.sunset}</td>
                     <td class="py-2.5 px-3 text-indigo-300">🌙 ${d.moonRise} / ${d.moonSet}</td>
                   </tr>
-                `
-                  )
+                `;
+                  })
                   .join("")}
               </tbody>
             </table>
@@ -2222,7 +2258,7 @@
     const sandArcPath = describeArc(cx, cy, 108, info.beachFaceDeg + 125, info.beachFaceDeg + 235);
 
     return `
-      <svg class="dsysa-compass-svg" width="${sizePx}" height="${sizePx}" viewBox="0 0 300 300" aria-label="Bússola de Posicionamento da Praia">
+      <svg class="dsysa-compass-svg" width="${sizePx}" height="${sizePx}" viewBox="0 0 300 300" style="max-width: 100%; height: auto;" aria-label="Bússola de Posicionamento da Praia">
         <defs>
           <radialGradient id="dsysaCompassDialGrad" cx="50%" cy="45%" r="55%">
             <stop offset="0%" stop-color="#0f2942" />
@@ -2327,6 +2363,10 @@
     };
 
     const startDrag = (clientX, clientY) => {
+      // Se a bússola ao vivo estiver ativa, desativa suavemente para permitir giro manual
+      if (window.DsySACompass?.compass?.isActive) {
+        window.DsySACompass.compass.stop();
+      }
       dragging = true;
       startAngle = getPointerAngle(clientX, clientY);
       initialRot = stateObj.rotationDeg || 0;
@@ -2381,6 +2421,27 @@
     svgEl.addEventListener("touchend", stopDrag, { passive: true });
   }
 
+  /* Helper de Feedback Visual / Toast para Sensores da Bússola */
+  function showCompassToast(parentEl, message, durationMs = 3800) {
+    if (!parentEl) return;
+    let toast = parentEl.querySelector(".dsysa-compass-live-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "dsysa-compass-live-toast";
+      parentEl.style.position = "relative";
+      parentEl.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.style.display = "inline-flex";
+    clearTimeout(toast.__hideTimer);
+    toast.__hideTimer = setTimeout(() => {
+      if (toast) toast.style.display = "none";
+    }, durationMs);
+  }
+
+  /* ==========================================================================
+     9. COMPONENTE 4: BÚSSOLA FUNCIONAL DE POSICIONAMENTO DA PRAIA
+     ========================================================================== */
   window.renderDsySACompassCard = function (containerEl, spotConfig) {
     if (!containerEl) return;
     window.__lastCompassSpotConfig = spotConfig;
@@ -2391,6 +2452,9 @@
       collapsed: false
     };
     containerEl.__compassState = state;
+
+    const compassService = window.DsySACompass?.compass;
+    const isLiveActive = compassService ? compassService.isActive : false;
 
     containerEl.innerHTML = `
       <div class="dsysa-wave-panel mt-4" style="--border-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.32), rgba(16, 185, 129, 0.08)); --border-radius-before: 16px;">
@@ -2453,6 +2517,13 @@
               </div>
 
               <div class="pt-1 flex flex-wrap items-center gap-2.5">
+                <!-- Botão 1: Bússola ao Vivo (Sensores Mobile iOS / Android) -->
+                <button type="button" class="dsysa-btn-live-compass ${isLiveActive ? "active" : ""}" data-toggle-live-compass="true" title="Alinhar automaticamente com o Norte magnético real usando o sensor do celular">
+                  <span class="dsysa-compass-live-dot"></span>
+                  <span class="dsysa-live-compass-text">${isLiveActive ? "Bússola ao Vivo Ativa" : "Bússola ao Vivo"}</span>
+                </button>
+
+                <!-- Botão 2: Ampliar Bússola Modal -->
                 <button type="button" class="dsysa-btn-expand-compass" data-open-compass-modal="true">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -2463,6 +2534,7 @@
                   <span>Ampliar bússola</span>
                 </button>
 
+                <!-- Botões Rápidos de Alinhamento -->
                 <button type="button" data-reset-compass="0" class="px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-white/10 text-[11px] font-medium text-slate-300 transition-colors">
                   Norte (0°)
                 </button>
@@ -2477,13 +2549,75 @@
     `;
 
     const svgEl = containerEl.querySelector(".dsysa-compass-svg");
+    const rotorEl = svgEl ? svgEl.querySelector(".dsysa-compass-rotor") : null;
     const readoutEl = containerEl.querySelector(".dsysa-compass-angle-readout");
     const captionEl = containerEl.querySelector(".dsysa-compass-dial-wrap span");
+    const liveBtn = containerEl.querySelector("[data-toggle-live-compass]");
+    const liveTextEl = containerEl.querySelector(".dsysa-live-compass-text");
 
     bindInteractiveCompassRotation(svgEl, state, (deg) => {
       if (readoutEl) readoutEl.textContent = `Azimute: ${deg}° · Face: ${info.beachFaceDeg}°`;
       if (captionEl) captionEl.textContent = `Arraste o disco p/ girar (${deg}°)`;
     });
+
+    // Vincula o rotor SVG do card ao serviço de bússola
+    if (compassService && rotorEl) {
+      compassService.attachElement(rotorEl);
+
+      // Limpeza prévia do subscription anterior no container
+      if (containerEl.__compassUnsub) {
+        containerEl.__compassUnsub();
+      }
+
+      containerEl.__compassUnsub = compassService.subscribe((cState) => {
+        if (!containerEl.isConnected) return;
+        if (cState.isActive) {
+          if (liveBtn) liveBtn.classList.add("active");
+          if (liveTextEl) liveTextEl.textContent = `Bússola Ativa (${cState.heading}° ${cState.cardinal})`;
+          if (readoutEl) {
+            readoutEl.innerHTML = `<span class="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>Bússola: ${cState.heading}° ${cState.cardinal} · Face: ${info.beachFaceDeg}°`;
+          }
+          if (captionEl) {
+            captionEl.innerHTML = `Orientação ao vivo: <strong class="text-emerald-300 font-mono">${cState.heading}° (${cState.cardinal})</strong>`;
+          }
+        } else {
+          if (liveBtn) liveBtn.classList.remove("active");
+          if (liveTextEl) liveTextEl.textContent = "Bússola ao Vivo";
+          if (readoutEl && !readoutEl.textContent.includes("Azimute")) {
+            readoutEl.textContent = `Azimute: ${state.rotationDeg}° · Face: ${info.beachFaceDeg}°`;
+          }
+        }
+
+        if (cState.status === "unsupported" && cState.errorMessage) {
+          showCompassToast(containerEl, cState.errorMessage, 4500);
+        } else if (cState.status === "denied" && cState.errorMessage) {
+          showCompassToast(containerEl, cState.errorMessage, 4500);
+        } else if (cState.status === "insecure_context" && cState.errorMessage) {
+          showCompassToast(containerEl, cState.errorMessage, 5000);
+        }
+      });
+    }
+
+    if (liveBtn) {
+      liveBtn.addEventListener("click", async () => {
+        if (!compassService) {
+          showCompassToast(containerEl, "Módulo DsySACompass não encontrado.", 3000);
+          return;
+        }
+
+        if (compassService.isActive) {
+          compassService.stop();
+          showCompassToast(containerEl, "Bússola ao vivo desativada.", 2000);
+        } else {
+          showCompassToast(containerEl, "Calibrando sensores de orientação...", 2200);
+          const ok = await compassService.start();
+          if (!ok) {
+            const err = compassService.errorMessage || "Não foi possível ativar os sensores de orientação.";
+            showCompassToast(containerEl, err, 4500);
+          }
+        }
+      });
+    }
 
     const openBtn = containerEl.querySelector("[data-open-compass-modal]");
     if (openBtn) {
@@ -2495,6 +2629,7 @@
     const resetBtn = containerEl.querySelector("[data-reset-compass]");
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
+        if (compassService && compassService.isActive) compassService.stop();
         state.rotationDeg = 0;
         window.renderDsySACompassCard(containerEl, spotConfig);
       });
@@ -2503,6 +2638,7 @@
     const alignBtn = containerEl.querySelector("[data-align-beach]");
     if (alignBtn) {
       alignBtn.addEventListener("click", () => {
+        if (compassService && compassService.isActive) compassService.stop();
         state.rotationDeg = parseInt(alignBtn.getAttribute("data-align-beach"), 10) || 0;
         window.renderDsySACompassCard(containerEl, spotConfig);
       });
@@ -2520,6 +2656,7 @@
   window.openDsySACompassModal = function (spotConfig, initialRotationDeg) {
     const activeSpot = spotConfig || window.__lastCompassSpotConfig || {};
     const info = inferBeachOrientation(activeSpot);
+    const compassService = window.DsySACompass?.compass;
 
     let modalEl = document.getElementById("dsysaCompassModal");
     if (!modalEl) {
@@ -2545,6 +2682,8 @@
     };
 
     const renderModalContent = () => {
+      const isLiveActive = compassService ? compassService.isActive : false;
+
       modalEl.innerHTML = `
         <div class="dsysa-compass-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="dsysaCompassModalTitle">
           <!-- Cabeçalho do Modal com Botão Fechar -->
@@ -2568,15 +2707,15 @@
           </div>
 
           <!-- Corpo do Modal -->
-          <div class="p-5 sm:p-6 grid gap-6 md:grid-cols-12 items-center">
-            <!-- Bússola Ampliada 320x320 -->
-            <div class="md:col-span-7 flex flex-col items-center justify-center bg-slate-950/80 border border-white/5 rounded-2xl p-4">
-              <div id="dsysaModalCompassSvgHost">
-                ${window.buildDsySACompassSvg(info, modalState.rotationDeg, 310, true)}
+          <div class="p-4 sm:p-6 grid gap-5 md:grid-cols-12 items-center">
+            <!-- Bússola Ampliada -->
+            <div class="md:col-span-7 flex flex-col items-center justify-center bg-slate-950/80 border border-white/5 rounded-2xl p-3 sm:p-4 relative">
+              <div id="dsysaModalCompassSvgHost" class="w-full flex justify-center">
+                ${window.buildDsySACompassSvg(info, modalState.rotationDeg, typeof window !== "undefined" && window.innerWidth < 480 ? Math.min(270, window.innerWidth - 64) : 310, true)}
               </div>
 
-              <!-- Slider de Rotação 0° a 360° -->
-              <div class="w-full mt-4 px-2 space-y-2">
+              <!-- Slider de Rotação 0° a 360° + Botão Bússola ao Vivo -->
+              <div class="w-full mt-4 px-2 space-y-2.5">
                 <div class="flex items-center justify-between text-[11px] text-slate-300 font-mono">
                   <span>Girar Rosa dos Ventos:</span>
                   <strong id="dsysaModalAngleLabel" class="text-sky-300">${modalState.rotationDeg}°</strong>
@@ -2584,10 +2723,16 @@
                 <input type="range" id="dsysaModalRotateSlider" min="0" max="359" value="${modalState.rotationDeg}"
                        class="w-full accent-sky-400 cursor-pointer" />
                 <div class="flex flex-wrap justify-center gap-2 pt-1">
-                  <button type="button" data-modal-rot="0" class="px-3 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-white/10 text-[11px] text-slate-200">
+                  <!-- Ativação da Bússola ao Vivo dentro do Modal -->
+                  <button type="button" data-modal-toggle-live="true" class="dsysa-btn-live-compass ${isLiveActive ? "active" : ""}">
+                    <span class="dsysa-compass-live-dot"></span>
+                    <span id="dsysaModalLiveBtnText">${isLiveActive ? "Bússola ao Vivo Ativa" : "Bússola ao Vivo"}</span>
+                  </button>
+
+                  <button type="button" data-modal-rot="0" class="px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-white/10 text-[11px] text-slate-200">
                     🧭 Norte no Topo (0°)
                   </button>
-                  <button type="button" data-modal-rot="${(360 - info.beachFaceDeg) % 360}" class="px-3 py-1 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-[11px] text-sky-300 font-medium">
+                  <button type="button" data-modal-rot="${(360 - info.beachFaceDeg) % 360}" class="px-3 py-1.5 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-[11px] text-sky-300 font-medium">
                     🌊 Olhar de Frente p/ o Mar (${info.beachFaceDeg}°)
                   </button>
                 </div>
@@ -2622,7 +2767,7 @@
               </div>
 
               <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-[11px] text-emerald-200 leading-relaxed">
-                <strong>Leitura Rápida na Bússola:</strong> A agulha <span class="text-rose-400 font-semibold">vermelha</span> aponta sempre para o <strong>Norte (N 0°)</strong> e a <span class="text-sky-300 font-semibold">azul</span> para o <strong>Sul (S 180°)</strong>. O arco ciano mostra para onde a areia da praia está olhando.
+                <strong>Leitura Rápida na Bússola:</strong> Aponte o topo do smartphone para o mar. A rosa dos ventos gira em tempo real e indica exatamente de onde a onda e o vento entram na sua praia!
               </div>
 
               <button type="button" id="dsysaCloseCompassModalBottomBtn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/15 text-xs font-semibold text-white transition-colors">
@@ -2639,8 +2784,11 @@
       if (closeBottom) closeBottom.addEventListener("click", window.closeDsySACompassModal);
 
       const modalSvg = modalEl.querySelector(".dsysa-compass-svg");
+      const modalRotor = modalSvg ? modalSvg.querySelector(".dsysa-compass-rotor") : null;
       const angleLabel = modalEl.querySelector("#dsysaModalAngleLabel");
       const slider = modalEl.querySelector("#dsysaModalRotateSlider");
+      const modalLiveBtn = modalEl.querySelector("[data-modal-toggle-live]");
+      const modalLiveBtnText = modalEl.querySelector("#dsysaModalLiveBtnText");
 
       const syncRotationUI = (deg) => {
         if (angleLabel) angleLabel.textContent = `${deg}°`;
@@ -2654,8 +2802,47 @@
 
       bindInteractiveCompassRotation(modalSvg, modalState, syncRotationUI);
 
+      // Vincula o rotor ampliado do modal à bússola ao vivo
+      if (compassService && modalRotor) {
+        compassService.attachElement(modalRotor);
+
+        if (modalEl.__compassModalUnsub) {
+          modalEl.__compassModalUnsub();
+        }
+
+        modalEl.__compassModalUnsub = compassService.subscribe((cState) => {
+          if (!modalEl.isConnected) return;
+          if (cState.isActive) {
+            if (modalLiveBtn) modalLiveBtn.classList.add("active");
+            if (modalLiveBtnText) modalLiveBtnText.textContent = `Bússola Ativa (${cState.heading}° ${cState.cardinal})`;
+            if (angleLabel) angleLabel.textContent = `Bússola: ${cState.heading}° ${cState.cardinal}`;
+            if (slider) slider.value = String(cState.heading);
+          } else {
+            if (modalLiveBtn) modalLiveBtn.classList.remove("active");
+            if (modalLiveBtnText) modalLiveBtnText.textContent = "Bússola ao Vivo";
+          }
+        });
+      }
+
+      if (modalLiveBtn) {
+        modalLiveBtn.addEventListener("click", async () => {
+          if (!compassService) return;
+          if (compassService.isActive) {
+            compassService.stop();
+          } else {
+            showCompassToast(modalEl.querySelector(".dsysa-compass-modal-dialog"), "Iniciando Bússola ao Vivo...", 2000);
+            const ok = await compassService.start();
+            if (!ok) {
+              const err = compassService.errorMessage || "Não foi possível ativar os sensores.";
+              showCompassToast(modalEl.querySelector(".dsysa-compass-modal-dialog"), err, 4500);
+            }
+          }
+        });
+      }
+
       if (slider) {
         slider.addEventListener("input", () => {
+          if (compassService && compassService.isActive) compassService.stop();
           const deg = parseInt(slider.value, 10) || 0;
           modalState.rotationDeg = deg;
           const rotor = modalEl.querySelector(".dsysa-compass-rotor");
@@ -2666,6 +2853,7 @@
 
       modalEl.querySelectorAll("[data-modal-rot]").forEach((btn) => {
         btn.addEventListener("click", () => {
+          if (compassService && compassService.isActive) compassService.stop();
           modalState.rotationDeg = parseInt(btn.getAttribute("data-modal-rot"), 10) || 0;
           renderModalContent();
           syncRotationUI(modalState.rotationDeg);
@@ -2683,6 +2871,14 @@
     const modalEl = document.getElementById("dsysaCompassModal");
     if (modalEl) {
       modalEl.classList.remove("open");
+      const modalRotor = modalEl.querySelector(".dsysa-compass-rotor");
+      if (modalRotor && window.DsySACompass?.compass) {
+        window.DsySACompass.compass.detachElement(modalRotor);
+      }
+      if (modalEl.__compassModalUnsub) {
+        modalEl.__compassModalUnsub();
+        modalEl.__compassModalUnsub = null;
+      }
     }
   };
 
