@@ -1,0 +1,26 @@
+{
+  "name": "SurfAgent — Previsão de Surfe por Voz",
+  "short_name": "SurfAgent",
+  "description": "Previsão de ondas, vento, maré e telemetria em tempo real com inteligência artificial por voz.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#060d1f",
+  "theme_color": "#060d1f",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

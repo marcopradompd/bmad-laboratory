@@ -111,24 +111,68 @@ flowchart TD
   - O Agente **não pergunta o nível de surfe**.
   - O sistema busca os dados atuais daquela praia, abre (ou atualiza) uma aba exclusiva para ela e narra por voz o boletim objetivo das condições atuais.
 
-### 5.2 Regra 2 — Consulta do Melhor Pico para Surfar Hoje (Top 4 Próximos)
-- **Gatilho:** O usuário pergunta *"Qual o pico com as melhores condições para surfar hoje?"* (ou variação equivalente).
-- **Passo 1 (Geolocalização):** O app identifica a localização atual do usuário e localiza os **4 picos de surfe mais próximos**.
-- **Passo 2 (Pergunta de Nível):** O Agente pergunta por voz (e exibe botões rápidos na tela):
-  > *"Você deseja saber de acordo com o seu nível de surfe?"*
-- **Passo 3A — Usuário responde SIM (e informa Iniciante, Intermediário ou Avançado):**
-  - **Iniciante:** Prioriza picos entre os 4 mais próximos com ondulação menor/controlada (ex.: 0,5m a 1,0m), energia moderada/baixa, período médio, vento fraco/terral e maré favorável.
-  - **Intermediário:** Prioriza picos com ondas de parede bem definida (ex.: 0,8m a 1,5m), período médio/longo (9s–12s), energia moderada a boa e vento terral ou fraco.
-  - **Avançado:** Prioriza picos com maior potencial de performance, ondas fortes, cavadas ou volumosas (ex.: > 1,2m), alta energia (kJ), período longo (> 11s) e vento terral.
-- **Passo 3B — Usuário responde NÃO (ou prefere não informar o nível):**
-  - O sistema seleciona entre os 4 picos mais próximos aquele que apresenta **todas as combinações que gerem uma onda boa, bem formada e forte** (alinhamento ideal da direção do swell com a praia + maior período e energia útil + vento terral/fraco + fase da maré adequada).
-- **Passo 4 (Apresentação em Abas + Voz):**
-  - Os **4 picos mais próximos** são abertos em **4 abas distintas**.
-  - A aba do pico vencedor recebe destaque visual (*"Melhor Condição Agora"*) e fica ativa em tela enquanto o Agente explica por voz o resultado.
+### 5.2 Regra 2 — Consulta do Melhor Pico para Surfar Hoje ("Falar com o SurfAgent")
+- **Gatilho:** O usuário clica no botão **"Falar com o SurfAgent"** ou pergunta *"Qual o pico com as melhores condições para surfar hoje?"*.
+- **Passo 1 (Geolocalização Inicial e Top 4 Picos Próximos):**
+  - O app solicita geolocalização (`navigator.geolocation`).
+  - Calcula a distância real em linha reta via **fórmula de Haversine** entre as coordenadas do usuário e a base de picos cadastrados (`SPOTS_DATABASE`).
+  - Renderiza automaticamente os **4 picos mais próximos** em formato de abas horizontais no topo da interface.
+  - *Fallback:* Caso a permissão seja negada ou indisponível, carrega 4 picos padrão da região e exibe um aviso discreto permitindo ativar a localização posteriormente.
+- **Passo 2 (Saudação e Triagem por Voz):**
+  - O SurfAgent fala exatamente:
+    > *"Você gostaria de saber a previsão de acordo com o seu nível? Se sim, diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, apenas diga: apenas me traga a praia com as melhores condições."*
+  - A interface exibe simultaneamente o balão conversacional e 4 chips rápidos de toque: `🌊 Melhores Condições (Sem Nível)`, `🟢 Iniciante`, `🟡 Intermediário` e `🔴 Avançado`.
+- **Passo 3 (Classificação da Intenção via STT):**
+  - O sistema classifica a resposta falada ou o toque em uma das 4 intenções:
+    - `INTENT_NO_LEVEL`: Melhores condições gerais / Sem filtro de nível (aceita sinônimos como *"não precisa"*, *"sem nível"*, *"tanto faz"*, *"melhores condições"*, *"onda boa e forte"*).
+    - `INTENT_BEGINNER`: Iniciante / Básico (aceita *"iniciante"*, *"básico"*, *"começando"*, *"aprendendo"*).
+    - `INTENT_INTERMEDIATE`: Intermediário (aceita *"intermediário"*, *"médio"*, *"evolução"*).
+    - `INTENT_ADVANCED`: Avançado (aceita *"avançado"*, *"experiente"*, *"pro"*, *"tubo e pressão"*).
+  - *Bypass:* Caso o usuário cite diretamente o nome de uma praia durante o diálogo, a IA identifica a intenção de pico específico e abre a praia solicitada sem insistir no filtro de nível.
+- **Passo 4 (Matriz de Ranqueamento e Pontuação Ponderada):**
+  - O motor `rankSpotsForSurfer` pontua os picos de 0 a 100 com base em critérios técnicos reais:
+    - **Altura da onda (30%):** Encaixe exato na faixa de segurança e manobrabilidade de cada perfil.
+    - **Vento (30%):** Direção em relação ao quadrante terral do pico (`offshoreWindDeg`) e intensidade em nós ($\le 8\text{ kt}$ para sem nível/vidro, $\le 10\text{ kt}$ para iniciante, $\le 12\text{ kt}$ para intermediário, $\le 14\text{ kt}$ para avançado).
+    - **Período e Energia (25%):** Ondulação primária e força do swell em Joules/kJ.
+    - **Maré e Fundo (15%):** Compatibilidade com a maré ideal do pico (`bestTide`) e tipo de fundo (`bottomType`: areia para iniciantes vs. laje/coral para avançados).
+- **Passo 5 (Contexto de Maré e Fallback Inteligente):**
+  - **Contexto de Maré:** Se o pico vencedor estiver fora da maré ideal no momento, mas atingir o ponto ideal nas próximas 2 horas, a fala instrui o surfista sobre o melhor horário para entrar na água.
+  - **Fallback Inteligente:** Se nenhum pico atingir score $> 60$ (mar flat ou temporal maral), o SurfAgent seleciona o pico mais abrigado e explica claramente o fator limitante.
+- **Passo 6 (Sincronização de UI e Fala):**
+  - A aba do pico vencedor é aberta/focada (sendo adicionada à barra caso ainda não estivesse aberta) e recebe o selo `★ MELHOR AGORA`.
+  - O SurfAgent sintetiza um resumo objetivo em voz natural explicando os fatores técnicos que motivaram a recomendação.
 
-### 5.3 Regra 3 — Persistência e Atualização Automática das Abas
-- Todas as abas abertas (sejam de consultas específicas ou dos 4 picos próximos) ficam salvas no dispositivo.
-- Sempre que o usuário acessar o aplicativo novamente, as abas salvas são mantidas e seus dados são **atualizados automaticamente** em tempo real.
+### 5.3 Regra 3 — Navegação, Adição Dinâmica e Persistência das Abas
+- **Navegação Dinâmica:** Ao pesquisar uma nova praia na barra de busca ou por comando de voz, o sistema adiciona o pico como uma **nova aba** junto às abas já abertas (sem duplicatas) e ativa-a imediatamente.
+- **Persistência no LocalStorage:** As abas abertas pelo usuário (picos iniciais por proximidade + picos pesquisados) são salvas no `localStorage`.
+- **Auto-Atualização ao Reabrir:** Ao retornar ao site, as abas salvas são restauradas na mesma ordem, disparando requisições em tempo real para a API de previsão (Open-Meteo WW3 + GFS) para renovar toda a telemetria e gráficos.
+
+---
+
+## 5.4 Matriz de Calibração Técnica de Leitura de Ondas
+
+| Perfil / Intenção | Altura (`waveHeight`) | Período (`wavePeriod`) | Energia (`energyJoules`) | Vento (`windSpeed` / Direção) | Tipo de Pico / Maré |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Sem Nível (`INTENT_NO_LEVEL`)** *(Clássico / Melhores condições)* | $\ge 1.0\text{ m}$ *(ou $\ge 0.8\text{ m}$ se período $\ge 12\text{s}$)* | $\ge 10\text{s}$ | $\ge 500\text{ J}$ | **Terral** (*offshore*) ou **Vidro/Fraco** ($\le 8\text{ nós}$) | Bônus alto se a maré atual coincidir com `bestTide` do pico |
+| **Iniciante (`INTENT_BEGINNER`)** *(Segurança e onda cheia)* | $0.3\text{ m}$ a $0.6\text{ m}$ | $\le 10\text{s}$ *(evita swells longos de impacto)* | $100\text{ J}$ a $450\text{ J}$ | **Fraco** ($\le 10\text{ nós}$) ou **Terral leve** *(evitar maral moderado/forte)* | Priorizar `bottomType === 'sand'` (fundo de areia) |
+| **Intermediário (`INTENT_INTERMEDIATE`)** *(Evolução e parede limpa)* | $0.6\text{ m}$ a $1.2\text{ m}$ | $9\text{s}$ a $13\text{s}$ | $400\text{ J}$ a $900\text{ J}$ | **Terral** ou **Fraco** ($\le 12\text{ nós}$) *(aceita lateral fraco)* | Picos de areia ou bancadas suaves na maré favorável |
+| **Avançado (`INTENT_ADVANCED`)** *(Pressão, tubo e manobra forte)* | $\ge 1.0\text{ m}$ | $\ge 11\text{s}$ *(ondulação de fundo)* | $\ge 600\text{ J}$ | **Terral**, **Lateral-Terral** ou **Fraco** ($\le 14\text{ nós}$) *(descarta maral forte)* | Bancadas de coral/pedra (`reef`/`point`) ou beach breaks tubulares |
+
+### Estrutura de Metadados Obrigatórios dos Picos
+Cada pico cadastrado no `SPOTS_DATABASE` deve possuir:
+```typescript
+interface SurfSpotMetadata {
+  id: string;
+  name: string;
+  region: string;
+  lat: number;
+  lon: number;
+  bottomType: 'sand' | 'reef' | 'point';
+  bestTide: 'LOW' | 'MID' | 'HIGH' | 'ALL';
+  offshoreWindDeg: [number, number]; // Faixa angular de vento terral (ex: [270, 360])
+  beachFaceDeg: number;             // Orientação frontal da praia em graus
+}
+```
 
 ---
 

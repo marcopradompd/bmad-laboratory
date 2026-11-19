@@ -34,27 +34,49 @@ O **SurfAgent** foi projetado sob o princípio **"Pergunte falando, decida olhan
 
 ## 3. Fluxos de Interação (User Flows)
 
-### Fluxo 1: "Qual o pico com as melhores condições para surfar hoje?"
-1. **Ação do Usuário:** Toca no microfone (ou atalho de voz) e pergunta *"Qual o pico com as melhores condições para surfar hoje?"*.
-2. **Resposta Imediata do SurfAgent (Voz + Balão Interativo):**
-   - Localiza via GPS os 4 picos mais próximos.
-   - Pergunta por voz e mostra na tela: ***"Você deseja saber de acordo com o seu nível de surfe?"***
-3. **Caminho A — Usuário diz/toca "Sim" e escolhe o nível (Iniciante, Intermediário ou Avançado):**
-   - O SurfAgent recalcula o score dos 4 picos mais próximos para aquele nível.
-   - Abre 4 abas distintas, destaca a melhor para o nível escolhido e narra o resumo por voz.
-4. **Caminho B — Usuário diz/toca "Não" (Sem nível específico):**
-   - O SurfAgent seleciona entre os 4 picos mais próximos aquele com todas as combinações que geram uma **onda boa, bem formada e forte** (alta qualidade de swell, período, energia, maré e vento terral).
-   - Abre as 4 abas, destaca a vencedora e narra o resumo por voz.
+### Fluxo 1: "Falar com o SurfAgent" (Triagem por Voz & Máquina de Estados)
+1. **Ação do Usuário:** Toca no botão principal **"Falar com o SurfAgent"** (ou atalho de microfone).
+2. **Estado 1 (Geolocalização Inicial e Top 4 Próximos):**
+   - No primeiro acesso, o app solicita permissão de GPS e calcula as distâncias reais via fórmula de Haversine contra a base de picos.
+   - Renderiza os **4 picos mais próximos** em abas no topo da interface.
+   - Caso a localização seja negada, exibe o aviso discreto: `📍 Localização desativada · Usando Salvador como padrão · [Ativar Localização]`.
+3. **Estado 2 (Saudação e Triagem de Nível por Voz):**
+   - O SurfAgent fala com voz natural sintetizada:
+     > *"Você gostaria de saber a previsão de acordo com o seu nível? Se sim, diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, apenas diga: apenas me traga a praia com as melhores condições."*
+   - A interface exibe o balão de transcrição e 4 chips táteis de clique rápido:
+     - `🌊 Melhores Condições (Sem Nível)`
+     - `🟢 Iniciante`
+     - `🟡 Intermediário`
+     - `🔴 Avançado`
+4. **Estado 3 (Processamento da Resposta do Usuário via STT):**
+   - O sistema classifica a fala do usuário em uma das 4 intenções:
+     - `INTENT_NO_LEVEL` (Sem nível / onda boa e forte / "não precisa" / "melhores condições")
+     - `INTENT_BEGINNER` (Iniciante / "básico" / "começando")
+     - `INTENT_INTERMEDIATE` (Intermediário / "médio" / "evolução")
+     - `INTENT_ADVANCED` (Avançado / "experiente" / "pro" / "pressão")
+5. **Estado 4 (Ranqueamento Técnico & Resposta Falada):**
+   - O motor `rankSpotsForSurfer` pontua os 4 picos (0 a 100) ponderando:
+     - **Altura da onda (30%)**
+     - **Vento terral/intensidade (30%)**
+     - **Período e Energia (25%)**
+     - **Compatibilidade com a maré atual e tipo de fundo (15%)**
+   - **Contexto de Maré:** Se a maré ideal virar nas próximas 2 horas, o SurfAgent inclui a dica de horário na fala.
+   - **Fallback Inteligente:** Se nenhum pico atingir score $> 60$, indica o pico mais abrigado e relata a restrição (ex: mar flat ou maral tempestuoso).
+6. **Estado 5 (Sincronização Visual):**
+   - A aba do pico vencedor é focada (adicionada à barra caso nova) com a insígnia `★ MELHOR AGORA`.
+   - O gráfico de ondas, bússola e telemetria atualizam instantaneamente.
 
-### Fluxo 2: Consulta de Praia Específica (Ex.: *"Como está Maresias?"* ou *"Condições em Stella Maris"*)
-1. **Ação do Usuário:** Pergunta diretamente sobre uma praia de qualquer região.
+### Fluxo 2: Consulta de Praia Específica (Ex.: *"Como está Maresias?"* ou busca direta)
+1. **Ação do Usuário:** Pergunta diretamente sobre uma praia ou digita na barra de busca.
 2. **Resposta Direta (Sem pergunta de nível):**
    - O SurfAgent **não pergunta o nível de surfe**.
-   - Abre (ou atualiza) imediatamente a aba daquela praia, mantendo as outras abas salvas do usuário, mostra apenas as condições completas do pico e responde por voz.
+   - Adiciona o pico como uma **nova aba** na lista de abas existentes (sem duplicatas) e ativa-a imediatamente.
+   - Dispara a requisição meteorológica e narra por voz as condições daquele pico.
 
-### Fluxo 3: Reabertura do App (Abas Persistentes)
-1. O usuário abre o SurfAgent.
-2. As abas da última sessão já estão abertas na barra superior e são atualizadas automaticamente com os dados do momento.
+### Fluxo 3: Reabertura do App (Abas Persistentes e Revalidação Automática)
+1. O usuário reabre o SurfAgent.
+2. As abas abertas na última sessão são restauradas do `localStorage` na mesma ordem.
+3. O app dispara automaticamente uma nova requisição para a API meteorológica (Open-Meteo), garantindo que os dados, marés e gráficos estejam 100% atualizados para o momento do acesso.
 
 ---
 

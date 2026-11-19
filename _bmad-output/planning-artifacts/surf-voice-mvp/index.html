@@ -6,6 +6,17 @@
   <meta name="description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+  <!-- Mobile Home Screen Shortcut / PWA & Favicon -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#060d1f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SurfAgent">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+
   <!-- Open Graph / WhatsApp / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://marcoprado.com.br/surfagent/">
@@ -57,9 +68,8 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-sm font-semibold tracking-tight text-white">SurfAgent</span>
-            <span class="rounded-full bg-sky-500/15 border border-sky-400/30 px-2 py-0.5 text-[10px] font-semibold text-sky-300 tracking-wider">DsySA Clean</span>
           </div>
-          <p class="text-[10px] text-slate-400 tracking-tight">Design System & Voice AI Surf Console</p>
+          <p class="text-[10px] text-slate-400 tracking-tight">Voice AI Surf Console</p>
         </div>
       </a>
 
@@ -109,37 +119,19 @@
           </div>
         </div>
 
-        <!-- Subheadline -->
-        <p class="sm:text-base text-sm font-normal text-slate-200/80 max-w-xl mt-4 mx-auto">
-          Pergunte sobre uma praia específica ou descubra qual dos <strong>4 picos mais próximos</strong> está melhor hoje — de acordo com seu nível de surfe ou buscando uma onda boa, bem formada e forte.
-        </p>
-
-        <!-- Primary Laser-Edge Glow Voice CTA + Quick Voice Prompts -->
-        <div class="flex flex-col mt-7 gap-4 items-center">
+        <!-- Primary Voice Pill CTA + Link "Como usar o SurfAgent" -->
+        <div class="flex flex-col mt-7 gap-3 items-center">
           <div class="flex flex-wrap justify-center gap-4 items-center">
-            <!-- Signature Laser-Edge Glow Button -->
-            <button id="heroMicBtn" onclick="startVoiceRecognition()" class="dsysa-btn-laser focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80">
-              <div class="laser-edge-v left">
-                <div class="laser-blur-base"></div>
-                <div class="laser-blur-hover"></div>
-              </div>
-              <div class="laser-edge-v right">
-                <div class="laser-blur-base"></div>
-                <div class="laser-blur-hover"></div>
-              </div>
-              <div class="laser-edge-h top">
-                <div class="laser-blur-base"></div>
-                <div class="laser-blur-hover"></div>
-              </div>
-              <div class="laser-edge-h bottom">
-                <div class="laser-blur-base"></div>
-                <div class="laser-blur-hover"></div>
-              </div>
-              <div class="laser-radial-glow"></div>
-              <span class="relative z-10 inline-flex items-center gap-2 text-xs font-semibold tracking-wider">
-                <span class="h-2 w-2 rounded-full bg-sky-400"></span>
-                <span id="heroMicLabel">🎙️ FALAR COM O SURFAGENT</span>
-              </span>
+            <!-- Signature Voice Pill CTA ("Pergunte ao SurfAgent") -->
+            <button id="heroMicBtn" data-ai-state="idle" onclick="handleVoiceButtonClick()" class="dsysa-btn-voice-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80">
+              <svg class="voice-mic-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="2" width="6" height="11" rx="3"/>
+                <path d="M5 10a7 7 0 0 0 14 0"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+              </svg>
+              <span class="voice-status-dot" aria-hidden="true"></span>
+              <span id="heroMicLabel" class="voice-label-text">Pergunte ao SurfAgent</span>
             </button>
 
             <button onclick="triggerBestSpotFlow()" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all w-full sm:w-auto text-center">
@@ -147,45 +139,35 @@
             </button>
           </div>
 
-          <!-- Quick Specific Beach Triggers -->
-          <div class="flex flex-wrap justify-center items-center gap-2 text-[11px]">
-            <span class="text-slate-400">Ou testar consulta direta de pico específico:</span>
-            <button onclick="triggerSpecificSpot('Maresias')" class="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition-colors">
-              "Como está Maresias?"
-            </button>
-            <button onclick="triggerSpecificSpot('Arpoador')" class="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition-colors">
-              "Como está o Arpoador?"
-            </button>
-            <button onclick="triggerSpecificSpot('Itamambuca')" class="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition-colors">
-              "Condições em Itamambuca"
-            </button>
-          </div>
+          <a href="#como-usar" onclick="openHowToUseModal(event)" class="text-xs font-medium text-white/95 hover:text-sky-200 underline underline-offset-4 decoration-white/50 hover:decoration-sky-300 transition-colors cursor-pointer" style="text-shadow: 0 1px 10px rgba(2, 12, 27, 0.85);">
+            Como usar o SurfAgent
+          </a>
         </div>
 
         <!-- CONDITIONAL DIALOG ALERT: "Você deseja saber de acordo com o seu nível de surfe?" -->
         <div id="levelQuestionAlert" class="hidden mt-6 max-w-2xl mx-auto bg-[#0A0A10]/95 backdrop-blur-xl border border-sky-400/40 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] text-left transition-all">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-              <span class="text-[10px] font-semibold text-sky-300 uppercase tracking-[0.18em]">SURFAGENT VOICE AI · PERGUNTA DE NÍVEL</span>
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              <span class="text-[10px] font-semibold text-sky-300 uppercase tracking-[0.18em]">SURFAGENT VOICE AI · TRIAGEM DE CONDIÇÕES</span>
             </div>
-            <span class="text-[10px] text-slate-400">📍 GPS: 4 picos mais próximos identificados</span>
+            <span id="levelAlertGpsBadge" class="text-[10px] text-slate-400">📍 Top 4 picos mais próximos</span>
           </div>
           <p class="text-sm font-medium text-white mb-3">
-            "Você deseja saber de acordo com o seu nível de surfe?"
+            "Você gostaria de saber a previsão de acordo com o seu nível? Se sim, clique no botão Falar com o surfeAgent e diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, clique no botão e apenas diga: apenas me traga a praia com as melhores condições."
           </p>
           <div class="flex flex-wrap gap-2">
-            <button onclick="applyLevelRecommendation('iniciante', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
-              Sim · Nível Iniciante
+            <button onclick="applyVoiceIntent('INTENT_NO_LEVEL', true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+              🌊 Melhores Condições (Sem Nível)
             </button>
-            <button onclick="applyLevelRecommendation('intermediario', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
-              Sim · Nível Intermediário
+            <button onclick="applyVoiceIntent('INTENT_BEGINNER', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+              🟢 Iniciante
             </button>
-            <button onclick="applyLevelRecommendation('avancado', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
-              Sim · Nível Avançado
+            <button onclick="applyVoiceIntent('INTENT_INTERMEDIATE', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+              🟡 Intermediário
             </button>
-            <button onclick="applyLevelRecommendation('sem_nivel', true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-              Não · Mostrar Onda Boa, Bem Formada e Forte
+            <button onclick="applyVoiceIntent('INTENT_ADVANCED', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+              🔴 Avançado
             </button>
           </div>
         </div>
@@ -195,32 +177,8 @@
            SURFAGENT CONSOLE (Clean Edition)
            ================================================================= -->
       <div id="console" class="w-full mt-10 relative z-10">
-        <div class="sm:px-4 bg-gradient-to-br from-blue-500/10 to-black/40 max-w-5xl rounded-3xl mx-auto py-4 px-2 relative shadow-[0_24px_80px_rgba(0,0,0,0.8)] backdrop-blur space-y-4"
+        <div class="sm:px-4 bg-gradient-to-br from-blue-500/10 to-black/40 max-w-5xl rounded-3xl mx-auto py-4 px-2 relative backdrop-blur space-y-4"
              style="position: relative; --border-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.02)); --border-radius-before: 24px;">
-
-          <!-- Card: Background Reativo ao Clima (DsySA Weather Aura) -->
-          <div class="bg-slate-900/85 rounded-2xl px-4 py-3 border border-white/5">
-            <div class="flex items-center justify-between flex-wrap gap-2 text-[11px]">
-              <div class="flex items-center gap-2">
-                <span class="text-slate-400">Background Reativo ao Clima:</span>
-                <span id="activeWeatherBgLabel" class="font-semibold text-amber-300">☀️ Ensolarado (BG Azulado + Amarelo Sol)</span>
-              </div>
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <button type="button" data-weather-btn="sunny" onclick="window.setDsySAWeatherBackground('sunny')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
-                  ☀️ Ensolarado
-                </button>
-                <button type="button" data-weather-btn="partly_cloudy" onclick="window.setDsySAWeatherBackground('partly_cloudy')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
-                  ⛅ Parcialmente Nublado
-                </button>
-                <button type="button" data-weather-btn="rainy" onclick="window.setDsySAWeatherBackground('rainy')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
-                  🌧️ Chuvoso
-                </button>
-                <button type="button" data-weather-btn="thunderstorm" onclick="window.setDsySAWeatherBackground('thunderstorm')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] text-slate-200 transition-all">
-                  ⛈️ Chuva com Raios
-                </button>
-              </div>
-            </div>
-          </div>
 
           <!-- Window Header + Persistent Spot Tabs -->
           <div class="flex flex-col gap-3 bg-slate-900/85 rounded-2xl px-4 py-3 border border-white/5">
@@ -230,9 +188,20 @@
                 <span class="h-2.5 w-2.5 rounded-full bg-amber-300/80"></span>
                 <span class="h-2.5 w-2.5 rounded-full bg-sky-400/80"></span>
                 <span class="ml-3 text-[11px] font-medium tracking-tight text-slate-200">
-                  Aqui estão os 4 picos mais próximos ou mais pesquisados por você.
+                  Arraste para o lado para ver os 4 picos mais próximos ou mais pesquisados por você.
                 </span>
               </div>
+            </div>
+
+            <!-- Fallback Discreto de Geolocalização (quando desativada) -->
+            <div id="geoNoticeBanner" class="hidden items-center justify-between px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200">
+              <span class="inline-flex items-center gap-1.5">
+                <span>📍</span>
+                <span id="geoNoticeText">Localização desativada · Usando Salvador como padrão</span>
+              </span>
+              <button type="button" onclick="requestUserGeolocation(true)" class="px-2.5 py-0.5 rounded bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 font-semibold text-[10px] transition-colors">
+                Ativar Localização
+              </button>
             </div>
 
             <!-- PERSISTENT SURF SPOT TABS BAR (Com suporte a Touch/Finger Drag) -->
@@ -253,7 +222,7 @@
           </div>
 
           <!-- Main Console Grid (5 Cols: 3 Left Telemetry+Charts, 2 Right Doughnut+AI Assistant) -->
-          <div class="grid gap-4 rounded-2xl bg-slate-900/70 p-2 sm:p-4 lg:grid-cols-5 border border-white/5">
+          <div class="grid gap-4 rounded-2xl p-0 lg:grid-cols-5 border border-white/5">
 
             <!-- LEFT (3 COLS): Active Spot Header + Swell Energy Bar Chart + 10 Mandatory Surf Metrics -->
             <div class="space-y-4 rounded-2xl bg-slate-950/85 p-3 sm:p-4 lg:col-span-3 border border-white/5">
@@ -272,9 +241,27 @@
                     Litoral Norte · A 5,8 km de você · Curva horária de Energia da Ondulação (kJ)
                   </p>
                 </div>
-                <span id="spotScorePill" class="inline-flex items-center gap-1 rounded-full bg-slate-800/80 border border-white/10 px-3 py-1 text-[10px] font-semibold text-sky-300">
-                  Score 97/100
-                </span>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button type="button" id="btnEnrichSpot" onclick="triggerSpotEnrichment(false)" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/35 px-3 py-1 text-[10px] font-semibold text-indigo-200 transition-colors">
+                    <span>✨</span>
+                    <span id="btnEnrichSpotLabel">Detalhes / Insights da IA</span>
+                  </button>
+                  <span id="spotScorePill" class="inline-flex items-center gap-1 rounded-full bg-slate-800/80 border border-white/10 px-3 py-1 text-[10px] font-semibold text-sky-300">
+                    Score 97/100
+                  </span>
+                </div>
+              </div>
+
+              <!-- Painel de Insights da IA & Aprendizado Contínuo (Web Grounding) -->
+              <div id="spotAiInsightsPanel" class="hidden rounded-2xl bg-indigo-950/35 border border-indigo-400/25 p-4 space-y-2.5 text-xs">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                  <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-300">
+                    🧠 CONHECIMENTO DO PICO · WEB GROUNDING IA
+                  </span>
+                  <span id="spotInsightsMeta" class="text-[10px] text-slate-400">Atualizado pela IA</span>
+                </div>
+                <p id="spotLocalNotesText" class="text-slate-200 leading-relaxed"></p>
+                <div id="spotTechBadges" class="flex flex-wrap gap-1.5 pt-1"></div>
               </div>
 
               <!-- ALL 10 MANDATORY SURF METRICS (4 Simplified Equal-Height Telemetry Cards — Positioned BEFORE Wave Period Chart) -->
@@ -398,30 +385,111 @@
 
   </main>
 
+  <!-- =====================================================================
+       MODAL: COMO USAR O SURFAGENT (Guia Rápido + Clima/Turnos no Background)
+       ===================================================================== -->
+  <div id="howToUseModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/75 backdrop-blur-md" onclick="if(event.target === this) closeHowToUseModal()">
+    <div class="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-3xl bg-[#071122]/95 border border-sky-400/30 p-6 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.85)] text-left space-y-5">
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">GUIA RÁPIDO · VOICE-FIRST SURF AI</span>
+          <h2 class="text-xl font-semibold text-white mt-1">Como usar o SurfAgent</h2>
+        </div>
+        <button type="button" onclick="closeHowToUseModal()" aria-label="Fechar" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-sm font-bold shrink-0">
+          ×
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
+        <!-- 1. Consulta por Voz -->
+        <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
+          <h3 class="font-semibold text-sky-300 text-sm mb-1.5">🎙️ 1. Fale com o SurfAgent (Push-to-Talk)</h3>
+          <p class="text-slate-300">
+            Toque em <strong>Pergunte ao SurfAgent</strong> para ativar o microfone. Na primeira vez, a IA pergunta se você quer filtrar pelo seu nível (<strong>Iniciante</strong>, <strong>Intermediário</strong> ou <strong>Avançado</strong>) ou buscar a praia com as <strong>melhores condições gerais</strong>. Você também pode ir direto ao ponto dizendo <em>"Sou iniciante, onde está bom hoje?"</em>.
+          </p>
+        </div>
+
+        <!-- 2. Uma ou várias praias ao mesmo tempo -->
+        <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
+          <h3 class="font-semibold text-emerald-300 text-sm mb-1.5">🌊 2. Pesquise uma ou várias praias de uma vez</h3>
+          <p class="text-slate-300">
+            Peça por voz ou digite no campo de busca uma praia específica (<em>"Como está Maresias?"</em>) ou várias juntas (<em>"Quais as previsões de Stella, Jaguaribe e Itacimirim?"</em>). O SurfAgent cria uma aba para cada pico, salva automaticamente no seu dispositivo e mantém os dados sempre atualizados ao reabrir o app.
+          </p>
+        </div>
+
+        <!-- 3. Background Dinâmico: Clima e Turnos -->
+        <div class="rounded-2xl bg-sky-950/50 border border-sky-400/25 p-4">
+          <h3 class="font-semibold text-amber-300 text-sm mb-1.5">🌦️ 3. Background Vivo: Clima e Turnos em Tempo Real</h3>
+          <p class="text-slate-200">
+            O fundo do aplicativo muda automaticamente conforme o <strong>clima atual</strong> e o <strong>turno (dia ou noite)</strong> no fuso horário local do pico selecionado:
+          </p>
+          <ul class="mt-2 space-y-1 text-xs text-slate-300">
+            <li>☀️ <strong>Dia Ensolarado:</strong> Céu azul costeiro vibrante com sol radiante.</li>
+            <li>⛅ <strong>Nublado / Chuvoso:</strong> Tons prata-acinzentados com nuvens em movimento e chuva sutil.</li>
+            <li>⛈️ <strong>Tempestade Elétrica:</strong> Céu carregado com flashes orgânicos de relâmpago.</li>
+            <li>🌙 <strong>Turno da Noite:</strong> Céu noturno estrelado em azul-marinho profundo com brilho lunar.</li>
+          </ul>
+        </div>
+
+        <!-- 4. Gráficos Interativos, Bússola ao Vivo e Insights da IA -->
+        <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
+          <h3 class="font-semibold text-indigo-300 text-sm mb-1.5">🧭 4. Gráficos, Bússola ao Vivo &amp; Insights da IA</h3>
+          <p class="text-slate-300">
+            Toque nas barras de <strong>Ondas</strong>, <strong>Energia</strong> e <strong>Vento</strong> para ver a hora exata e o valor sobre cada barra. Use o botão <strong>✨ Detalhes / Insights da IA</strong> (ou diga <em>"Me fale mais sobre esse pico"</em>) para pesquisar bancada, fundo e melhor maré, e aproveite a <strong>Bússola ao Vivo</strong> alinhada automaticamente com o Norte real no celular.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button type="button" onclick="closeHowToUseModal()" class="rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-6 py-2.5 text-xs font-semibold text-slate-950 hover:from-sky-300 hover:to-blue-400 transition-all">
+          Entendi, vamos checar o mar!
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Open-Meteo Surf & Marine Ingestion Service -->
   <script src="./DsySA/open-meteo-service.js"></script>
 
   <!-- DsySA Compass Service (Mobile Sensors & Real-time Live Compass) -->
   <script src="./DsySA/compass-service.js"></script>
 
+  <!-- surfeAgent Spot Knowledge & Auto-Discovery Service (Web Grounding) -->
+  <script src="./DsySA/spot-knowledge-service.js"></script>
+
+  <!-- surfeAgent Guardrail, Strict Grounding & Deterministic LLM Service -->
+  <script src="./DsySA/surfeagent-llm-guardrail.js"></script>
+
   <!-- DsySA Core JS -->
   <script src="./DsySA/dsysa.js"></script>
 
   <!-- SurfAgent Interactive Voice + Tabs + Charts Logic -->
   <script>
-    const NEARBY_4_SPOTS = [
+    // =========================================================================
+    // 1. BASE DE PICOS DE SURFE COM METADADOS TÉCNICOS COMPLETOS
+    // (bottomType, bestTide, offshoreWindDeg, beachFaceDeg, coordenadas e baseline)
+    // =========================================================================
+    const SPOTS_DATABASE = [
+      // --- SALVADOR & LITORAL NORTE (BA) ---
       {
         id: 'itacimirim',
         name: 'Itacimirim (A Espera)',
-        region: 'Litoral Norte · A 5,8 km de você',
+        baseRegion: 'Litoral Norte, BA',
+        region: 'Litoral Norte · A Espera',
         lat: -12.63,
         lon: -38.05,
+        bottomType: 'reef',
+        bestTide: 'MID',
+        offshoreWindDeg: [270, 340],
+        beachFaceDeg: 135,
         swellSize: '1.7 m',
         swellPeriod: '13 s',
         swellDir: 'SE 135°',
         energy: '640 kJ',
         windSpeed: '7 km/h',
+        windSpeedKnots: 3.8,
         windDir: 'NO 315°',
+        windDirDeg: 315,
         windRelation: 'Terral Liso',
         tidePhase: 'Enchendo (0.9m → 1.8m às 15:10)',
         moonPhase: '🌕 Lua Cheia (Maré Viva)',
@@ -429,27 +497,27 @@
         waterTemp: '26 °C (Boardshort / Lycra)',
         hourlyEnergy: [390, 450, 540, 640, 600, 510, 430, 360],
         peakHourIndex: 3,
-        distribution: [55, 30, 15],
-        scores: { sem_nivel: 97, avancado: 96, intermediario: 84, iniciante: 55 },
-        speech: {
-          sem_nivel: 'Sem filtro de nível, Itacimirim é o melhor pico entre os 4 mais próximos com todas as combinações para uma onda boa, bem formada e forte: 1,7m com 13 segundos de período, 640 kJ de energia, vento terral liso e maré enchendo.',
-          avancado: 'Para o seu nível avançado, Itacimirim é o melhor pico agora com 1,7m, 13s, 640 kJ de energia e vento terral.',
-          intermediario: 'Itacimirim está com ondas fortes de 1,7m e 640 kJ, exigindo preparo nas séries.',
-          iniciante: 'Itacimirim está pesado agora (640 kJ) para iniciantes; confira a aba de Guarajuba.'
-        }
+        distribution: [55, 30, 15]
       },
       {
         id: 'stella_maris',
         name: 'Stella Maris',
-        region: 'Salvador · A 8,2 km de você',
+        baseRegion: 'Salvador, BA',
+        region: 'Salvador · Stella Maris',
         lat: -12.95,
         lon: -38.35,
+        bottomType: 'sand',
+        bestTide: 'LOW',
+        offshoreWindDeg: [260, 330],
+        beachFaceDeg: 140,
         swellSize: '1.2 m',
         swellPeriod: '11 s',
         swellDir: 'SE 142°',
         energy: '380 kJ',
         windSpeed: '9 km/h',
+        windSpeedKnots: 4.9,
         windDir: 'O 275°',
+        windDirDeg: 275,
         windRelation: 'Terral Fraco',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:05)',
         moonPhase: '🌕 Lua Cheia',
@@ -457,27 +525,27 @@
         waterTemp: '26 °C (Lycra)',
         hourlyEnergy: [260, 310, 350, 380, 360, 320, 290, 250],
         peakHourIndex: 3,
-        distribution: [48, 32, 20],
-        scores: { sem_nivel: 86, avancado: 82, intermediario: 95, iniciante: 78 },
-        speech: {
-          sem_nivel: 'Stella Maris apresenta boas paredes de 1,2m, 11s de período, 380 kJ e vento terral fraco.',
-          intermediario: 'Para nível intermediário, Stella Maris é o melhor pico entre os 4 mais próximos! Ondas manobráveis de 1,2m com 11 segundos, 380 kJ e vento terral fraco.',
-          avancado: 'Stella Maris tem boas valas para manobras com 1,2m e 380 kJ.',
-          iniciante: 'Stella Maris tem 1,2m; atenção às correntes.'
-        }
+        distribution: [48, 32, 20]
       },
       {
         id: 'guarajuba',
         name: 'Guarajuba (Praia do Surf)',
-        region: 'Litoral Norte · A 9,5 km de você',
+        baseRegion: 'Litoral Norte, BA',
+        region: 'Litoral Norte · Guarajuba',
         lat: -12.65,
         lon: -38.07,
+        bottomType: 'sand',
+        bestTide: 'MID',
+        offshoreWindDeg: [280, 340],
+        beachFaceDeg: 120,
         swellSize: '0.8 m',
         swellPeriod: '10 s',
         swellDir: 'L-SE 120°',
         energy: '195 kJ',
         windSpeed: '6 km/h',
+        windSpeedKnots: 3.2,
         windDir: 'NO 310°',
+        windDirDeg: 310,
         windRelation: 'Terral Fraco',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:12)',
         moonPhase: '🌕 Lua Cheia',
@@ -485,27 +553,27 @@
         waterTemp: '26 °C (Água Quente)',
         hourlyEnergy: [140, 165, 180, 195, 185, 170, 150, 130],
         peakHourIndex: 3,
-        distribution: [42, 38, 20],
-        scores: { sem_nivel: 75, avancado: 64, intermediario: 83, iniciante: 96 },
-        speech: {
-          sem_nivel: 'Guarajuba está com ondas menores de 0,8m, 10s e 195 kJ, muito lisas.',
-          iniciante: 'Para nível iniciante, Guarajuba é o melhor pico hoje! Ondas suaves e bem formadas de 0,8m, energia controlada de 195 kJ e vento terral fraco de 6 km/h.',
-          intermediario: 'Ótima opção para longboard ou funboard em Guarajuba.',
-          avancado: 'Ondas pequenas em Guarajuba no momento.'
-        }
+        distribution: [42, 38, 20]
       },
       {
         id: 'pedra_do_sal',
         name: 'Pedra do Sal',
-        region: 'Itapuã · A 11,0 km de você',
+        baseRegion: 'Salvador, BA',
+        region: 'Itapuã · Pedra do Sal',
         lat: -12.94,
         lon: -38.36,
+        bottomType: 'point',
+        bestTide: 'MID',
+        offshoreWindDeg: [270, 330],
+        beachFaceDeg: 95,
         swellSize: '1.1 m',
         swellPeriod: '9 s',
         swellDir: 'L 95°',
         energy: '240 kJ',
         windSpeed: '18 km/h',
+        windSpeedKnots: 9.7,
         windDir: 'L 90°',
+        windDirDeg: 90,
         windRelation: 'Lateral / Maral',
         tidePhase: 'Enchendo (0.8m → 1.7m às 15:00)',
         moonPhase: '🌕 Lua Cheia',
@@ -513,27 +581,84 @@
         waterTemp: '25 °C (Confortável)',
         hourlyEnergy: [190, 210, 225, 240, 230, 215, 200, 180],
         peakHourIndex: 3,
-        distribution: [45, 20, 35],
-        scores: { sem_nivel: 68, avancado: 65, intermediario: 70, iniciante: 62 },
-        speech: {
-          sem_nivel: 'Pedra do Sal tem 1,1m com 9s e 240 kJ, mas o vento lateral de 18 km/h deixa o mar mexido.'
-        }
-      }
-    ];
-
-    const SPECIFIC_PRESETS = {
-      maresias: {
+        distribution: [45, 20, 35]
+      },
+      {
+        id: 'barravento',
+        name: 'Barravento (Farol da Barra)',
+        baseRegion: 'Salvador, BA',
+        region: 'Salvador · Farol da Barra',
+        lat: -13.01,
+        lon: -38.53,
+        bottomType: 'reef',
+        bestTide: 'LOW',
+        offshoreWindDeg: [0, 90],
+        beachFaceDeg: 210,
+        swellSize: '1.3 m',
+        swellPeriod: '11 s',
+        swellDir: 'S 180°',
+        energy: '410 kJ',
+        windSpeed: '11 km/h',
+        windSpeedKnots: 5.9,
+        windDir: 'NE 45°',
+        windDirDeg: 45,
+        windRelation: 'Terral Fraco',
+        tidePhase: 'Secando (1.4m → 0.4m às 16:30)',
+        moonPhase: '🌕 Lua Cheia',
+        weather: '☀️ Sol (28 °C)',
+        waterTemp: '26 °C',
+        hourlyEnergy: [290, 340, 380, 410, 395, 360, 320, 280],
+        peakHourIndex: 3,
+        distribution: [50, 30, 20]
+      },
+      {
+        id: 'praia_do_forte',
+        name: 'Praia do Forte (Lord)',
+        baseRegion: 'Litoral Norte, BA',
+        region: 'Litoral Norte · Praia do Forte',
+        lat: -12.57,
+        lon: -38.01,
+        bottomType: 'reef',
+        bestTide: 'LOW',
+        offshoreWindDeg: [270, 340],
+        beachFaceDeg: 110,
+        swellSize: '1.5 m',
+        swellPeriod: '12 s',
+        swellDir: 'SE 130°',
+        energy: '510 kJ',
+        windSpeed: '9 km/h',
+        windSpeedKnots: 4.8,
+        windDir: 'NO 310°',
+        windDirDeg: 310,
+        windRelation: 'Terral Liso',
+        tidePhase: 'Secando (1.3m → 0.4m às 16:20)',
+        moonPhase: '🌕 Lua Cheia',
+        weather: '☀️ Sol (29 °C)',
+        waterTemp: '26 °C',
+        hourlyEnergy: [350, 410, 470, 510, 490, 440, 390, 340],
+        peakHourIndex: 3,
+        distribution: [52, 30, 18]
+      },
+      // --- SÃO PAULO (SP) ---
+      {
         id: 'spec_maresias',
         name: 'Maresias',
-        region: 'São Sebastião, SP · Pico Específico',
+        baseRegion: 'São Sebastião, SP',
+        region: 'São Sebastião, SP · Litoral Norte',
         lat: -23.79,
         lon: -45.56,
+        bottomType: 'sand',
+        bestTide: 'MID',
+        offshoreWindDeg: [340, 45],
+        beachFaceDeg: 170,
         swellSize: '1.6 m',
         swellPeriod: '12 s',
         swellDir: 'S-SE 155°',
         energy: '530 kJ',
         windSpeed: '8 km/h',
+        windSpeedKnots: 4.3,
         windDir: 'N 10°',
+        windDirDeg: 10,
         windRelation: 'Terral',
         tidePhase: 'Vazante (1.1m → 0.3m às 16:40)',
         moonPhase: '🌕 Lua Cheia',
@@ -543,18 +668,54 @@
         peakHourIndex: 3,
         distribution: [52, 30, 18]
       },
-      arpoador: {
+      {
+        id: 'spec_itamambuca',
+        name: 'Itamambuca',
+        baseRegion: 'Ubatuba, SP',
+        region: 'Ubatuba, SP · Praia do Surf',
+        lat: -23.40,
+        lon: -45.01,
+        bottomType: 'sand',
+        bestTide: 'MID',
+        offshoreWindDeg: [280, 360],
+        beachFaceDeg: 140,
+        swellSize: '1.5 m',
+        swellPeriod: '12 s',
+        swellDir: 'SE 140°',
+        energy: '470 kJ',
+        windSpeed: '7 km/h',
+        windSpeedKnots: 3.8,
+        windDir: 'NO 300°',
+        windDirDeg: 300,
+        windRelation: 'Terral Liso',
+        tidePhase: 'Enchendo (0.7m → 1.5m às 15:20)',
+        moonPhase: '🌕 Lua Cheia',
+        weather: '☀️ Sol (26 °C)',
+        waterTemp: '23 °C (Lycra / 2mm)',
+        hourlyEnergy: [320, 390, 440, 470, 450, 410, 380, 340],
+        peakHourIndex: 3,
+        distribution: [50, 32, 18]
+      },
+      // --- RIO DE JANEIRO (RJ) ---
+      {
         id: 'spec_arpoador',
         name: 'Arpoador',
-        region: 'Rio de Janeiro, RJ · Pico Específico',
+        baseRegion: 'Rio de Janeiro, RJ',
+        region: 'Rio de Janeiro, RJ · Ipanema/Arpoador',
         lat: -22.99,
         lon: -43.19,
+        bottomType: 'point',
+        bestTide: 'LOW',
+        offshoreWindDeg: [10, 80],
+        beachFaceDeg: 195,
         swellSize: '1.3 m',
         swellPeriod: '11 s',
         swellDir: 'S-SO 195°',
         energy: '390 kJ',
         windSpeed: '10 km/h',
+        windSpeedKnots: 5.4,
         windDir: 'NE 45°',
+        windDirDeg: 45,
         windRelation: 'Terral',
         tidePhase: 'Enchendo (0.6m → 1.3m às 15:30)',
         moonPhase: '🌕 Lua Cheia',
@@ -564,84 +725,456 @@
         peakHourIndex: 3,
         distribution: [48, 32, 20]
       },
-      itamambuca: {
-        id: 'spec_itamambuca',
-        name: 'Itamambuca',
-        region: 'Ubatuba, SP · Pico Específico',
-        lat: -23.40,
-        lon: -45.01,
-        swellSize: '1.5 m',
+      {
+        id: 'prainha_rj',
+        name: 'Prainha',
+        baseRegion: 'Rio de Janeiro, RJ',
+        region: 'Rio de Janeiro, RJ · Reserva Ambiental',
+        lat: -23.04,
+        lon: -43.51,
+        bottomType: 'sand',
+        bestTide: 'MID',
+        offshoreWindDeg: [330, 45],
+        beachFaceDeg: 180,
+        swellSize: '1.6 m',
         swellPeriod: '12 s',
-        swellDir: 'SE 140°',
-        energy: '470 kJ',
+        swellDir: 'S-SO 190°',
+        energy: '550 kJ',
         windSpeed: '7 km/h',
-        windDir: 'NO 300°',
+        windSpeedKnots: 3.8,
+        windDir: 'NNE 20°',
+        windDirDeg: 20,
         windRelation: 'Terral Liso',
-        tidePhase: 'Enchendo (0.7m → 1.5m às 15:20)',
+        tidePhase: 'Enchendo (0.7m → 1.4m às 15:25)',
         moonPhase: '🌕 Lua Cheia',
         weather: '☀️ Sol (26 °C)',
-        waterTemp: '23 °C (Lycra / 2mm)',
-        hourlyEnergy: [320, 390, 440, 470, 450, 410, 380, 340],
+        waterTemp: '20 °C (Wetsuit 2mm)',
+        hourlyEnergy: [390, 460, 510, 550, 520, 470, 420, 380],
         peakHourIndex: 3,
-        distribution: [50, 32, 18]
+        distribution: [52, 30, 18]
+      },
+      // --- SANTA CATARINA (SC) ---
+      {
+        id: 'joaquina_sc',
+        name: 'Praia da Joaquina',
+        baseRegion: 'Florianópolis, SC',
+        region: 'Florianópolis, SC · Joaquina',
+        lat: -27.63,
+        lon: -48.45,
+        bottomType: 'sand',
+        bestTide: 'MID',
+        offshoreWindDeg: [250, 330],
+        beachFaceDeg: 100,
+        swellSize: '1.4 m',
+        swellPeriod: '11 s',
+        swellDir: 'L-SE 110°',
+        energy: '420 kJ',
+        windSpeed: '11 km/h',
+        windSpeedKnots: 5.9,
+        windDir: 'O 280°',
+        windDirDeg: 280,
+        windRelation: 'Terral',
+        tidePhase: 'Enchendo (0.5m → 1.2m às 15:00)',
+        moonPhase: '🌕 Lua Cheia',
+        weather: '⛅ Parcialmente nublado (22 °C)',
+        waterTemp: '19 °C (Long John 3/2mm)',
+        hourlyEnergy: [310, 360, 400, 420, 410, 380, 340, 300],
+        peakHourIndex: 3,
+        distribution: [48, 32, 20]
       }
-    };
+    ];
 
     const STORAGE_KEY = 'dsysa_surfagent_tabs_v1';
+    const ONBOARDING_KEY = 'surfeAgent_onboardingCompleted';
+    const SHARED_SPOTS_CACHE_KEY = 'surfeAgent_global_surf_spots_v2';
+    const TURN_TAKING_SUFFIX = ' Sempre que quiser responder ou fazer uma nova consulta, basta clicar novamente no botão Falar com o surfeAgent.';
     let voiceMuted = false;
+    let voiceState = 'IDLE'; // 'IDLE' | 'PROMPTING_LEVEL' | 'WAITING_REPLY' | 'LISTENING_RESPONSE' | 'PROCESSING'
+    let userCoords = null;
+
+    function isOnboardingCompleted() {
+      return localStorage.getItem(ONBOARDING_KEY) === 'true';
+    }
+
+    function markOnboardingCompleted() {
+      localStorage.setItem(ONBOARDING_KEY, 'true');
+    }
+
+    // Normaliza e garante metadados da coleção global `surf_spots`
+    function normalizeSpotSchema(spot) {
+      return {
+        ...spot,
+        aliases: Array.isArray(spot.aliases) ? spot.aliases : [spot.name],
+        baseRegion: spot.baseRegion || spot.region || 'Litoral',
+        state: spot.state || '',
+        idealSwellDir: spot.idealSwellDir || [110, 180],
+        offshoreWindDir: spot.offshoreWindDir || spot.offshoreWindDeg || [270, 340],
+        offshoreWindDeg: spot.offshoreWindDeg || spot.offshoreWindDir || [270, 340],
+        skillLevelFit: spot.skillLevelFit || ['iniciante', 'intermediario', 'avancado'],
+        localNotes: spot.localNotes || `Bancada com fundo de ${spot.bottomType === 'reef' ? 'coral/pedra' : spot.bottomType === 'point' ? 'point break' : 'areia'}, ideal na maré ${spot.bestTide || 'MID'}.`,
+        lastEnrichedAt: spot.lastEnrichedAt || new Date().toISOString(),
+        searchCount: typeof spot.searchCount === 'number' ? spot.searchCount : 50
+      };
+    }
+
+    function persistGlobalSpotsLocal() {
+      try {
+        localStorage.setItem(SHARED_SPOTS_CACHE_KEY, JSON.stringify(SPOTS_DATABASE));
+      } catch (e) {}
+    }
+
+    async function syncGlobalSpotsFromBackend() {
+      // 1. Mescla cache colaborativo local (se houver picos recém-descobertos)
+      try {
+        const localRaw = localStorage.getItem(SHARED_SPOTS_CACHE_KEY);
+        if (localRaw) {
+          const localList = JSON.parse(localRaw);
+          if (Array.isArray(localList)) {
+            localList.forEach(s => {
+              const normS = normalizeSpotSchema(s);
+              const idx = SPOTS_DATABASE.findIndex(x => x.id === normS.id);
+              if (idx >= 0) SPOTS_DATABASE[idx] = { ...SPOTS_DATABASE[idx], ...normS };
+              else SPOTS_DATABASE.push(normS);
+            });
+          }
+        }
+      } catch (e) {}
+
+      // 2. Sincroniza com a API global compartilhada GET /api/spots (quando rodando via servidor)
+      if (window.location.protocol.startsWith('http')) {
+        try {
+          const res = await fetch('/api/spots');
+          if (res.ok) {
+            const payload = await res.json();
+            if (payload && Array.isArray(payload.spots) && payload.spots.length > 0) {
+              payload.spots.forEach(s => {
+                const normS = normalizeSpotSchema(s);
+                const idx = SPOTS_DATABASE.findIndex(x => x.id === normS.id);
+                if (idx >= 0) SPOTS_DATABASE[idx] = { ...SPOTS_DATABASE[idx], ...normS };
+                else SPOTS_DATABASE.push(normS);
+              });
+              persistGlobalSpotsLocal();
+            }
+          }
+        } catch (e) {}
+      }
+
+      // Garante schema completo em todos os itens
+      for (let i = 0; i < SPOTS_DATABASE.length; i++) {
+        SPOTS_DATABASE[i] = normalizeSpotSchema(SPOTS_DATABASE[i]);
+      }
+    }
+
     let appState = {
       tabs: [],
       activeTabId: null,
-      currentMode: 'sem_nivel'
+      currentMode: 'sem_nivel',
+      hasGeo: false
     };
 
-    function speakText(msg) {
-      document.getElementById('voiceTranscriptBar').innerHTML = `<span class="opacity-60">SurfAgent Voz:</span> "${msg}"`;
-      if (voiceMuted || !('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(msg);
-      u.lang = 'pt-BR';
-      u.rate = 1.05;
-      window.speechSynthesis.speak(u);
+    // =========================================================================
+    // 2. FÓRMULA DE HAVERSINE (Distância em km entre duas coordenadas geográficas)
+    // =========================================================================
+    function calculateHaversineDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Raio da Terra em km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
     }
 
-    function toggleVoiceMute() {
-      voiceMuted = !voiceMuted;
-      document.getElementById('navMuteBtn').textContent = voiceMuted ? '🔇 VOZ MUDA' : '🔊 VOZ IA ATIVA';
-      if (voiceMuted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    // =========================================================================
+    // 3. GEOLOCALIZAÇÃO E OBTENÇÃO DOS 4 PICOS MAIS PRÓXIMOS
+    // =========================================================================
+    function getNearest4Spots(lat, lon) {
+      const sorted = SPOTS_DATABASE.map(spot => {
+        const dist = calculateHaversineDistanceKm(lat, lon, spot.lat, spot.lon);
+        return {
+          ...spot,
+          distanceKm: dist,
+          region: `${spot.baseRegion} · A ${dist < 10 ? dist.toFixed(1) : Math.round(dist)} km de você`
+        };
+      }).sort((a, b) => a.distanceKm - b.distanceKm);
+
+      return sorted.slice(0, 4);
     }
 
-    // Regra 1: "Qual o melhor pico para surfar hoje?" -> Pergunta se quer filtrar pelo nível de surfe
-    function triggerBestSpotFlow() {
-      const alertBox = document.getElementById('levelQuestionAlert');
-      alertBox.classList.remove('hidden');
-      alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      speakText('Identifiquei sua localização e os 4 picos mais próximos. Você deseja saber de acordo com o seu nível de surfe?');
+    function getDefault4Spots() {
+      // Fallback: 4 picos mais populares (searchCount) da base global compartilhada
+      return [...SPOTS_DATABASE]
+        .sort((a, b) => (b.searchCount || 0) - (a.searchCount || 0))
+        .slice(0, 4)
+        .map((spot) => ({
+          ...spot,
+          region: `${spot.baseRegion} · Top Popular (${spot.searchCount || 1} buscas)`
+        }));
     }
 
-    function applyLevelRecommendation(mode, shouldSpeak) {
-      document.getElementById('levelQuestionAlert').classList.add('hidden');
-      appState.currentMode = mode;
+    function showGeoFallback(msg) {
+      const banner = document.getElementById('geoNoticeBanner');
+      const text = document.getElementById('geoNoticeText');
+      if (banner && text) {
+        text.textContent = msg || 'Localização desativada · Exibindo os 4 picos mais populares da base global';
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+      }
+      const badge = document.getElementById('levelAlertGpsBadge');
+      if (badge) badge.textContent = '🔥 Top 4 mais populares';
+    }
+
+    function hideGeoFallback() {
+      const banner = document.getElementById('geoNoticeBanner');
+      if (banner) {
+        banner.classList.add('hidden');
+        banner.classList.remove('flex');
+      }
+      const badge = document.getElementById('levelAlertGpsBadge');
+      if (badge) badge.textContent = '📍 4 picos mais próximos da sua localização';
+    }
+
+    function requestUserGeolocation(forcePrompt = false) {
+      if (!('geolocation' in navigator)) {
+        showGeoFallback('Geolocalização não suportada neste dispositivo · Usando Salvador');
+        setupInitialSpots(getDefault4Spots(), false);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+          appState.hasGeo = true;
+          hideGeoFallback();
+          console.log(`📍 [GPS Ativo] Localização: ${userCoords.lat.toFixed(4)}, ${userCoords.lon.toFixed(4)}`);
+          
+          const nearest4 = getNearest4Spots(userCoords.lat, userCoords.lon);
+          setupInitialSpots(nearest4, true);
+        },
+        (err) => {
+          console.warn('⚠️ Geolocalização negada/indisponível:', err.message);
+          showGeoFallback('Localização desativada · Usando Salvador como padrão');
+          setupInitialSpots(getDefault4Spots(), false);
+        },
+        { timeout: 8000, maximumAge: 600000, enableHighAccuracy: false }
+      );
+    }
+
+    function setupInitialSpots(initialSpots, fromGps) {
+      // Se não havia abas abertas ou se forçado pelo botão "Ativar Localização"
+      if (!appState.tabs || appState.tabs.length === 0 || fromGps) {
+        appState.tabs = initialSpots.map(s => ({ ...s, isBest: false, isSpecific: false }));
+        appState.activeTabId = initialSpots[0].id;
+      } else {
+        // Atualiza as distâncias das abas que pertencem à base
+        appState.tabs.forEach(tab => {
+          const match = initialSpots.find(s => s.id === tab.id);
+          if (match) {
+            tab.distanceKm = match.distanceKm;
+            tab.region = match.region;
+          }
+        });
+      }
+
+      // Aplica o ranqueamento com o modo ativo
+      rankSpotsForSurfer(appState.tabs, appState.currentMode || 'INTENT_NO_LEVEL', false);
+    }
+
+    // =========================================================================
+    // 4. MOTOR DE RANQUEAMENTO E PONTUAÇÃO (MATRIZ CALIBRADA DE SURF)
+    // =========================================================================
+    function getWindAlignment(windDeg, offshoreRange) {
+      if (!offshoreRange || offshoreRange.length !== 2) {
+        return { relation: 'Vento Médio', isTerral: false, score: 60 };
+      }
+      const [minDeg, maxDeg] = offshoreRange;
+      let center = (minDeg + maxDeg) / 2;
+      let halfSpan = Math.abs(maxDeg - minDeg) / 2;
+      if (minDeg > maxDeg) {
+        center = ((minDeg + maxDeg + 360) / 2) % 360;
+        halfSpan = (360 - minDeg + maxDeg) / 2;
+      }
+
+      const diff = Math.abs(((windDeg - center + 540) % 360) - 180);
+
+      if (diff <= halfSpan + 10) {
+        return { relation: 'Terral Liso (Offshore)', isTerral: true, score: 100 };
+      } else if (diff <= halfSpan + 35) {
+        return { relation: 'Lateral-Terral', isTerral: true, score: 75 };
+      } else if (diff <= 90) {
+        return { relation: 'Vento Lateral (Cruzado)', isTerral: false, score: 45 };
+      } else {
+        return { relation: 'Maral (Onshore)', isTerral: false, score: 15 };
+      }
+    }
+
+    function rankSpotsForSurfer(spots, intent, shouldSpeak = false) {
+      if (!spots || spots.length === 0) return;
+
+      const scoredSpots = spots.map(spot => {
+        // Extrai parâmetros oceanográficos atuais
+        const rawH = typeof spot.swellSize === 'number' ? spot.swellSize : parseFloat(spot.swellSize || 1.2);
+        const rawP = typeof spot.swellPeriod === 'number' ? spot.swellPeriod : parseFloat(spot.swellPeriod || 11);
+        const rawE = typeof spot.energy === 'number' ? spot.energy : parseInt(spot.energy || 400, 10);
+        const rawWk = typeof spot.windSpeedKnots === 'number' ? spot.windSpeedKnots : (parseFloat(spot.windSpeed || 8) / 1.852);
+        const rawWdeg = typeof spot.windDirDeg === 'number' ? spot.windDirDeg : (parseInt((spot.windDir || '').match(/\d+/)?.[0] || 270, 10));
+
+        const windEval = getWindAlignment(rawWdeg, spot.offshoreWindDeg);
+        spot.windRelation = windEval.relation;
+
+        // 1. Altura da Onda (30%)
+        let hScore = 50;
+        if (intent === 'INTENT_BEGINNER' || intent === 'iniciante') {
+          if (rawH >= 0.3 && rawH <= 0.6) hScore = 100;
+          else if (rawH > 0.6 && rawH <= 0.8) hScore = 75;
+          else if (rawH > 0.8) hScore = Math.max(15, 100 - (rawH - 0.6) * 110);
+          else hScore = 50;
+        } else if (intent === 'INTENT_INTERMEDIATE' || intent === 'intermediario') {
+          if (rawH >= 0.6 && rawH <= 1.2) hScore = 100;
+          else if (rawH > 1.2 && rawH <= 1.5) hScore = 80;
+          else if (rawH >= 0.4 && rawH < 0.6) hScore = 70;
+          else hScore = 40;
+        } else if (intent === 'INTENT_ADVANCED' || intent === 'avancado') {
+          if (rawH >= 1.4) hScore = 100;
+          else if (rawH >= 1.0) hScore = 90;
+          else if (rawH >= 0.8) hScore = 65;
+          else hScore = 30;
+        } else {
+          // INTENT_NO_LEVEL (Clássico / Melhores Condições)
+          if (rawH >= 1.0 || (rawH >= 0.8 && rawP >= 12)) hScore = 100;
+          else if (rawH >= 0.7) hScore = 80;
+          else hScore = Math.max(30, Math.round((rawH / 1.0) * 70));
+        }
+
+        // 2. Vento: Direção e Intensidade (30%)
+        let wSpeedPenalty = 1.0;
+        const maxKts = intent.includes('BEGINNER') || intent === 'iniciante' ? 10 :
+                       intent.includes('INTERMEDIATE') || intent === 'intermediario' ? 12 :
+                       intent.includes('ADVANCED') || intent === 'avancado' ? 14 : 8;
+
+        if (rawWk <= 4.0) {
+          wSpeedPenalty = 1.0; // Vidro total
+        } else if (rawWk <= maxKts) {
+          wSpeedPenalty = 0.95;
+        } else if (rawWk <= maxKts + 5) {
+          wSpeedPenalty = 0.65;
+        } else {
+          wSpeedPenalty = 0.35;
+        }
+        const wScore = Math.round(windEval.score * wSpeedPenalty);
+
+        // 3. Período e Energia (25%)
+        let eScore = 50;
+        if (intent === 'INTENT_BEGINNER' || intent === 'iniciante') {
+          if (rawP <= 10 && rawE >= 100 && rawE <= 450) eScore = 100;
+          else if (rawE > 500) eScore = Math.max(20, 100 - (rawE - 450) * 0.2);
+          else eScore = 65;
+        } else if (intent === 'INTENT_INTERMEDIATE' || intent === 'intermediario') {
+          if (rawP >= 9 && rawP <= 13 && rawE >= 400 && rawE <= 900) eScore = 100;
+          else eScore = 70;
+        } else if (intent === 'INTENT_ADVANCED' || intent === 'avancado') {
+          if (rawP >= 11 && rawE >= 600) eScore = 100;
+          else if (rawE >= 500) eScore = 85;
+          else eScore = 50;
+        } else {
+          // INTENT_NO_LEVEL
+          if (rawP >= 10 && rawE >= 500) eScore = 100;
+          else if (rawP >= 9 && rawE >= 350) eScore = 80;
+          else eScore = Math.max(35, Math.round((rawE / 500) * 80));
+        }
+
+        // 4. Tipo de Fundo e Compatibilidade com Maré (15%)
+        let tideMatchScore = 70;
+        const currentTideState = (spot.tidePhase || '').toLowerCase().includes('enchen') ? 'MID' :
+                                 (spot.tidePhase || '').toLowerCase().includes('vazan') || (spot.tidePhase || '').toLowerCase().includes('seca') ? 'LOW' : 'MID';
+
+        if (spot.bestTide === 'ALL' || spot.bestTide === currentTideState) {
+          tideMatchScore = 100;
+        } else {
+          tideMatchScore = 55;
+        }
+
+        let bottomScore = 100;
+        if (intent === 'INTENT_BEGINNER' || intent === 'iniciante') {
+          bottomScore = spot.bottomType === 'sand' ? 100 : 35;
+        } else if (intent === 'INTENT_ADVANCED' || intent === 'avancado') {
+          bottomScore = spot.bottomType === 'reef' || spot.bottomType === 'point' ? 100 : 85;
+        }
+
+        const tScore = Math.round(tideMatchScore * 0.7 + bottomScore * 0.3);
+
+        // Pontuação Final Ponderada (0 a 100)
+        const finalScore = Math.min(99, Math.max(25, Math.round(
+          hScore * 0.30 +
+          wScore * 0.30 +
+          eScore * 0.25 +
+          tScore * 0.15
+        )));
+
+        return {
+          spot,
+          score: finalScore,
+          hScore,
+          wScore,
+          eScore,
+          tScore,
+          windRelation: windEval.relation
+        };
+      });
+
+      // Ordena decrescente pelo Score
+      scoredSpots.sort((a, b) => b.score - a.score);
+
+      const winnerItem = scoredSpots[0];
+      const winnerSpot = winnerItem.spot;
+      const winnerId = winnerSpot.id;
+
+      // Dica de contexto de maré (próximas 2 horas)
+      let tideContextTip = '';
+      if (winnerSpot.bestTide && winnerSpot.bestTide !== 'ALL') {
+        const tideAction = winnerSpot.bestTide === 'LOW' ? 'secar um pouco por volta das 15:30' : 'encher e atingir meia-maré em 1 hora';
+        tideContextTip = ` Para a formação perfeita, aguarde a maré ${tideAction}.`;
+      }
+
+      // Fallback Inteligente caso o score máximo seja baixo (<60)
+      let speechText = '';
+      if (winnerItem.score < 60) {
+        speechText = `O mar hoje está desafiador e fora do ideal para a maioria dos picos (${winnerItem.score}/100), mas a opção mais abrigada e viável é ${winnerSpot.name}, com ${winnerSpot.swellSize}, ${winnerSpot.swellPeriod} de período e vento ${winnerItem.windRelation}.${tideContextTip}`;
+      } else if (intent === 'INTENT_BEGINNER' || intent === 'iniciante') {
+        speechText = `Para o seu nível iniciante, ${winnerSpot.name} é a melhor opção agora (Score ${winnerItem.score}/100)! Fundo de areia seguro, ondas suaves de ${winnerSpot.swellSize}, período de ${winnerSpot.swellPeriod} e vento ${winnerItem.windRelation} de ${winnerSpot.windSpeed}.${tideContextTip}`;
+      } else if (intent === 'INTENT_INTERMEDIATE' || intent === 'intermediario') {
+        speechText = `Para nível intermediário, ${winnerSpot.name} reúne as melhores condições (Score ${winnerItem.score}/100)! Paredes abrindo com ${winnerSpot.swellSize}, período de ${winnerSpot.swellPeriod}, ${winnerSpot.energy} de energia e vento ${winnerItem.windRelation}.${tideContextTip}`;
+      } else if (intent === 'INTENT_ADVANCED' || intent === 'avancado') {
+        speechText = `Para o seu nível avançado, ${winnerSpot.name} é a melhor bancada hoje (Score ${winnerItem.score}/100)! Muita pressão com ${winnerSpot.swellSize}, período longo de ${winnerSpot.swellPeriod}, ${winnerSpot.energy} de energia e vento ${winnerItem.windRelation}.${tideContextTip}`;
+      } else {
+        speechText = `Sem filtro de nível, ${winnerSpot.name} é o melhor pico entre os mais próximos (Score ${winnerItem.score}/100) com todas as combinações para uma onda boa, bem formada e forte: ${winnerSpot.swellSize} com ${winnerSpot.swellPeriod} de período, ${winnerSpot.energy} de energia e vento ${winnerItem.windRelation}.${tideContextTip}`;
+      }
+
+      // Atualiza o estado das abas e destaca a vencedora
+      appState.currentMode = intent;
+      appState.tabs = scoredSpots.map(item => ({
+        ...item.spot,
+        displayScore: item.score,
+        isBest: item.spot.id === winnerId,
+        isSpecific: false,
+        activeSpeech: item.spot.id === winnerId ? speechText : `Condições em ${item.spot.name}: ${item.spot.swellSize}, ${item.spot.swellPeriod}, energia de ${item.spot.energy} e vento ${item.windRelation}.`
+      }));
+
+      appState.activeTabId = winnerId;
 
       const modeLabels = {
+        INTENT_BEGINNER: 'Nível Iniciante',
         iniciante: 'Nível Iniciante',
+        INTENT_INTERMEDIATE: 'Nível Intermediário',
         intermediario: 'Nível Intermediário',
+        INTENT_ADVANCED: 'Nível Avançado',
         avancado: 'Nível Avançado',
+        INTENT_NO_LEVEL: 'Onda Boa, Bem Formada e Forte',
         sem_nivel: 'Onda Boa, Bem Formada e Forte'
       };
-      document.getElementById('activeFilterBadge').textContent = modeLabels[mode] || modeLabels.sem_nivel;
-
-      const sorted = [...NEARBY_4_SPOTS].sort((a, b) => b.scores[mode] - a.scores[mode]);
-      const winnerId = sorted[0].id;
-
-      appState.tabs = sorted.map(s => ({
-        ...s,
-        isBest: s.id === winnerId,
-        isSpecific: false,
-        displayScore: s.scores[mode],
-        activeSpeech: s.speech[mode] || s.speech.sem_nivel
-      }));
-      appState.activeTabId = winnerId;
+      const badge = document.getElementById('activeFilterBadge');
+      if (badge) badge.textContent = modeLabels[intent] || 'Onda Boa, Bem Formada e Forte';
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       updateSyncTime();
@@ -649,79 +1182,564 @@
       renderActiveSpot();
 
       if (shouldSpeak) {
-        speakText(sorted[0].speech[mode] || sorted[0].speech.sem_nivel);
+        speakText(speechText);
       }
     }
 
-    // Regra 2: Consulta de Praia Específica -> NÃO pergunta nível, mostra direto apenas as condições do pico
-    function triggerSpecificSpot(rawName) {
-      document.getElementById('levelQuestionAlert').classList.add('hidden');
-      const clean = rawName.trim();
-      const key = clean.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // =========================================================================
+    // 5. MÁQUINA DE ESTADOS DO AGENTE DE VOZ (PUSH-TO-TALK + MEMÓRIA PERSISTENTE)
+    // =========================================================================
+    let voiceBtnResetTimer = null;
 
-      let preset = SPECIFIC_PRESETS[key];
-      let nearbyMatch = NEARBY_4_SPOTS.find(s => s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(key));
+    function setVoiceButtonState(state, customLabel = null) {
+      const btn = document.getElementById('heroMicBtn');
+      const label = document.getElementById('heroMicLabel');
+      const hint = document.getElementById('voiceHintText');
+      if (!btn || !label) return;
+
+      if (voiceBtnResetTimer) {
+        clearTimeout(voiceBtnResetTimer);
+        voiceBtnResetTimer = null;
+      }
+
+      const defaultLabels = {
+        idle: 'Pergunte ao SurfAgent',
+        waiting_reply: 'Clique para responder',
+        speaking: 'surfeAgent falando...',
+        listening: 'Ouvindo... pode falar agora',
+        processing: 'Analisando condições...',
+        success: 'Melhor pico encontrado!'
+      };
+
+      const defaultHints = {
+        idle: "Toque no botão 'Falar com o surfeAgent' para responder ou fazer uma nova pergunta",
+        waiting_reply: "Toque no botão 'Falar com o surfeAgent' para responder ou fazer uma nova pergunta",
+        speaking: "surfeAgent falando... aguarde para responder",
+        listening: "Ouvindo... pode falar agora",
+        processing: "Processando telemetria e pesquisa web...",
+        success: "Toque no botão 'Falar com o surfeAgent' para responder ou fazer uma nova pergunta"
+      };
+
+      btn.setAttribute('data-ai-state', state);
+      btn.classList.toggle('listening', state === 'listening');
+      label.textContent = customLabel || defaultLabels[state] || defaultLabels.idle;
+
+      if (hint) {
+        hint.textContent = defaultHints[state] || defaultHints.idle;
+        hint.className = state === 'listening'
+          ? 'text-[11px] font-medium text-rose-300 transition-colors'
+          : state === 'speaking' || state === 'waiting_reply'
+            ? 'text-[11px] font-medium text-sky-300 transition-colors'
+            : 'text-[11px] text-slate-400 transition-colors';
+      }
+
+      if (state === 'success') {
+        voiceBtnResetTimer = setTimeout(() => {
+          setVoiceButtonState('idle');
+        }, 2800);
+      }
+    }
+
+    /**
+     * Botão principal Push-to-Talk ("Pergunte ao SurfAgent"):
+     * - Cenário A (1ª interação, surfeAgent_onboardingCompleted === false):
+     *   1º clique: fala a pergunta de triagem e entra em WAITING_REPLY.
+     *   2º clique: abre o microfone para capturar a resposta e grava onboardingCompleted = true.
+     * - Cenário B (atalho direto com nível em qualquer momento):
+     *   Detectado no STT -> grava onboardingCompleted = true e entrega o nível direto.
+     * - Cenário C (interações seguintes, surfeAgent_onboardingCompleted === true):
+     *   Abre direto o microfone (ou, se STT indisponível, entrega direto INTENT_NO_LEVEL sem repetir triagem).
+     */
+    function handleVoiceButtonClick() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      // Se estava aguardando a resposta da triagem (2º clique do Cenário A), abre o microfone agora
+      if (voiceState === 'WAITING_REPLY') {
+        if (SpeechRec) {
+          listenForVoiceResponse();
+        } else {
+          // Sem suporte a STT: mantém os chips visíveis
+          const alertBox = document.getElementById('levelQuestionAlert');
+          if (alertBox) alertBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Cenário A: Primeira interação (onboarding ainda não concluído)
+      if (!isOnboardingCompleted()) {
+        triggerOnboardingTriage();
+        return;
+      }
+
+      // Cenário C: Próximas interações (onboarding já concluído — nunca repete triagem!)
+      if (SpeechRec) {
+        listenForVoiceResponse();
+      } else {
+        // Fallback sem microfone: retorna diretamente sem filtro de nível (INTENT_NO_LEVEL)
+        applyVoiceIntent('INTENT_NO_LEVEL', true);
+      }
+    }
+
+    function triggerOnboardingTriage() {
+      const alertBox = document.getElementById('levelQuestionAlert');
+      if (alertBox) {
+        alertBox.classList.remove('hidden');
+        alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      voiceState = 'PROMPTING_LEVEL';
+      setVoiceButtonState('speaking', 'surfeAgent falando...');
+      const promptSpeech = "Você gostaria de saber a previsão de acordo com o seu nível? Se sim, clique no botão Falar com o surfeAgent e diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, clique no botão e apenas diga: apenas me traga a praia com as melhores condições.";
+      speakText(promptSpeech, () => {
+        voiceState = 'WAITING_REPLY';
+        setVoiceButtonState('waiting_reply', 'Clique para responder');
+      }, false); // Não duplica o sufixo no prompt de triagem que já instrui o clique
+    }
+
+    function triggerBestSpotFlow() {
+      // Se ainda não completou onboarding, faz a triagem única; se já completou, entrega direto INTENT_NO_LEVEL
+      if (!isOnboardingCompleted()) {
+        triggerOnboardingTriage();
+      } else {
+        applyVoiceIntent('INTENT_NO_LEVEL', true);
+      }
+    }
+
+    function classifyVoiceIntent(rawTranscript) {
+      const t = rawTranscript.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+      // 1. Pedido de detalhes / insights profundos sobre o pico ativo ("Me fale mais sobre esse pico", "Como funciona a bancada daqui?")
+      if (
+        t.includes('fale mais') ||
+        t.includes('saber mais') ||
+        t.includes('detalhes') ||
+        t.includes('como funciona a bancada') ||
+        t.includes('sobre esse pico') ||
+        t.includes('sobre essa praia') ||
+        t.includes('insights')
+      ) {
+        return { intent: 'INTENT_ENRICH_SPOT' };
+      }
+
+      // 2. Comando direto de nível (Cenário B — atalho em qualquer momento)
+      if (t.includes('iniciante') || t.includes('basico') || t.includes('comecando') || t.includes('aprendendo') || t.includes('primeira vez') || t.includes('facil')) {
+        return { intent: 'INTENT_BEGINNER', explicitLevel: true };
+      }
+      if (t.includes('intermediario') || t.includes('medio') || t.includes('evolucao') || t.includes('moderado')) {
+        return { intent: 'INTENT_INTERMEDIATE', explicitLevel: true };
+      }
+      if (t.includes('avancado') || t.includes('pro') || t.includes('experiente') || t.includes('pesado') || t.includes('tubo') || t.includes('pressao') || t.includes('buraco')) {
+        return { intent: 'INTENT_ADVANCED', explicitLevel: true };
+      }
+
+      // 3. Pedido explícito sem filtro de nível / melhores condições
+      if (t.includes('nao') || t.includes('nao precisa') || t.includes('sem nivel') || t.includes('tanto faz') || t.includes('melhor') || t.includes('condicoes') || t.includes('forte') || t.includes('geral') || t.includes('apenas me traga') || t.includes('onde surfar')) {
+        return { intent: 'INTENT_NO_LEVEL' };
+      }
+
+      // 4. Verifica se corresponde a um pico já cadastrado (nome ou aliases)
+      if (window.SpotKnowledgeService) {
+        const match = window.SpotKnowledgeService.findSpotBySemanticMatch(SPOTS_DATABASE, rawTranscript);
+        if (match) {
+          return { intent: 'INTENT_SPECIFIC_SPOT', spotName: match.name };
+        }
+      }
+
+      // 5. Verifica se o usuário perguntou sobre uma praia nova (ex: "Como está Saquarema?", "Previsão em Pipeline")
+      const beachAsk = rawTranscript
+        .replace(/como est[aá] o mar (em|na|no)/gi, '')
+        .replace(/como est[aã]o as condi[cç][oõ]es (em|na|no)/gi, '')
+        .replace(/previs[aã]o (em|na|no|para|de)/gi, '')
+        .replace(/como est[aá] (a|o)?/gi, '')
+        .replace(/\?/g, '')
+        .trim();
+
+      if (beachAsk.length >= 3 && /como esta|previsao|praia|pico|condicoes/i.test(t)) {
+        return { intent: 'INTENT_SPECIFIC_SPOT', spotName: beachAsk };
+      }
+
+      // Cenário C padrão: retorno direto sem filtro de nível
+      return { intent: 'INTENT_NO_LEVEL' };
+    }
+
+    function applyVoiceIntent(intent, shouldSpeak = true) {
+      const alertBox = document.getElementById('levelQuestionAlert');
+      if (alertBox) alertBox.classList.add('hidden');
+      voiceState = 'IDLE';
+
+      // Grava memória persistente de que a triagem foi concluída (nunca mais pergunta!)
+      markOnboardingCompleted();
+
+      setVoiceButtonState('processing', 'Ranqueando picos...');
+      rankSpotsForSurfer(appState.tabs, intent, shouldSpeak);
+      if (!shouldSpeak) {
+        setVoiceButtonState('success');
+      }
+    }
+
+    function listenForVoiceResponse() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        setVoiceButtonState('idle');
+        return;
+      }
+
+      const rec = new SpeechRec();
+      rec.lang = 'pt-BR';
+      rec.interimResults = false;
+      let gotResult = false;
+
+      voiceState = 'LISTENING_RESPONSE';
+      setVoiceButtonState('listening', 'Ouvindo... pode falar agora');
+
+      rec.onresult = (ev) => {
+        gotResult = true;
+        const transcript = ev.results[0][0].transcript;
+        console.log('🗣️ [Voz Reconhecida]:', transcript);
+        document.getElementById('voiceTranscriptBar').innerHTML = `<span class="opacity-60">Você disse:</span> "${transcript}"`;
+
+        setVoiceButtonState('processing', 'Analisando sua fala...');
+        markOnboardingCompleted();
+        executeStructuredQuery(transcript, true);
+      };
+
+      rec.onend = () => {
+        if (!gotResult) {
+          voiceState = 'IDLE';
+          setVoiceButtonState('idle');
+        }
+      };
+
+      rec.onerror = () => {
+        voiceState = 'IDLE';
+        setVoiceButtonState('idle');
+      };
+
+      try {
+        rec.start();
+      } catch (e) {
+        voiceState = 'IDLE';
+        setVoiceButtonState('idle');
+      }
+    }
+
+    function startVoiceRecognition() {
+      handleVoiceButtonClick();
+    }
+
+    // =========================================================================
+    // 6. AUTO-DISCOVERY DE PICOS NOVOS + ENRIQUECIMENTO WEB SOB DEMANDA
+    // =========================================================================
+    async function triggerSpecificSpot(rawName) {
+      const alertBox = document.getElementById('levelQuestionAlert');
+      if (alertBox) alertBox.classList.add('hidden');
+
+      const clean = String(rawName || '').trim();
+      if (!clean) return;
+
+      setVoiceButtonState('processing', `Pesquisando ${clean}...`);
+
+      let result = null;
+      if (window.SpotKnowledgeService) {
+        result = await window.SpotKnowledgeService.discoverAndRegisterSpot(clean, SPOTS_DATABASE);
+      }
 
       let spotObj;
-      if (nearbyMatch) {
-        spotObj = {
-          ...nearbyMatch,
-          id: 'spec_' + nearbyMatch.id,
-          isBest: false,
-          isSpecific: true,
-          displayScore: nearbyMatch.scores.sem_nivel,
-          activeSpeech: `Condições atuais em ${nearbyMatch.name}: ondulação de ${nearbyMatch.swellSize} com ${nearbyMatch.swellPeriod} de período (${nearbyMatch.swellDir}), energia de ${nearbyMatch.energy}, vento ${nearbyMatch.windSpeed} (${nearbyMatch.windRelation}), maré enchendo e água a ${nearbyMatch.waterTemp}.`
-        };
-      } else if (preset) {
-        spotObj = {
-          ...preset,
-          isBest: false,
-          isSpecific: true,
-          displayScore: 91,
-          activeSpeech: `Condições atuais em ${preset.name}: ondulação de ${preset.swellSize}, período de ${preset.swellPeriod} (${preset.swellDir}), energia de ${preset.energy}, vento ${preset.windSpeed} (${preset.windRelation}) e água a ${preset.waterTemp}.`
-        };
+      let discoveredTag = '';
+      if (result && result.spot) {
+        spotObj = normalizeSpotSchema(result.spot);
+        if (result.isNew) {
+          // Salva imediatamente na coleção global em memória e cache colaborativo
+          if (!SPOTS_DATABASE.some(s => s.id === spotObj.id)) {
+            SPOTS_DATABASE.push(spotObj);
+          }
+          persistGlobalSpotsLocal();
+          discoveredTag = ' · Novo pico mapeado pela IA!';
+        } else {
+          const dbIdx = SPOTS_DATABASE.findIndex(s => s.id === spotObj.id);
+          if (dbIdx >= 0) SPOTS_DATABASE[dbIdx] = { ...SPOTS_DATABASE[dbIdx], ...spotObj };
+          persistGlobalSpotsLocal();
+        }
       } else {
-        const titleName = clean.charAt(0).toUpperCase() + clean.slice(1);
-        spotObj = {
-          id: 'spec_' + key.replace(/\s+/g, '_'),
-          name: titleName,
-          region: 'Cobertura Aberta Global · Consulta de Pico Específico',
+        const title = clean.charAt(0).toUpperCase() + clean.slice(1);
+        spotObj = normalizeSpotSchema({
+          id: 'spot_' + clean.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_'),
+          name: title,
+          baseRegion: 'Cobertura Aberta Global',
+          region: 'Cobertura Aberta Global · Pico Específico',
+          lat: -23.00,
+          lon: -44.00,
+          bottomType: 'sand',
+          bestTide: 'MID',
+          offshoreWindDir: [300, 360],
+          offshoreWindDeg: [300, 360],
+          beachFaceDeg: 160,
           swellSize: '1.4 m',
           swellPeriod: '11 s',
           swellDir: 'SE 140°',
           energy: '430 kJ',
           windSpeed: '8 km/h',
+          windSpeedKnots: 4.3,
           windDir: 'NO 305°',
+          windDirDeg: 305,
           windRelation: 'Terral Fraco',
-          tidePhase: 'Enchendo (0.7m → 1.6m às 15:45)',
+          tidePhase: 'Enchendo (0.7m → 1.6m)',
           moonPhase: '🌕 Lua Cheia',
           weather: '☀️ Sol (26 °C)',
           waterTemp: '24 °C (Confortável)',
           hourlyEnergy: [310, 360, 400, 430, 415, 380, 340, 300],
           peakHourIndex: 3,
-          distribution: [50, 30, 20],
-          isBest: false,
-          isSpecific: true,
-          displayScore: 89,
-          activeSpeech: `Condições atuais em ${titleName}: ondulação de 1,4m com 11 segundos de período, direção SE 140°, energia de 430 kJ, vento terral fraco de 8 km/h, maré enchendo e temperatura da água em 24 graus.`
-        };
+          distribution: [50, 30, 20]
+        });
       }
 
-      document.getElementById('activeFilterBadge').textContent = 'Consulta Direta de Pico Específico';
+      spotObj.isBest = false;
+      spotObj.isSpecific = true;
+      spotObj.displayScore = spotObj.displayScore || 90;
+      spotObj.activeSpeech = result && result.isNew
+        ? `Descobri e cadastrei ${spotObj.name} na base global do surfeAgent! ${spotObj.localNotes} Condições atuais estimadas: ${spotObj.swellSize} com ${spotObj.swellPeriod} de período e vento ${spotObj.windRelation}.`
+        : `Condições atuais em ${spotObj.name}: ondulação de ${spotObj.swellSize} com ${spotObj.swellPeriod} de período (${spotObj.swellDir}), energia de ${spotObj.energy}, vento ${spotObj.windSpeed} (${spotObj.windRelation}), maré ${(spotObj.tidePhase || 'enchendo').split('(')[0].trim()} e água a ${spotObj.waterTemp}.`;
 
-      const idx = appState.tabs.findIndex(t => t.id === spotObj.id);
+      const filterBadge = document.getElementById('activeFilterBadge');
+      if (filterBadge) filterBadge.textContent = `Consulta Direta de Pico${discoveredTag}`;
+
+      // Adiciona como nova aba caso não exista (sem duplicar); se já existir, ativa a existente
+      const idx = appState.tabs.findIndex(t => t.id === spotObj.id || t.name.toLowerCase() === spotObj.name.toLowerCase());
       if (idx >= 0) {
-        appState.tabs[idx] = spotObj;
+        appState.tabs[idx] = { ...appState.tabs[idx], ...spotObj };
+        appState.activeTabId = appState.tabs[idx].id;
       } else {
-        appState.tabs.unshift(spotObj);
+        appState.tabs.push(spotObj);
+        appState.activeTabId = spotObj.id;
       }
-      appState.activeTabId = spotObj.id;
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       updateSyncTime();
       renderTabsBar();
       renderActiveSpot();
+      if (result && result.isNew) {
+        renderSpotInsightsPanel(spotObj, true);
+      }
       speakText(spotObj.activeSpeech);
+    }
+
+    function renderSpotInsightsPanel(spot, forceOpen = false) {
+      const panel = document.getElementById('spotAiInsightsPanel');
+      const notesEl = document.getElementById('spotLocalNotesText');
+      const badgesEl = document.getElementById('spotTechBadges');
+      const metaEl = document.getElementById('spotInsightsMeta');
+      if (!panel || !spot) return;
+
+      if (forceOpen) panel.classList.remove('hidden');
+
+      const bottomPt = spot.bottomType === 'reef' ? '🪨 Fundo: Reef / Coral' : spot.bottomType === 'point' ? '🏔️ Fundo: Point Break' : '🏖️ Fundo: Areia (Sand)';
+      const tidePt = `🌊 Melhor Maré: ${spot.bestTide || 'MID'}`;
+      const swellPt = spot.idealSwellDir ? `🧭 Swell Ideal: ${spot.idealSwellDir[0]}°–${spot.idealSwellDir[1]}°` : '';
+      const offDir = spot.offshoreWindDir || spot.offshoreWindDeg;
+      const windPt = offDir ? `💨 Terral: ${offDir[0]}°–${offDir[1]}°` : '';
+      const levelsPt = Array.isArray(spot.skillLevelFit) ? `🏄 Níveis: ${spot.skillLevelFit.join(', ')}` : '';
+      const popPt = `🔥 Popularidade: ${spot.searchCount || 1} buscas`;
+
+      if (notesEl) {
+        notesEl.textContent = spot.localNotes || 'Clique em "Detalhes / Insights da IA" para pesquisar dados técnicos atualizados deste pico na web.';
+      }
+      if (metaEl && spot.lastEnrichedAt) {
+        const dt = new Date(spot.lastEnrichedAt);
+        metaEl.textContent = `Web Grounding · ${dt.toLocaleDateString('pt-BR')} às ${dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      }
+      if (badgesEl) {
+        badgesEl.innerHTML = [bottomPt, tidePt, swellPt, windPt, levelsPt, popPt]
+          .filter(Boolean)
+          .map(txt => `<span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-200">${txt}</span>`)
+          .join('');
+      }
+    }
+
+    async function triggerSpotEnrichment(shouldSpeak = false) {
+      const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
+      if (!spot) return;
+
+      const btnLabel = document.getElementById('btnEnrichSpotLabel');
+      if (btnLabel) btnLabel.textContent = 'Pesquisando na web...';
+      setVoiceButtonState('processing', `Pesquisando ${spot.name}...`);
+
+      try {
+        let enriched = spot;
+        if (window.SpotKnowledgeService) {
+          enriched = await window.SpotKnowledgeService.enrichSpotKnowledge(spot);
+        }
+
+        // Atualiza na aba ativa e na coleção global
+        const tabIdx = appState.tabs.findIndex(t => t.id === spot.id);
+        if (tabIdx >= 0) appState.tabs[tabIdx] = { ...appState.tabs[tabIdx], ...enriched };
+
+        const dbIdx = SPOTS_DATABASE.findIndex(s => s.id === spot.id);
+        if (dbIdx >= 0) SPOTS_DATABASE[dbIdx] = { ...SPOTS_DATABASE[dbIdx], ...enriched };
+        else SPOTS_DATABASE.push(enriched);
+
+        persistGlobalSpotsLocal();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+
+        renderSpotInsightsPanel(enriched, true);
+
+        if (shouldSpeak) {
+          const summary = `Insights atualizados de ${enriched.name}: ${enriched.localNotes}`;
+          speakText(summary);
+        } else {
+          setVoiceButtonState('success', 'Insights atualizados!');
+        }
+      } catch (err) {
+        console.warn('⚠️ Falha no enriquecimento web:', err);
+        setVoiceButtonState('idle');
+      } finally {
+        if (btnLabel) btnLabel.textContent = 'Detalhes / Insights da IA';
+      }
+    }
+
+    /**
+     * Processamento em Lote (2+ Praias na mesma frase/pesquisa):
+     * - Resolve em paralelo via Promise.all (deduplicação ou Auto-Discovery)
+     * - Cria uma aba individual por pico (sem duplicar abas abertas)
+     * - Ativa o 1º pico mencionado e narra resumo comparativo
+     */
+    async function triggerBatchSpots(spotNames, shouldSpeak = true) {
+      if (!Array.isArray(spotNames) || spotNames.length === 0) return;
+      if (spotNames.length === 1) {
+        return triggerSpecificSpot(spotNames[0]);
+      }
+
+      const alertBox = document.getElementById('levelQuestionAlert');
+      if (alertBox) alertBox.classList.add('hidden');
+
+      setVoiceButtonState('processing', `Buscando ${spotNames.length} picos...`);
+
+      const results = await Promise.all(
+        spotNames.map(async (name) => {
+          if (window.SpotKnowledgeService) {
+            return window.SpotKnowledgeService.discoverAndRegisterSpot(name, SPOTS_DATABASE);
+          }
+          return null;
+        })
+      );
+
+      const resolvedSpots = [];
+      let newCount = 0;
+
+      for (const res of results) {
+        if (!res || !res.spot) continue;
+        const spotObj = normalizeSpotSchema(res.spot);
+        spotObj.isBest = false;
+        spotObj.isSpecific = true;
+        spotObj.displayScore = spotObj.displayScore || 90;
+
+        if (res.isNew) {
+          newCount++;
+          if (!SPOTS_DATABASE.some(s => s.id === spotObj.id)) {
+            SPOTS_DATABASE.push(spotObj);
+          }
+        } else {
+          const dbIdx = SPOTS_DATABASE.findIndex(s => s.id === spotObj.id);
+          if (dbIdx >= 0) SPOTS_DATABASE[dbIdx] = { ...SPOTS_DATABASE[dbIdx], ...spotObj };
+        }
+
+        // Adiciona aba individual sem duplicar abas já abertas
+        const existingTabIdx = appState.tabs.findIndex(
+          t => t.id === spotObj.id || t.name.toLowerCase() === spotObj.name.toLowerCase()
+        );
+        if (existingTabIdx >= 0) {
+          appState.tabs[existingTabIdx] = { ...appState.tabs[existingTabIdx], ...spotObj };
+          resolvedSpots.push(appState.tabs[existingTabIdx]);
+        } else {
+          appState.tabs.push(spotObj);
+          resolvedSpots.push(spotObj);
+        }
+      }
+
+      if (resolvedSpots.length === 0) {
+        setVoiceButtonState('idle');
+        return;
+      }
+
+      persistGlobalSpotsLocal();
+
+      // Define como aba ativa o PRIMEIRO pico mencionado na frase
+      appState.activeTabId = resolvedSpots[0].id;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+
+      const filterBadge = document.getElementById('activeFilterBadge');
+      if (filterBadge) {
+        filterBadge.textContent = `Consulta em Lote (${resolvedSpots.length} picos)${newCount > 0 ? ` · +${newCount} novo(s)` : ''}`;
+      }
+
+      updateSyncTime();
+      renderTabsBar();
+      renderActiveSpot();
+
+      // Dispara previsão Open-Meteo em paralelo para todos os picos abertos
+      await Promise.all(resolvedSpots.map(s => loadSpotForecast(s)));
+
+      // Resumo comparativo falado para múltiplos picos
+      const namesList = resolvedSpots.map(s => s.name);
+      const formattedNames = namesList.length > 1
+        ? `${namesList.slice(0, -1).join(', ')} e ${namesList[namesList.length - 1]}`
+        : namesList[0];
+
+      const comparisons = resolvedSpots.map(s => `${s.name} está com ${s.swellSize} e ${s.windRelation}`);
+      const compSentence = comparisons.length > 1
+        ? `${comparisons.slice(0, -1).join(', ')} e ${comparisons[comparisons.length - 1]}`
+        : comparisons[0];
+
+      const batchSpeech = `Abri as abas de ${formattedNames}. Hoje ${compSentence}. Clique nas abas acima para ver os gráficos detalhados de cada pico.`;
+
+      if (shouldSpeak) {
+        speakText(batchSpeech);
+      } else {
+        setVoiceButtonState('success', `${resolvedSpots.length} abas abertas!`);
+      }
+    }
+
+    /**
+     * Dispatcher Unificado (Contrato JSON Schema do Parser de Intenção):
+     * { intent: "SEARCH_SPOTS" | "BEST_SPOT" | "ENRICH_SPOT", spots: string[], skillLevelFilter: string | null }
+     */
+    function executeStructuredQuery(rawInput, fromVoice = false) {
+      // 0. GUARDRAIL PRE-FLIGHT: Bloqueia imediatamente desvios de escopo / alucinação
+      if (window.SurfeAgentGuardrail) {
+        const scopeCheck = window.SurfeAgentGuardrail.checkDomainScope(rawInput, SPOTS_DATABASE);
+        if (!scopeCheck.inScope) {
+          console.warn('🛡️ [surfeAgent Guardrail] Bloqueado fora de escopo:', rawInput, '→', scopeCheck.reason);
+          const filterBadge = document.getElementById('activeFilterBadge');
+          if (filterBadge) filterBadge.textContent = '🛡️ Escopo Exclusivo de Surfe';
+          speakText(scopeCheck.refusal, null, false);
+          return;
+        }
+      }
+
+      const parsed = window.SpotKnowledgeService
+        ? window.SpotKnowledgeService.parseUserQuery(rawInput, SPOTS_DATABASE)
+        : { intent: 'SEARCH_SPOTS', spots: [rawInput], skillLevelFilter: null };
+
+      console.log('🧠 [NLP Parser JSON]:', JSON.stringify(parsed));
+
+      if (parsed.intent === 'ENRICH_SPOT') {
+        return triggerSpotEnrichment(true);
+      }
+
+      if (parsed.intent === 'BEST_SPOT') {
+        if (parsed.skillLevelFilter && parsed.skillLevelFilter !== 'INTENT_NO_LEVEL') {
+          return applyVoiceIntent(parsed.skillLevelFilter, true);
+        }
+        return fromVoice ? applyVoiceIntent('INTENT_NO_LEVEL', true) : triggerBestSpotFlow();
+      }
+
+      if (parsed.intent === 'SEARCH_SPOTS' && Array.isArray(parsed.spots) && parsed.spots.length > 0) {
+        if (parsed.spots.length > 1) {
+          return triggerBatchSpots(parsed.spots, true);
+        }
+        return triggerSpecificSpot(parsed.spots[0]);
+      }
+
+      return applyVoiceIntent('INTENT_NO_LEVEL', true);
     }
 
     function handleConsoleInput() {
@@ -729,58 +1747,59 @@
       const q = input.value.trim();
       if (!q) return;
       input.value = '';
-      const lower = q.toLowerCase();
-      if (lower.includes('melhor') || lower.includes('onde surfar') || lower.includes('qual o pico')) {
-        triggerBestSpotFlow();
-      } else {
-        const cleaned = q
-          .replace(/como est[aá] o mar em/gi, '')
-          .replace(/como est[aã]o as condi[cç][oõ]es em/gi, '')
-          .replace(/como est[aá]/gi, '')
-          .replace(/\?/g, '')
-          .trim();
-        triggerSpecificSpot(cleaned || q);
-      }
+      executeStructuredQuery(q, false);
     }
 
-    function startVoiceRecognition() {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const btn = document.getElementById('heroMicBtn');
-      const label = document.getElementById('heroMicLabel');
-      if (!SpeechRec) {
-        triggerBestSpotFlow();
+    // =========================================================================
+    // 7. SÍNTESE DE VOZ (TTS) & ORIENTAÇÃO EXPLÍCITA DE TURNO (PUSH-TO-TALK)
+    // =========================================================================
+    function speakText(msg, onEndCallback = null, appendTurnHint = true) {
+      const fullSpeech = appendTurnHint && !msg.includes('basta clicar novamente no botão Falar com o surfeAgent')
+        ? `${msg}${TURN_TAKING_SUFFIX}`
+        : msg;
+
+      document.getElementById('voiceTranscriptBar').innerHTML = `<span class="opacity-60">surfeAgent Voz:</span> "${fullSpeech}"`;
+      if (voiceMuted || !('speechSynthesis' in window)) {
+        if (typeof onEndCallback === 'function') {
+          onEndCallback();
+        } else {
+          setVoiceButtonState('success');
+        }
         return;
       }
-      const rec = new SpeechRec();
-      rec.lang = 'pt-BR';
-      rec.interimResults = false;
-      btn.classList.add('listening');
-      label.textContent = '🔴 OUVINDO SUA VOZ...';
-
-      rec.onresult = (ev) => {
-        const transcript = ev.results[0][0].transcript;
-        const lower = transcript.toLowerCase();
-        const levelAlertVisible = !document.getElementById('levelQuestionAlert').classList.contains('hidden');
-        if (levelAlertVisible) {
-          if (lower.includes('iniciante')) return applyLevelRecommendation('iniciante', true);
-          if (lower.includes('intermedi')) return applyLevelRecommendation('intermediario', true);
-          if (lower.includes('avan')) return applyLevelRecommendation('avancado', true);
-          if (lower.includes('não') || lower.includes('nao') || lower.includes('forte')) return applyLevelRecommendation('sem_nivel', true);
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(fullSpeech);
+      u.lang = 'pt-BR';
+      u.rate = 1.05;
+      u.onstart = () => {
+        if (voiceState !== 'PROMPTING_LEVEL') {
+          setVoiceButtonState('speaking', 'surfeAgent falando...');
         }
-        document.getElementById('consoleQueryInput').value = transcript;
-        handleConsoleInput();
       };
-      rec.onend = () => {
-        btn.classList.remove('listening');
-        label.textContent = '🎙️ FALAR COM O SURFAGENT';
+      u.onend = () => {
+        if (typeof onEndCallback === 'function') {
+          onEndCallback();
+        } else {
+          setVoiceButtonState('success');
+        }
       };
-      rec.onerror = () => {
-        btn.classList.remove('listening');
-        label.textContent = '🎙️ FALAR COM O SURFAGENT';
+      u.onerror = () => {
+        setVoiceButtonState('idle');
       };
-      rec.start();
+      window.speechSynthesis.speak(u);
     }
 
+    window.applyLevelRecommendation = applyVoiceIntent;
+
+    function toggleVoiceMute() {
+      voiceMuted = !voiceMuted;
+      document.getElementById('navMuteBtn').textContent = voiceMuted ? '🔇 VOZ MUDA' : '🔊 VOZ IA ATIVA';
+      if (voiceMuted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    // =========================================================================
+    // 8. GERENCIAMENTO DE ABAS (TABS), SELEÇÃO E FECHAMENTO
+    // =========================================================================
     function selectTab(id) {
       appState.activeTabId = id;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
@@ -802,17 +1821,23 @@
 
     function refreshSavedTabs() {
       updateSyncTime();
-      speakText('Suas abas salvas foram atualizadas automaticamente com os dados deste momento.');
+      // Dispara atualização meteorológica para todas as abas
+      appState.tabs.forEach(spot => {
+        loadSpotForecast(spot, true);
+      });
+      speakText('Suas abas salvas foram atualizadas automaticamente com os dados mais recentes deste momento.');
     }
 
     function updateSyncTime() {
       const d = new Date();
       const str = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-      document.getElementById('navSyncTime').textContent = str;
+      const el = document.getElementById('navSyncTime');
+      if (el) el.textContent = str;
     }
 
     function renderTabsBar() {
       const bar = document.getElementById('tabsBar');
+      if (!bar) return;
       bar.innerHTML = appState.tabs.map(t => {
         const active = t.id === appState.activeTabId ? 'active' : '';
         const best = t.isBest ? 'best-spot' : '';
@@ -826,30 +1851,36 @@
       }).join('');
     }
 
+    // =========================================================================
+    // 9. INTEGRAÇÃO METEOROLÓGICA (OPEN-METEO) & RENDERIZAÇÃO DE TELEMETRIA
+    // =========================================================================
     const spotForecastCache = new Map();
 
-    async function loadSpotForecast(spot) {
+    async function loadSpotForecast(spot, forceRefresh = false) {
       if (!spot || !spot.lat || !spot.lon || !window.fetchSurfForecast) return;
-      if (spotForecastCache.has(spot.id)) {
+      if (!forceRefresh && spotForecastCache.has(spot.id)) {
         spot.forecastData = spotForecastCache.get(spot.id);
         updateSpotMetricsFromForecast(spot);
-        renderSpotTelemetryAndCharts(spot);
+        if (spot.id === appState.activeTabId) {
+          renderSpotTelemetryAndCharts(spot);
+        }
         return;
       }
 
       try {
-        console.log(`🌊 [Open-Meteo] Disparando requisições paralelas (WW3 + GFS) para ${spot.name} (${spot.lat}, ${spot.lon})...`);
+        console.log(`🌊 [Open-Meteo] Buscando previsão atualizada para ${spot.name} (${spot.lat}, ${spot.lon})...`);
         const data = await window.fetchSurfForecast({
           lat: spot.lat,
           lon: spot.lon,
-          timezone: 'America/Sao_Paulo',
+          timezone: 'auto',
           forecastDays: 14
         });
-        console.log(`✅ [Open-Meteo] Previsão de 14 dias recebida com sucesso para ${spot.name}! (${data.timeline.length} horas normalizadas)`);
         spotForecastCache.set(spot.id, data);
         spot.forecastData = data;
         updateSpotMetricsFromForecast(spot);
-        renderSpotTelemetryAndCharts(spot);
+        if (spot.id === appState.activeTabId) {
+          renderSpotTelemetryAndCharts(spot);
+        }
       } catch (err) {
         console.warn('⚠️ Falha ao obter dados Open-Meteo para ' + spot.name, err);
       }
@@ -875,15 +1906,22 @@
       if (now.wind) {
         const kmh = Math.round((now.wind.speedKnots || 5) * 1.852);
         spot.windSpeed = `${kmh} km/h`;
+        spot.windSpeedKnots = now.wind.speedKnots;
         spot.windDir = `${now.wind.directionCardinal} ${now.wind.directionDeg}°`;
-        if (kmh <= 7) {
-          spot.windRelation = 'Terral Fraco';
-        } else if (['O', 'W', 'ONO', 'WNW', 'NO', 'NW', 'NNO', 'NNW', 'N'].includes(now.wind.directionCardinal)) {
-          spot.windRelation = 'Terral Liso';
-        } else if (['ESE', 'SE', 'SSE', 'S'].includes(now.wind.directionCardinal)) {
-          spot.windRelation = 'Maral';
-        } else {
-          spot.windRelation = 'Vento Cruzado';
+        spot.windDirDeg = now.wind.directionDeg;
+
+        const align = getWindAlignment(now.wind.directionDeg, spot.offshoreWindDeg);
+        spot.windRelation = align.relation;
+      }
+
+      if (spot.forecastData && spot.forecastData.currentWeather) {
+        spot.currentWeather = spot.forecastData.currentWeather;
+        if (window.WeatherThemeEngine && typeof window.WeatherThemeEngine.describeWmoCode === 'function') {
+          spot.weather = window.WeatherThemeEngine.describeWmoCode(
+            spot.currentWeather.weatherCode,
+            spot.currentWeather.isDay,
+            spot.currentWeather.temperatureC
+          );
         }
       }
 
@@ -917,14 +1955,16 @@
     function renderSpotTelemetryAndCharts(spot) {
       if (!spot) return;
 
-      if (window.setDsySAWeatherBackground) {
-        window.setDsySAWeatherBackground(spot.weather);
+      if (window.WeatherThemeEngine && typeof window.WeatherThemeEngine.applyFromSpot === 'function') {
+        window.WeatherThemeEngine.applyFromSpot(spot);
+      } else if (window.setDsySAWeatherBackground) {
+        window.setDsySAWeatherBackground(spot);
       }
 
       document.getElementById('spotTitle').textContent = spot.name;
       document.getElementById('spotRegion').textContent = `${spot.region} · Curva horária de Energia da Ondulação (kJ)`;
       document.getElementById('spotScorePill').textContent = `Score ${spot.displayScore || 92}/100`;
-      document.getElementById('spotWindTag').textContent = spot.windRelation;
+      document.getElementById('spotWindTag').textContent = spot.windRelation || 'Terral Fraco';
 
       const bestBadge = document.getElementById('spotBestBadge');
       if (spot.isBest) {
@@ -1034,29 +2074,78 @@
       const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
       if (!spot) return;
 
-      // Renderiza imediatamente com dados disponíveis
+      // Renderiza imediatamente com dados disponíveis em memória
       renderSpotTelemetryAndCharts(spot);
+      renderSpotInsightsPanel(spot, false);
 
       // Dispara a ingestão de dados meteorológicos reais da Open-Meteo
       loadSpotForecast(spot);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    // =========================================================================
+    // 10. INICIALIZAÇÃO DA APLICAÇÃO (CICLO DE VIDA, BASE GLOBAL E PERSISTÊNCIA)
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', async () => {
       window.initDsySAAuraBackground();
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+
+      // 1. Sincroniza coleção global `surf_spots` (backend compartilhado + cache local)
+      await syncGlobalSpotsFromBackend();
+
+      // 2. Restaura abas salvas do usuário no localStorage e revalida previsão na API
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           if (parsed.tabs && parsed.tabs.length > 0) {
             appState = parsed;
+            // Atualiza cada aba salva com os metadados globais mais recentes (ex: localNotes enriquecidas)
+            appState.tabs = appState.tabs.map(t => {
+              const latest = SPOTS_DATABASE.find(s => s.id === t.id);
+              return normalizeSpotSchema(latest ? { ...latest, ...t, localNotes: latest.localNotes, lastEnrichedAt: latest.lastEnrichedAt, searchCount: latest.searchCount } : t);
+            });
             updateSyncTime();
             renderTabsBar();
             renderActiveSpot();
+
+            // Dispara revalidação meteorológica em tempo real para todas as abas salvas
+            appState.tabs.forEach(spot => {
+              loadSpotForecast(spot);
+            });
             return;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.warn('Erro ao restaurar abas salvas:', e);
+        }
       }
-      applyLevelRecommendation('sem_nivel', false);
+
+      // 3. Primeiro acesso: Solicita geolocalização (ou fallback Top 4 populares por searchCount)
+      requestUserGeolocation();
+    });
+
+    function openHowToUseModal(ev) {
+      if (ev) ev.preventDefault();
+      const modal = document.getElementById('howToUseModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeHowToUseModal() {
+      const modal = document.getElementById('howToUseModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeHowToUseModal();
     });
   </script>
 </body>

@@ -85,11 +85,25 @@
 }
 
 /* Font Helper Classes (from Mira) */
-.font-inter { font-family: var(--dsysa-font-sans) !important; }
-.font-playfair { font-family: var(--dsysa-font-serif) !important; }
-.font-geist { font-family: var(--dsysa-font-geist) !important; }
-.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
-.font-oswald { font-family: var(--dsysa-font-oswald) !important; }
+.font-inter {
+  font-family: var(--dsysa-font-sans) !important;
+}
+
+.font-playfair {
+  font-family: var(--dsysa-font-serif) !important;
+}
+
+.font-geist {
+  font-family: var(--dsysa-font-geist) !important;
+}
+
+.font-dm-sans {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+.font-oswald {
+  font-family: var(--dsysa-font-oswald) !important;
+}
 
 /* ==========================================================================
    1. SIGNATURE MASK BORDER GRADIENT ([style*="--border-gradient"]::before)
@@ -114,10 +128,12 @@
   -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 85%, transparent);
   mask-image: linear-gradient(180deg, transparent, black 0%, black 85%, transparent);
 }
+
 .dsysa-mask-marquee {
   -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
+
 .dsysa-dot-matrix {
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
   background-size: 16px 16px;
@@ -127,8 +143,13 @@
    2. TRANSIÇÕES E ANIMAÇÕES CLEAN (Sem efeito cascata ou flashes da v1)
    ========================================================================== */
 @keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* ==========================================================================
@@ -152,27 +173,45 @@
   border: none;
   transition: all 0.3s ease;
 }
-.dsysa-btn-laser:hover { background: rgba(0, 0, 0, 0.8); }
+
+.dsysa-btn-laser:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .dsysa-btn-laser .laser-edge-v {
   pointer-events: none;
   position: absolute;
   top: -28px;
   bottom: -28px;
   width: 2px;
-  background: linear-gradient(transparent, rgba(255,255,255,0.2) 28px, rgba(255,255,255,0.75) 28px, #ffffff, rgba(255,255,255,0.75) calc(100% - 28px), rgba(255,255,255,0.2) calc(100% - 28px), transparent);
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.2) 28px, rgba(255, 255, 255, 0.75) 28px, #ffffff, rgba(255, 255, 255, 0.75) calc(100% - 28px), rgba(255, 255, 255, 0.2) calc(100% - 28px), transparent);
 }
-.dsysa-btn-laser .laser-edge-v.left { left: -2px; }
-.dsysa-btn-laser .laser-edge-v.right { right: -2px; }
+
+.dsysa-btn-laser .laser-edge-v.left {
+  left: -2px;
+}
+
+.dsysa-btn-laser .laser-edge-v.right {
+  right: -2px;
+}
+
 .dsysa-btn-laser .laser-edge-h {
   pointer-events: none;
   position: absolute;
   left: -28px;
   right: -28px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2) 28px, rgba(255,255,255,0.75) 28px, #ffffff, rgba(255,255,255,0.75) calc(100% - 28px), rgba(255,255,255,0.2) calc(100% - 28px), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 28px, rgba(255, 255, 255, 0.75) 28px, #ffffff, rgba(255, 255, 255, 0.75) calc(100% - 28px), rgba(255, 255, 255, 0.2) calc(100% - 28px), transparent);
 }
-.dsysa-btn-laser .laser-edge-h.top { top: -2px; }
-.dsysa-btn-laser .laser-edge-h.bottom { bottom: -2px; }
+
+.dsysa-btn-laser .laser-edge-h.top {
+  top: -2px;
+}
+
+.dsysa-btn-laser .laser-edge-h.bottom {
+  bottom: -2px;
+}
+
 .dsysa-btn-laser .laser-blur-base {
   position: absolute;
   inset: 0;
@@ -180,6 +219,7 @@
   opacity: 0.8;
   background: inherit;
 }
+
 .dsysa-btn-laser .laser-blur-hover {
   position: absolute;
   inset: 0;
@@ -188,6 +228,7 @@
   background: inherit;
   transition: opacity 0.3s ease;
 }
+
 .dsysa-btn-laser .laser-radial-glow {
   pointer-events: none;
   position: absolute;
@@ -197,11 +238,198 @@
   filter: blur(18px);
   transition: opacity 0.3s ease;
 }
+
 .dsysa-btn-laser:hover .laser-blur-hover,
-.dsysa-btn-laser:hover .laser-radial-glow { opacity: 1; }
+.dsysa-btn-laser:hover .laser-radial-glow {
+  opacity: 1;
+}
+
 .dsysa-btn-laser.listening .laser-radial-glow {
   opacity: 1;
   background: radial-gradient(circle, rgba(244, 63, 94, 0.45), transparent 65%);
+}
+
+/* ==========================================================================
+   3B. VOICE PILL CTA BUTTON ("Pergunte ao SurfAgent") + ESTADOS DA IA
+   Estados: idle | speaking | listening | processing | success
+   ========================================================================== */
+.dsysa-btn-voice-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 26px 13px 20px;
+  border-radius: 9999px;
+  background: #0d1526;
+  border: 1.5px solid rgba(203, 213, 225, 0.48);
+  color: #cbd5e1;
+  font-family: var(--dsysa-font-sans, 'Inter', sans-serif);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease, color 0.25s ease;
+}
+
+.dsysa-btn-voice-pill:hover {
+  background: #111c33;
+  border-color: rgba(56, 189, 248, 0.78);
+  color: #f8fafc;
+  box-shadow: 0 14px 36px rgba(2, 132, 199, 0.28), 0 0 0 1px rgba(56, 189, 248, 0.2);
+  transform: translateY(-1px);
+}
+
+.dsysa-btn-voice-pill:active {
+  transform: translateY(0) scale(0.985);
+}
+
+/* Ícone de Microfone (Esquerda) */
+.dsysa-btn-voice-pill .voice-mic-icon {
+  width: 22px;
+  height: 22px;
+  color: #0284c7;
+  flex-shrink: 0;
+  transition: color 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+}
+
+.dsysa-btn-voice-pill:hover .voice-mic-icon {
+  color: #38bdf8;
+}
+
+/* Bolinha Indicadora de Status da IA (Centro-esquerda) */
+.dsysa-btn-voice-pill .voice-status-dot {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  border-radius: 9999px;
+  background: #38bdf8;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.55);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Texto do Botão */
+.dsysa-btn-voice-pill .voice-label-text {
+  white-space: nowrap;
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+/* --- ESTADO 1B: WAITING_REPLY (Aguardando clique Push-to-Talk do usuário) --- */
+.dsysa-btn-voice-pill[data-ai-state="waiting_reply"] {
+  background: #0d1d35;
+  border-color: rgba(56, 189, 248, 0.85);
+  color: #f0f9ff;
+  animation: dsysaVoiceWaitingGlow 2s ease-in-out infinite;
+}
+.dsysa-btn-voice-pill[data-ai-state="waiting_reply"] .voice-mic-icon {
+  color: #38bdf8;
+}
+.dsysa-btn-voice-pill[data-ai-state="waiting_reply"] .voice-status-dot {
+  background: #38bdf8;
+  animation: dsysaVoiceSpeakingPulse 1.6s ease-out infinite;
+}
+
+@keyframes dsysaVoiceWaitingGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.35), 0 10px 28px rgba(0, 0, 0, 0.45); }
+  50%      { box-shadow: 0 0 0 7px rgba(56, 189, 248, 0), 0 14px 36px rgba(56, 189, 248, 0.25); }
+}
+
+/* --- ESTADO 1: SPEAKING (SurfAgent falando / triagem TTS) --- */
+.dsysa-btn-voice-pill[data-ai-state="speaking"] {
+  background: #0c1d36;
+  border-color: rgba(56, 189, 248, 0.9);
+  color: #e0f2fe;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.32), inset 0 1px 0 rgba(125, 211, 252, 0.2);
+}
+.dsysa-btn-voice-pill[data-ai-state="speaking"] .voice-mic-icon {
+  color: #38bdf8;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.65));
+}
+.dsysa-btn-voice-pill[data-ai-state="speaking"] .voice-status-dot {
+  background: #38bdf8;
+  animation: dsysaVoiceSpeakingPulse 1.3s ease-out infinite;
+}
+
+/* --- ESTADO 2: LISTENING (Ouvindo a voz do usuário via STT) --- */
+.dsysa-btn-voice-pill[data-ai-state="listening"],
+.dsysa-btn-voice-pill.listening {
+  background: #1d0e1a;
+  border-color: rgba(244, 63, 94, 0.9);
+  color: #ffe4e6;
+  box-shadow: 0 0 30px rgba(244, 63, 94, 0.38), inset 0 1px 0 rgba(251, 113, 133, 0.2);
+}
+.dsysa-btn-voice-pill[data-ai-state="listening"] .voice-mic-icon,
+.dsysa-btn-voice-pill.listening .voice-mic-icon {
+  color: #fb7185;
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.7));
+}
+.dsysa-btn-voice-pill[data-ai-state="listening"] .voice-status-dot,
+.dsysa-btn-voice-pill.listening .voice-status-dot {
+  background: #f43f5e;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.85);
+  animation: dsysaVoiceListeningPulse 0.9s ease-in-out infinite;
+}
+
+/* --- ESTADO 3: PROCESSING (Classificando intenção & ranqueando picos) --- */
+.dsysa-btn-voice-pill[data-ai-state="processing"] {
+  background: #131531;
+  border-color: rgba(129, 140, 248, 0.85);
+  color: #e0e7ff;
+  box-shadow: 0 0 26px rgba(99, 102, 241, 0.34);
+}
+.dsysa-btn-voice-pill[data-ai-state="processing"] .voice-mic-icon {
+  color: #818cf8;
+}
+.dsysa-btn-voice-pill[data-ai-state="processing"] .voice-status-dot {
+  background: #818cf8;
+  animation: dsysaVoiceProcessingPulse 0.75s ease-in-out infinite alternate;
+}
+
+/* --- ESTADO 4: SUCCESS (Recomendação aplicada com sucesso) --- */
+.dsysa-btn-voice-pill[data-ai-state="success"] {
+  background: #09201c;
+  border-color: rgba(16, 185, 129, 0.85);
+  color: #d1fae5;
+  box-shadow: 0 0 26px rgba(16, 185, 129, 0.32);
+}
+.dsysa-btn-voice-pill[data-ai-state="success"] .voice-mic-icon {
+  color: #34d399;
+}
+.dsysa-btn-voice-pill[data-ai-state="success"] .voice-status-dot {
+  background: #10b981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+}
+
+@keyframes dsysaVoiceSpeakingPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.75); transform: scale(1); }
+  70%  { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); transform: scale(1); }
+}
+
+@keyframes dsysaVoiceListeningPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.85); transform: scale(1); }
+  65%  { box-shadow: 0 0 0 11px rgba(244, 63, 94, 0); transform: scale(1.12); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); transform: scale(1); }
+}
+
+@keyframes dsysaVoiceProcessingPulse {
+  from { opacity: 0.45; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1.12); }
+}
+
+@media (max-width: 480px) {
+  .dsysa-btn-voice-pill {
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 14px;
+    gap: 10px;
+  }
 }
 
 /* ==========================================================================
@@ -223,11 +451,13 @@
   cursor: pointer;
   white-space: nowrap;
 }
+
 .dsysa-tab:hover {
   color: var(--dsysa-text-primary);
   background: rgba(30, 41, 59, 0.8);
   border-color: var(--dsysa-border-strong);
 }
+
 .dsysa-tab.active {
   color: #020617;
   background: linear-gradient(90deg, #38bdf8, #3b82f6);
@@ -235,11 +465,13 @@
   font-weight: 600;
   box-shadow: 0 8px 25px rgba(56, 189, 248, 0.35);
 }
+
 .dsysa-tab.best-spot {
   border-color: rgba(16, 185, 129, 0.45);
   color: #6ee7b7;
   background: rgba(16, 185, 129, 0.1);
 }
+
 .dsysa-tab.best-spot.active {
   color: #022c22;
   background: linear-gradient(90deg, #34d399, #10b981);
@@ -254,17 +486,20 @@
   gap: 0.75rem;
   align-items: stretch;
 }
+
 @media (min-width: 640px) {
   .dsysa-telemetry-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
 .dsysa-telemetry-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 84px;
-  height: auto; /* Hug content: ajusta-se naturalmente ao conteúdo sem quebrar */
+  height: auto;
+  /* Hug content: ajusta-se naturalmente ao conteúdo sem quebrar */
   max-height: none;
   padding: 12px 14px;
   background: #05080F;
@@ -275,6 +510,7 @@
   overflow: visible;
   gap: 6px;
 }
+
 .dsysa-telemetry-card-head {
   display: flex;
   align-items: center;
@@ -282,6 +518,7 @@
   gap: 8px;
   line-height: 1;
 }
+
 .dsysa-telemetry-card-cat {
   font-family: var(--dsysa-font-sans);
   font-size: 10px;
@@ -293,6 +530,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dsysa-telemetry-card-badge {
   font-family: var(--dsysa-font-mono);
   font-size: 10px;
@@ -301,6 +539,7 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
 .dsysa-telemetry-card-value {
   font-family: var(--dsysa-font-geist);
   font-size: 14.5px;
@@ -310,6 +549,7 @@
   line-height: 1.25;
   word-break: break-word;
 }
+
 .dsysa-telemetry-card-sub {
   font-family: var(--dsysa-font-sans);
   font-size: 11px;
@@ -342,6 +582,7 @@
   background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.35) 50%, rgba(15, 23, 42, 0.95) 100%);
   border-bottom: 1px solid var(--dsysa-border-subtle);
 }
+
 .dsysa-wave-topbar-title {
   font-family: var(--dsysa-font-oswald);
   font-size: 0.95rem;
@@ -364,6 +605,7 @@
   background: rgba(2, 6, 23, 0.6);
   overflow-x: auto;
 }
+
 .dsysa-wave-subtab {
   padding: 7px 14px;
   font-size: 0.75rem;
@@ -378,10 +620,12 @@
   transition: all 0.2s ease;
   white-space: nowrap;
 }
+
 .dsysa-wave-subtab:hover {
   color: #f8fafc;
   background: rgba(20, 184, 166, 0.28);
 }
+
 .dsysa-wave-subtab.active {
   color: #020617;
   background: #f8fafc;
@@ -408,14 +652,17 @@
   user-select: none;
   z-index: 5;
 }
+
 .dsysa-wave-yaxis.right {
   border-right: none;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .dsysa-wave-yaxis-spacer {
   height: 28px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .dsysa-wave-yaxis-ticks {
   height: 210px;
   position: relative;
@@ -429,11 +676,13 @@
   color: #94a3b8;
   font-weight: 500;
 }
+
 .dsysa-wave-yaxis-ticks .unit-label {
   font-size: 9px;
   color: #64748b;
   display: block;
 }
+
 .dsysa-wave-dir-box {
   height: 54px;
   display: flex;
@@ -464,22 +713,27 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(56, 189, 248, 0.55) rgba(15, 23, 42, 0.9);
 }
+
 .dsysa-wave-viewport.dragging,
 .dsysa-touch-scroll.dragging {
   cursor: grabbing;
   scroll-behavior: auto;
 }
+
 .dsysa-wave-viewport::-webkit-scrollbar {
   height: 7px;
 }
+
 .dsysa-wave-viewport::-webkit-scrollbar-track {
   background: rgba(2, 6, 23, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .dsysa-wave-viewport::-webkit-scrollbar-thumb {
   background: linear-gradient(90deg, rgba(56, 189, 248, 0.5), rgba(59, 130, 246, 0.85));
   border-radius: 9999px;
 }
+
 .dsysa-wave-viewport::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(90deg, #38bdf8, #3b82f6);
 }
@@ -496,6 +750,7 @@
   height: 28px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
+
 .dsysa-wave-day-cell {
   display: flex;
   align-items: center;
@@ -508,10 +763,12 @@
   background: rgba(30, 41, 59, 0.65);
   border-right: 1px solid rgba(255, 255, 255, 0.14);
 }
+
 .dsysa-wave-day-cell.is-past {
   background: linear-gradient(90deg, #072238, #0c4a6e);
   color: #f8fafc;
 }
+
 .dsysa-wave-day-cell.is-today {
   background: linear-gradient(90deg, rgba(14, 165, 233, 0.28), rgba(59, 130, 246, 0.22));
   color: #38bdf8;
@@ -535,6 +792,7 @@
   pointer-events: none;
   z-index: 1;
 }
+
 .dsysa-wave-gridline.major {
   border-top-style: dashed;
   border-top-color: rgba(226, 232, 240, 0.35);
@@ -553,22 +811,28 @@
   transition: background 0.15s ease;
   cursor: pointer;
 }
+
 .dsysa-wave-slot-col.daylight {
   background: rgba(56, 189, 248, 0.08);
 }
+
 .dsysa-wave-slot-col.twilight {
   background: rgba(15, 23, 42, 0.25);
 }
+
 .dsysa-wave-slot-col.night {
   background: rgba(2, 6, 23, 0.45);
 }
+
 .dsysa-wave-slot-col.day-divider {
   border-right: 1px solid rgba(2, 6, 23, 0.95);
   box-shadow: 1px 0 0 rgba(255, 255, 255, 0.16);
 }
+
 .dsysa-wave-slot-col:hover {
   background: rgba(255, 255, 255, 0.12);
 }
+
 .dsysa-wave-slot-col.is-now::after {
   content: "AGORA";
   position: absolute;
@@ -593,6 +857,7 @@
   transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, filter 0.2s ease;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
+
 .dsysa-wave-slot-col:hover .dsysa-wave-bar {
   filter: brightness(1.18);
 }
@@ -604,6 +869,7 @@
   background: rgba(2, 6, 23, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
+
 .dsysa-wave-dir-cell {
   display: flex;
   flex-direction: column;
@@ -613,9 +879,11 @@
   padding: 4px 1px;
   border-right: 1px solid rgba(255, 255, 255, 0.04);
 }
+
 .dsysa-wave-dir-cell.day-divider {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .dsysa-dir-circle {
   width: 24px;
   height: 24px;
@@ -629,6 +897,7 @@
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
   transition: transform 0.35s ease;
 }
+
 .dsysa-dir-cardinal {
   font-size: 9px;
   font-weight: 700;
@@ -643,6 +912,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
 }
+
 .dsysa-period-scale-bar {
   display: grid;
   grid-template-columns: repeat(20, minmax(0, 1fr));
@@ -652,6 +922,7 @@
   max-width: 680px;
   margin: 0 auto;
 }
+
 .dsysa-period-cell {
   padding: 3px 0;
   font-size: 10px;
@@ -661,9 +932,11 @@
   user-select: none;
   transition: transform 0.15s ease;
 }
+
 .dsysa-period-cell.light-text {
   color: #f8fafc;
 }
+
 .dsysa-period-caption {
   margin-top: 5px;
   font-size: 10.5px;
@@ -685,10 +958,12 @@
   color: #94a3b8;
   transition: all 0.25s ease;
 }
+
 .dsysa-scroll-status-bar.at-end {
   background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(245, 158, 11, 0.16), rgba(15, 23, 42, 0.95));
   border-top-color: rgba(251, 191, 36, 0.4);
 }
+
 .dsysa-end-forecast-msg {
   display: inline-flex;
   align-items: center;
@@ -703,6 +978,7 @@
   letter-spacing: -0.01em;
   box-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
 }
+
 .dsysa-end-cap-col {
   width: 190px;
   display: flex;
@@ -730,6 +1006,7 @@
   padding: 12px 16px 8px;
   background: rgba(2, 6, 23, 0.78);
 }
+
 .dsysa-wind-zone-group {
   display: inline-flex;
   align-items: stretch;
@@ -738,6 +1015,7 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(15, 23, 42, 0.9);
 }
+
 .dsysa-wind-zone-btn {
   padding: 8px 16px;
   font-family: var(--dsysa-font-oswald);
@@ -752,15 +1030,18 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .dsysa-wind-zone-btn:hover {
   color: #f8fafc;
   background: rgba(255, 255, 255, 0.05);
 }
+
 .dsysa-wind-zone-btn.active {
   color: #020617;
   background: #f8fafc;
   box-shadow: inset 0 0 0 1px #020617;
 }
+
 .dsysa-wind-help-btn {
   padding: 0 12px;
   display: inline-flex;
@@ -772,10 +1053,12 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
+
 .dsysa-wind-help-btn:hover {
   background: rgba(56, 189, 248, 0.25);
   color: #38bdf8;
 }
+
 .dsysa-wind-zone-note {
   font-size: 11px;
   font-weight: 600;
@@ -794,6 +1077,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(2, 6, 23, 0.6);
 }
+
 .dsysa-wind-bars-legend {
   display: inline-flex;
   align-items: center;
@@ -803,6 +1087,7 @@
   font-weight: 600;
   color: #e2e8f0;
 }
+
 .dsysa-wind-swatch {
   display: inline-block;
   width: 16px;
@@ -811,10 +1096,12 @@
   vertical-align: middle;
   margin-left: 5px;
 }
+
 .dsysa-wind-swatch.sustained {
   background: #facc15;
   box-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
 }
+
 .dsysa-wind-swatch.gust {
   background: #f97316;
   box-shadow: 0 0 10px rgba(249, 115, 22, 0.45);
@@ -833,15 +1120,18 @@
   transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
 }
+
 .dsysa-wave-slot-col:hover .dsysa-wind-bar-stack {
   filter: brightness(1.15);
 }
+
 .dsysa-wind-bar-gust-part {
   width: 100%;
   background: linear-gradient(180deg, #fb923c 0%, #f97316 100%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
+
 .dsysa-wind-bar-sustained-part {
   width: 100%;
   background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
@@ -858,21 +1148,25 @@
   color: #ffffff;
   transition: transform 0.35s ease;
 }
+
 .dsysa-wind-dir-circle.fraco {
   background: linear-gradient(135deg, #818cf8, #6366f1);
   border: 1px solid rgba(199, 210, 254, 0.5);
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
 }
+
 .dsysa-wind-dir-circle.terral {
   background: linear-gradient(135deg, #22c55e, #15803d);
   border: 1px solid rgba(134, 239, 172, 0.5);
   box-shadow: 0 2px 10px rgba(22, 163, 74, 0.5);
 }
+
 .dsysa-wind-dir-circle.cruzado {
   background: linear-gradient(135deg, #fb923c, #ea580c);
   border: 1px solid rgba(253, 186, 116, 0.5);
   box-shadow: 0 2px 8px rgba(234, 88, 12, 0.45);
 }
+
 .dsysa-wind-dir-circle.maral {
   background: linear-gradient(135deg, #ef4444, #991b1b);
   border: 1px solid rgba(252, 165, 165, 0.5);
@@ -890,6 +1184,7 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .dsysa-wind-arrows-title {
   font-family: var(--dsysa-font-oswald);
   font-size: 12px;
@@ -898,6 +1193,7 @@
   color: #f8fafc;
   text-transform: uppercase;
 }
+
 .dsysa-wind-arrows-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(78px, 120px));
@@ -905,6 +1201,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
+
 .dsysa-wind-arrow-key {
   padding: 4px 10px;
   font-size: 11px;
@@ -913,43 +1210,111 @@
   text-align: center;
   letter-spacing: 0.02em;
 }
-.dsysa-wind-arrow-key.fraco { background: #818cf8; }
-.dsysa-wind-arrow-key.terral { background: #16a34a; }
-.dsysa-wind-arrow-key.cruzado { background: #ea580c; }
-.dsysa-wind-arrow-key.maral { background: #991b1b; }
+
+.dsysa-wind-arrow-key.fraco {
+  background: #818cf8;
+}
+
+.dsysa-wind-arrow-key.terral {
+  background: #16a34a;
+}
+
+.dsysa-wind-arrow-key.cruzado {
+  background: #ea580c;
+}
+
+.dsysa-wind-arrow-key.maral {
+  background: #991b1b;
+}
 
 /* ==========================================================================
    7. DSYSA WEATHER-REACTIVE AMBIENT BACKGROUND ENGINE
    (Ensolarado | Parcialmente Nublado | Chuvoso | Chuva com Raios)
    ========================================================================== */
 @keyframes dsysa-sun-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.92; }
-  50% { transform: scale(1.08); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
 }
 
 @keyframes dsysa-cloud-drift {
-  0% { transform: translateX(-6%); }
-  50% { transform: translateX(6%); }
-  100% { transform: translateX(-6%); }
+  0% {
+    transform: translateX(-6%);
+  }
+
+  50% {
+    transform: translateX(6%);
+  }
+
+  100% {
+    transform: translateX(-6%);
+  }
 }
 
 @keyframes dsysa-rain-fall {
-  0% { background-position: 0 0; }
-  100% { background-position: -90px 420px; }
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: -90px 420px;
+  }
 }
 
 @keyframes dsysa-lightning-flash {
-  0%, 84%, 88%, 92%, 100% { opacity: 0; }
-  85% { opacity: 0.55; }
-  86% { opacity: 0.12; }
-  89% { opacity: 0.85; }
-  90% { opacity: 0; }
+
+  0%,
+  84%,
+  88%,
+  92%,
+  100% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0.55;
+  }
+
+  86% {
+    opacity: 0.12;
+  }
+
+  89% {
+    opacity: 0.85;
+  }
+
+  90% {
+    opacity: 0;
+  }
 }
 
 @keyframes dsysa-bolt-strike {
-  0%, 84%, 91%, 100% { opacity: 0; transform: scaleY(0.95); }
-  85%, 89% { opacity: 1; transform: scaleY(1); }
-  87% { opacity: 0.2; }
+
+  0%,
+  84%,
+  91%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
+
+  85%,
+  89% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  87% {
+    opacity: 0.2;
+  }
 }
 
 .dsysa-weather-stage {
@@ -965,6 +1330,7 @@
 .dsysa-weather-stage.weather-sunny {
   background: linear-gradient(180deg, #031B38 0%, #073B6B 45%, #020813 100%);
 }
+
 .dsysa-weather-stage .dsysa-sun-orb {
   position: absolute;
   top: -70px;
@@ -972,17 +1338,16 @@
   width: 440px;
   height: 440px;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(254, 240, 138, 0.95) 0%,
-    rgba(250, 204, 21, 0.72) 22%,
-    rgba(245, 158, 11, 0.28) 48%,
-    rgba(56, 189, 248, 0) 72%
-  );
+  background: radial-gradient(circle,
+      rgba(254, 240, 138, 0.95) 0%,
+      rgba(250, 204, 21, 0.72) 22%,
+      rgba(245, 158, 11, 0.28) 48%,
+      rgba(56, 189, 248, 0) 72%);
   filter: blur(8px);
   opacity: 0;
   transition: all 0.8s ease;
 }
+
 .dsysa-weather-stage .dsysa-sun-core {
   position: absolute;
   top: 48px;
@@ -995,6 +1360,7 @@
   opacity: 0;
   transition: all 0.8s ease;
 }
+
 .dsysa-weather-stage.weather-sunny .dsysa-sun-orb,
 .dsysa-weather-stage.weather-sunny .dsysa-sun-core {
   opacity: 1;
@@ -1005,12 +1371,14 @@
 .dsysa-weather-stage.weather-partly_cloudy {
   background: linear-gradient(180deg, #0B2545 0%, #1E3A5F 48%, #0B1120 100%);
 }
+
 .dsysa-weather-stage.weather-partly_cloudy .dsysa-sun-orb {
   opacity: 0.62;
   top: -40px;
   right: 12%;
   filter: blur(18px);
 }
+
 .dsysa-weather-stage.weather-partly_cloudy .dsysa-sun-core {
   opacity: 0.75;
   top: 62px;
@@ -1019,18 +1387,21 @@
   height: 86px;
   filter: blur(2px);
 }
+
 .dsysa-weather-stage .dsysa-clouds-layer {
   position: absolute;
   inset: 0;
   opacity: 0;
   transition: opacity 0.8s ease;
 }
+
 .dsysa-weather-stage .dsysa-cloud-blob {
   position: absolute;
   border-radius: 9999px;
   background: radial-gradient(closest-side, rgba(203, 213, 225, 0.32), rgba(148, 163, 184, 0.12), transparent);
   filter: blur(16px);
 }
+
 .dsysa-weather-stage.weather-partly_cloudy .dsysa-clouds-layer {
   opacity: 1;
   animation: dsysa-cloud-drift 18s ease-in-out infinite;
@@ -1040,25 +1411,26 @@
 .dsysa-weather-stage.weather-rainy {
   background: linear-gradient(180deg, #273244 0%, #334155 45%, #111827 100%);
 }
+
 .dsysa-weather-stage.weather-rainy .dsysa-clouds-layer {
   opacity: 0.9;
   animation: dsysa-cloud-drift 22s ease-in-out infinite;
 }
+
 .dsysa-weather-stage .dsysa-rain-layer {
   position: absolute;
   inset: -40px;
   opacity: 0;
-  background-image: repeating-linear-gradient(
-    108deg,
-    transparent 0px,
-    transparent 18px,
-    rgba(203, 213, 225, 0.22) 19px,
-    transparent 20px,
-    transparent 46px
-  );
+  background-image: repeating-linear-gradient(108deg,
+      transparent 0px,
+      transparent 18px,
+      rgba(203, 213, 225, 0.22) 19px,
+      transparent 20px,
+      transparent 46px);
   background-size: 180px 420px;
   transition: opacity 0.6s ease;
 }
+
 .dsysa-weather-stage.weather-rainy .dsysa-rain-layer {
   opacity: 0.85;
   animation: dsysa-rain-fall 0.85s linear infinite;
@@ -1068,13 +1440,16 @@
 .dsysa-weather-stage.weather-thunderstorm {
   background: linear-gradient(180deg, #111827 0%, #1E293B 45%, #090D16 100%);
 }
+
 .dsysa-weather-stage.weather-thunderstorm .dsysa-clouds-layer {
   opacity: 1;
 }
+
 .dsysa-weather-stage.weather-thunderstorm .dsysa-rain-layer {
   opacity: 1;
   animation: dsysa-rain-fall 0.65s linear infinite;
 }
+
 .dsysa-weather-stage .dsysa-lightning-overlay {
   position: absolute;
   inset: 0;
@@ -1082,6 +1457,7 @@
   background: radial-gradient(circle at 65% 18%, rgba(224, 242, 254, 0.85), rgba(148, 163, 184, 0.35) 55%, rgba(15, 23, 42, 0.1) 100%);
   mix-blend-mode: screen;
 }
+
 .dsysa-weather-stage .dsysa-lightning-svg {
   position: absolute;
   top: 0;
@@ -1091,9 +1467,11 @@
   opacity: 0;
   filter: drop-shadow(0 0 18px #7dd3fc) drop-shadow(0 0 35px #e0f2fe);
 }
+
 .dsysa-weather-stage.weather-thunderstorm .dsysa-lightning-overlay {
   animation: dsysa-lightning-flash 4.8s infinite;
 }
+
 .dsysa-weather-stage.weather-thunderstorm .dsysa-lightning-svg {
   animation: dsysa-bolt-strike 4.8s infinite;
 }
@@ -1110,9 +1488,11 @@
   transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, filter 0.2s ease;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+
 .dsysa-wave-slot-col:hover .dsysa-energy-bar {
   filter: brightness(1.2);
 }
+
 .dsysa-energy-val-tag {
   font-size: 8.5px;
   font-weight: 700;
@@ -1122,6 +1502,7 @@
   opacity: 0.85;
   z-index: 3;
 }
+
 .dsysa-energy-scale-bar {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -1131,6 +1512,7 @@
   max-width: 680px;
   margin: 0 auto;
 }
+
 .dsysa-energy-cell {
   padding: 4px 2px;
   font-size: 9.5px;
@@ -1141,9 +1523,11 @@
   transition: transform 0.15s ease;
   line-height: 1.15;
 }
+
 .dsysa-energy-cell.light-text {
   color: #f8fafc;
 }
+
 .dsysa-energy-cell span {
   display: block;
   font-size: 8px;
@@ -1163,6 +1547,7 @@
   padding: 12px 18px 8px;
   background: rgba(2, 6, 23, 0.78);
 }
+
 .dsysa-tide-harbor-pin {
   display: inline-flex;
   align-items: center;
@@ -1174,6 +1559,7 @@
   color: #38bdf8;
   text-transform: lowercase;
 }
+
 .dsysa-tide-matrix-wrap {
   display: grid;
   grid-template-columns: 58px minmax(0, 1fr);
@@ -1181,6 +1567,7 @@
   background: #05080F;
   position: relative;
 }
+
 .dsysa-tide-yaxis {
   display: flex;
   flex-direction: column;
@@ -1189,6 +1576,7 @@
   user-select: none;
   z-index: 5;
 }
+
 .dsysa-tide-astro-label {
   height: 112px;
   display: flex;
@@ -1196,6 +1584,7 @@
   justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .dsysa-tide-astro-label span {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -1206,6 +1595,7 @@
   text-align: center;
   line-height: 1.15;
 }
+
 .dsysa-tide-meters-ticks {
   height: 138px;
   display: flex;
@@ -1217,11 +1607,13 @@
   font-weight: 600;
   color: #94a3b8;
 }
+
 .dsysa-tide-day-col {
   position: relative;
   border-right: 1px solid rgba(255, 255, 255, 0.18);
   user-select: none;
 }
+
 .dsysa-tide-badge-high {
   background: #00e5ff;
   color: #020617;
@@ -1234,6 +1626,7 @@
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
   white-space: nowrap;
 }
+
 .dsysa-tide-badge-low {
   background: #0284c7;
   color: #f8fafc;
@@ -1246,6 +1639,7 @@
   box-shadow: 0 0 10px rgba(2, 132, 199, 0.35);
   white-space: nowrap;
 }
+
 .dsysa-tide-now-callout {
   background: #be123c;
   color: #ffffff;
@@ -1277,6 +1671,7 @@
   background: rgba(2, 6, 23, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .dsysa-tide-mode-group {
   display: inline-flex;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -1284,6 +1679,7 @@
   overflow: hidden;
   background: rgba(15, 23, 42, 0.9);
 }
+
 .dsysa-tide-mode-btn {
   padding: 8px 20px;
   font-family: var(--dsysa-font-oswald);
@@ -1298,13 +1694,16 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .dsysa-tide-mode-btn:last-child {
   border-right: none;
 }
+
 .dsysa-tide-mode-btn:hover {
   color: #f8fafc;
   background: rgba(255, 255, 255, 0.06);
 }
+
 .dsysa-tide-mode-btn.active {
   color: #020617;
   background: #f8fafc;
@@ -1323,11 +1722,13 @@
   align-items: center;
   background: radial-gradient(circle at 22% 50%, rgba(56, 189, 248, 0.08), rgba(5, 8, 15, 0.96) 70%);
 }
+
 @media (min-width: 640px) {
   .dsysa-compass-body {
     grid-template-columns: 205px minmax(0, 1fr);
   }
 }
+
 .dsysa-compass-dial-wrap {
   position: relative;
   display: flex;
@@ -1337,20 +1738,24 @@
   margin: 0 auto;
   user-select: none;
 }
+
 .dsysa-compass-svg {
   display: block;
   cursor: grab;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.14));
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .dsysa-compass-svg:active {
   cursor: grabbing;
 }
+
 .dsysa-compass-rotor {
   transform-origin: 150px 150px;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
+
 .dsysa-compass-rotor.dragging,
 .dsysa-compass-rotor.live-tracking {
   transition: none !important;
@@ -1374,17 +1779,20 @@
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
+
 .dsysa-btn-live-compass:hover {
   background: rgba(56, 189, 248, 0.16);
   border-color: rgba(56, 189, 248, 0.65);
   transform: translateY(-1px);
 }
+
 .dsysa-btn-live-compass.active {
   background: rgba(16, 185, 129, 0.2);
   border-color: #10b981;
   color: #34d399;
   box-shadow: 0 0 18px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
+
 .dsysa-compass-live-dot {
   width: 7px;
   height: 7px;
@@ -1392,16 +1800,21 @@
   background: #64748b;
   transition: background 0.2s ease;
 }
+
 .dsysa-btn-live-compass.active .dsysa-compass-live-dot {
   background: #10b981;
   box-shadow: 0 0 8px #10b981;
   animation: dsysaPulseLive 1.6s infinite ease-in-out;
 }
+
 @keyframes dsysaPulseLive {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.35);
     opacity: 0.65;
@@ -1427,21 +1840,25 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
   animation: dsysaFadeInToast 0.25s ease-out;
 }
+
 @keyframes dsysaFadeInToast {
   from {
     opacity: 0;
     transform: translate(-50%, -8px);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, 0);
   }
 }
+
 .dsysa-compass-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .dsysa-compass-headline {
   font-family: var(--dsysa-font-sans);
   font-size: 1rem;
@@ -1450,17 +1867,20 @@
   color: #f8fafc;
   line-height: 1.3;
 }
+
 .dsysa-compass-desc {
   font-family: var(--dsysa-font-sans);
   font-size: 12px;
   color: #cbd5e1;
   line-height: 1.5;
 }
+
 .dsysa-compass-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
+
 .dsysa-compass-pill {
   display: inline-flex;
   align-items: center;
@@ -1473,6 +1893,7 @@
   font-weight: 500;
   color: #e2e8f0;
 }
+
 .dsysa-btn-expand-compass {
   display: inline-flex;
   align-items: center;
@@ -1491,6 +1912,7 @@
   box-shadow: 0 10px 28px rgba(56, 189, 248, 0.38);
   transition: all 0.2s ease;
 }
+
 .dsysa-btn-expand-compass:hover {
   transform: translateY(-1px);
   filter: brightness(1.08);
@@ -1513,10 +1935,12 @@
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
+
 .dsysa-compass-modal-backdrop.open {
   opacity: 1;
   pointer-events: auto;
 }
+
 .dsysa-compass-modal-dialog {
   position: relative;
   width: 100%;
@@ -1530,9 +1954,11 @@
   transform: scale(0.95);
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .dsysa-compass-modal-backdrop.open .dsysa-compass-modal-dialog {
   transform: scale(1);
 }
+
 .dsysa-btn-close-modal {
   display: inline-flex;
   align-items: center;
@@ -1548,6 +1974,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .dsysa-btn-close-modal:hover {
   background: rgba(244, 63, 94, 0.28);
   color: #ffffff;
@@ -1560,7 +1987,8 @@
   height: fit-content !important;
   min-height: 0 !important;
   max-height: none !important;
-  flex: 0 0 auto !important; /* Nunca estica para preencher a coluna; mantém sempre o tamanho do conteúdo interno (HUG) */
+  flex: 0 0 auto !important;
+  /* Nunca estica para preencher a coluna; mantém sempre o tamanho do conteúdo interno (HUG) */
   align-self: flex-start;
   width: 100%;
   display: flex;
@@ -1575,19 +2003,22 @@
    ========================================================================== */
 
 /* Prevenção universal de overflow horizontal */
-html, body {
+html,
+body {
   max-width: 100vw;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
 }
 
 @media (max-width: 640px) {
+
   /* Painéis de Gráficos: Topbar compacta e fluida */
   .dsysa-wave-topbar {
     padding: 8px 12px;
     flex-wrap: wrap;
     gap: 6px;
   }
+
   .dsysa-wave-topbar-title {
     font-size: 0.84rem;
     letter-spacing: 0.03em;
@@ -1595,10 +2026,12 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .dsysa-wave-subtabs {
     padding: 8px 10px 0;
     gap: 3px;
   }
+
   .dsysa-wave-subtab {
     padding: 6px 10px;
     font-size: 0.72rem;
@@ -1608,16 +2041,20 @@ html, body {
   .dsysa-wave-matrix-wrap {
     grid-template-columns: 44px minmax(0, 1fr) !important;
   }
+
   .dsysa-wave-yaxis.right {
     display: none !important;
   }
+
   .dsysa-wave-yaxis.left {
     width: 44px;
   }
+
   .dsysa-wave-yaxis-ticks {
     font-size: 8.5px;
     padding: 8px 1px 18px;
   }
+
   .dsysa-wave-dir-box {
     font-size: 7.8px;
     line-height: 1.1;
@@ -1629,17 +2066,21 @@ html, body {
   .dsysa-tide-matrix-wrap {
     grid-template-columns: 44px minmax(0, 1fr) !important;
   }
+
   .dsysa-tide-harbor-bar {
     padding: 8px 12px;
     flex-wrap: wrap;
     gap: 6px;
   }
+
   .dsysa-tide-harbor-pin span {
     font-size: 0.88rem;
   }
+
   .dsysa-tide-astro-label span {
     font-size: 8.5px;
   }
+
   .dsysa-tide-meters-ticks {
     font-size: 8.5px;
     padding: 4px 2px;
@@ -1651,21 +2092,25 @@ html, body {
     flex-wrap: wrap;
     gap: 6px;
   }
+
   .dsysa-wind-zone-note {
     font-size: 9.5px;
     width: 100%;
   }
+
   .dsysa-wind-subtabs-row {
     padding: 6px 12px 0;
     gap: 6px;
     flex-direction: column;
     align-items: flex-start;
   }
+
   .dsysa-wind-bars-legend {
     font-size: 10.5px;
     gap: 10px;
     padding-bottom: 4px;
   }
+
   .dsysa-wind-swatch {
     width: 12px;
     height: 12px;
@@ -1677,30 +2122,37 @@ html, body {
     gap: 14px;
     grid-template-columns: 1fr;
   }
+
   .dsysa-compass-svg {
     max-width: 172px;
     height: auto;
   }
+
   .dsysa-compass-headline {
     font-size: 0.95rem;
   }
+
   .dsysa-compass-desc {
     font-size: 11.5px;
   }
+
   .dsysa-compass-badges {
     gap: 6px;
   }
+
   .dsysa-compass-pill {
     font-size: 10px;
     padding: 4px 8px;
     max-width: 100%;
   }
+
   .dsysa-btn-live-compass,
   .dsysa-btn-expand-compass {
     font-size: 11px;
     padding: 7px 12px;
     gap: 6px;
   }
+
   .dsysa-compass-angle-readout {
     font-size: 10px !important;
   }
@@ -1709,16 +2161,19 @@ html, body {
   .dsysa-compass-modal-backdrop {
     padding: 8px;
   }
+
   .dsysa-compass-modal-dialog {
     max-width: 100%;
     max-height: 94vh;
     border-radius: 16px;
   }
+
   #dsysaModalCompassSvgHost {
     width: 100%;
     display: flex;
     justify-content: center;
   }
+
   #dsysaModalCompassSvgHost svg {
     max-width: 100% !important;
     width: 260px !important;
@@ -1729,12 +2184,15 @@ html, body {
   .dsysa-telemetry-grid {
     gap: 0.6rem;
   }
+
   .dsysa-telemetry-card {
     padding: 10px 12px;
   }
+
   .dsysa-telemetry-card-value {
     font-size: 13.5px;
   }
+
   .dsysa-telemetry-card-sub {
     font-size: 10.5px;
   }
@@ -1746,16 +2204,422 @@ html, body {
   }
 }
 
+/* ==========================================================================
+   12. CALLOUT INTERATIVO DE TAMANHO & HORA SOBRE AS BARRAS DOS GRÁFICOS
+   (Exibido ao clicar ou tocar sobre as barras: onda, energia e vento)
+   ========================================================================== */
+.dsysa-bar-callout {
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  z-index: 12;
+  white-space: nowrap;
+  line-height: 1.1;
+  padding-bottom: 2px;
+  animation: dsysaCalloutPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dsysaCalloutPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* Mostra no slot selecionado (por clique ou toque) ou no hover */
+.dsysa-wave-slot-col.is-selected .dsysa-bar-callout,
+.dsysa-wave-slot-col:hover .dsysa-bar-callout {
+  display: flex !important;
+}
+
+.dsysa-bar-callout-time {
+  font-family: var(--dsysa-font-mono, monospace);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #cbd5e1;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.dsysa-bar-callout-val {
+  font-family: var(--dsysa-font-geist, var(--dsysa-font-sans));
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+/* 1. Gráfico de Ondas: Tamanho em metros (ex: 1.7) */
+.dsysa-bar-callout-val.wave-val {
+  color: #f8fafc;
+  font-size: 13.5px;
+}
+
+/* 2. Gráfico de Energia: Valor dourado/amarelo destacado (ex: 520) */
+.dsysa-bar-callout-val.energy-val {
+  color: #facc15;
+  font-family: var(--dsysa-font-mono, monospace);
+  font-weight: 800;
+  font-size: 13.5px;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.45), 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+/* 3. Gráfico de Vento: Velocidade clara com unidade (ex: 20km/h) */
+.dsysa-bar-callout-val.wind-val {
+  color: #e2e8f0;
+  font-family: var(--dsysa-font-mono, monospace);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+/* Realce na coluna da barra quando selecionada */
+.dsysa-wave-slot-col.is-selected {
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+
+.dsysa-wave-slot-col.is-selected .dsysa-wave-bar,
+.dsysa-wave-slot-col.is-selected .dsysa-energy-bar,
+.dsysa-wave-slot-col.is-selected .dsysa-wind-bar-stack {
+  filter: brightness(1.22);
+}
+
 @media (max-width: 390px) {
+
   /* Smartphones ultra-compactos (iPhone SE, Galaxy Mini) */
   .dsysa-telemetry-card-value {
     font-size: 12.5px;
   }
+
   .dsysa-wave-topbar-title {
     font-size: 0.78rem;
   }
+
   #dsysaModalCompassSvgHost svg {
     width: 230px !important;
   }
 }
 
+/* ==========================================================================
+   13. WEATHER THEME ENGINE & DYNAMIC WEATHER BACKGROUND (Tempo Real WMO)
+   Estados: night | storm | cloudy (+ has-rain) | sunny
+   GPU-Accelerated (opacity & transform only) + Glassmorphism Adaptativo WCAG AA
+   ========================================================================== */
+.dsysa-weather-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: background 1.2s ease-in-out, opacity 1.2s ease-in-out;
+  will-change: opacity;
+}
+
+/* --- ESTADO 1: NOITE (is_day === 0 — Prioridade Máxima) --- */
+.dsysa-weather-stage.weather-night {
+  background: linear-gradient(180deg, #060d1f 0%, #0f1f3d 52%, #050a18 100%);
+}
+
+.dsysa-weather-stage .dsysa-stars-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(248, 250, 252, 0.7), transparent),
+    radial-gradient(1px 1px at 26% 10%, rgba(226, 232, 240, 0.55), transparent),
+    radial-gradient(1.5px 1.5px at 42% 24%, rgba(248, 250, 252, 0.65), transparent),
+    radial-gradient(1px 1px at 58% 12%, rgba(186, 230, 253, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 74% 20%, rgba(248, 250, 252, 0.65), transparent),
+    radial-gradient(1px 1px at 88% 14%, rgba(226, 232, 240, 0.5), transparent),
+    radial-gradient(1.2px 1.2px at 19% 36%, rgba(248, 250, 252, 0.45), transparent),
+    radial-gradient(1px 1px at 67% 32%, rgba(226, 232, 240, 0.45), transparent),
+    radial-gradient(1.4px 1.4px at 83% 40%, rgba(186, 230, 253, 0.5), transparent);
+}
+
+.dsysa-weather-stage .dsysa-moon-glow {
+  position: absolute;
+  top: 42px;
+  right: 11%;
+  width: 240px;
+  height: 240px;
+  border-radius: 9999px;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(226, 232, 240, 0.28) 0%, rgba(148, 163, 184, 0.1) 42%, transparent 72%);
+  transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+  will-change: opacity, transform;
+}
+
+.dsysa-weather-stage .dsysa-moon-disc {
+  position: absolute;
+  top: 78px;
+  right: calc(11% + 84px);
+  width: 68px;
+  height: 68px;
+  border-radius: 9999px;
+  opacity: 0;
+  background: radial-gradient(circle at 35% 35%, #f8fafc 0%, #cbd5e1 65%, #94a3b8 100%);
+  box-shadow: 0 0 42px rgba(226, 232, 240, 0.45);
+  transition: opacity 1.2s ease-in-out;
+}
+
+.dsysa-weather-stage.weather-night .dsysa-stars-layer {
+  opacity: 0.85;
+}
+.dsysa-weather-stage.weather-night .dsysa-moon-glow,
+.dsysa-weather-stage.weather-night .dsysa-moon-disc {
+  opacity: 1;
+}
+/* Variação Noturna com Tempestade Elétrica (WMO 95/96/99) */
+.dsysa-weather-stage.weather-night.has-storm .dsysa-lightning-overlay {
+  animation: dsysa-organic-lightning 7.6s infinite;
+}
+.dsysa-weather-stage.weather-night.has-storm .dsysa-lightning-svg {
+  animation: dsysa-organic-bolt 7.6s infinite;
+}
+.dsysa-weather-stage.weather-night.has-rain .dsysa-rain-layer {
+  opacity: 0.45;
+  animation: dsysa-rain-drift 0.9s linear infinite;
+}
+
+/* --- ESTADO 2: TEMPESTADE ELÉTRICA DIURNA (WMO 95, 96, 99) --- */
+.dsysa-weather-stage.weather-storm {
+  background: linear-gradient(180deg, #1e2530 0%, #3a4454 55%, #161c26 100%);
+}
+.dsysa-weather-stage.weather-storm .dsysa-clouds-layer {
+  opacity: 0.95;
+}
+.dsysa-weather-stage.weather-storm .dsysa-cloud-blob {
+  background: radial-gradient(ellipse at center, rgba(30, 41, 59, 0.88) 0%, rgba(51, 65, 85, 0.45) 55%, transparent 75%);
+  animation: dsysa-cloud-drift 34s ease-in-out infinite alternate;
+}
+.dsysa-weather-stage.weather-storm .dsysa-rain-layer {
+  opacity: 0.65;
+  animation: dsysa-rain-drift 0.72s linear infinite;
+}
+.dsysa-weather-stage.weather-storm .dsysa-lightning-overlay {
+  animation: dsysa-organic-lightning 6.8s infinite;
+}
+.dsysa-weather-stage.weather-storm .dsysa-lightning-svg {
+  animation: dsysa-organic-bolt 6.8s infinite;
+}
+
+/* --- ESTADO 3: NUBLADO / ENCOBERTO / CHUVA SEM TROVOADAS --- */
+.dsysa-weather-stage.weather-cloudy {
+  background: linear-gradient(180deg, #4b6584 0%, #778ca3 56%, #34495e 100%);
+}
+.dsysa-weather-stage.weather-cloudy.has-rain {
+  background: linear-gradient(180deg, #3b4e63 0%, #586c80 55%, #263445 100%);
+}
+.dsysa-weather-stage.weather-cloudy .dsysa-clouds-layer {
+  opacity: 0.88;
+}
+.dsysa-weather-stage.weather-cloudy .dsysa-cloud-blob {
+  background: radial-gradient(ellipse at center, rgba(226, 232, 240, 0.42) 0%, rgba(148, 163, 184, 0.2) 55%, transparent 75%);
+  animation: dsysa-cloud-drift 42s ease-in-out infinite alternate;
+}
+.dsysa-weather-stage.weather-cloudy.has-rain .dsysa-rain-layer {
+  opacity: 0.55;
+  animation: dsysa-rain-drift 0.92s linear infinite;
+}
+
+/* --- ESTADO 4: ENSOLARADO / CÉU LIMPO (WMO 0, 1) --- */
+.dsysa-weather-stage.weather-sunny {
+  background: linear-gradient(180deg, #0284c7 0%, #0ea5e9 46%, #7dd3fc 84%, #bae6fd 100%);
+}
+.dsysa-weather-stage.weather-sunny .dsysa-sun-orb {
+  opacity: 1;
+  background: radial-gradient(circle, rgba(254, 240, 138, 0.75) 0%, rgba(253, 224, 71, 0.35) 38%, rgba(56, 189, 248, 0) 72%);
+  animation: dsysa-sun-glow-gpu 6.5s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+.dsysa-weather-stage.weather-sunny .dsysa-sun-core {
+  opacity: 1;
+  background: radial-gradient(circle, #fef9c3 0%, #fde047 58%, rgba(253, 224, 71, 0) 100%);
+  animation: dsysa-sun-glow-gpu 6.5s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+/* --- ANIMAÇÕES GPU-ACCELERATED (APENAS transform & opacity) --- */
+@keyframes dsysa-sun-glow-gpu {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.07); opacity: 1; }
+}
+
+@keyframes dsysa-cloud-drift {
+  0%   { transform: translate3d(-4%, 0, 0); }
+  100% { transform: translate3d(6%, 0, 0); }
+}
+
+@keyframes dsysa-rain-drift {
+  0%   { transform: translate3d(0, -18px, 0); }
+  100% { transform: translate3d(-14px, 28px, 0); }
+}
+
+/* Flashes orgânicos e espaçados (4s–9s) sem incomodar a leitura dos gráficos */
+@keyframes dsysa-organic-lightning {
+  0%, 54%, 58%, 88%, 92%, 100% { opacity: 0; }
+  55%  { opacity: 0.34; }
+  56.5%{ opacity: 0.1; }
+  89%  { opacity: 0.42; }
+  90.5%{ opacity: 0.14; }
+}
+
+@keyframes dsysa-organic-bolt {
+  0%, 54%, 57%, 88%, 91%, 100% { opacity: 0; transform: scale(0.98); }
+  55%  { opacity: 0.65; transform: scale(1); }
+  89%  { opacity: 0.85; transform: scale(1.02); }
+}
+
+/* ==========================================================================
+   13B. GLASSMORPHISM ADAPTATIVO & CONTRASTE WCAG AA/AAA POR TEMA (body[data-weather-theme])
+   Garante leitura cristalina de textos, legendas e botões sobre céus claros e escuros
+   ========================================================================== */
+body[data-weather-theme] {
+  background-color: transparent !important;
+  transition: color 0.8s ease-in-out;
+}
+
+/* Scrim atmosférico sutil sobre céus claros (Ensolarado / Nublado) para contraste de texto > 7:1 */
+.dsysa-weather-stage.weather-sunny::after,
+.dsysa-weather-stage.weather-cloudy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 15, 34, 0.42) 0%,
+    rgba(4, 15, 34, 0.28) 44%,
+    rgba(4, 15, 34, 0.52) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Cabeçalho e Console com Glassmorphism escuro translúcido sobre céus claros */
+body[data-weather-theme="sunny"] header,
+body[data-weather-theme="cloudy"] header {
+  background: rgba(6, 14, 28, 0.82) !important;
+  backdrop-filter: blur(16px);
+  border-bottom-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body[data-weather-theme="sunny"] #console > div,
+body[data-weather-theme="cloudy"] #console > div {
+  background: rgba(6, 14, 28, 0.78) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Hero Headline & Subheadline com alto contraste sobre céus claros */
+body[data-weather-theme="sunny"] main > section:first-of-type h1,
+body[data-weather-theme="sunny"] main > section:first-of-type > div:first-child p,
+body[data-weather-theme="cloudy"] main > section:first-of-type h1,
+body[data-weather-theme="cloudy"] main > section:first-of-type > div:first-child p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 16px rgba(2, 12, 27, 0.68), 0 1px 3px rgba(2, 12, 27, 0.85);
+}
+
+/* Destaque itálico "ondas perfeitas" em creme solar vibrante (não se mistura ao azul) */
+body[data-weather-theme="sunny"] .font-playfair {
+  color: #fef9c3 !important;
+  text-shadow: 0 2px 18px rgba(2, 12, 27, 0.65), 0 0 22px rgba(253, 224, 71, 0.28);
+}
+
+/* Botão secundário "QUAL O MELHOR PICO HOJE?" em branco alto-contraste sobre céu azul */
+body[data-weather-theme="sunny"] button[onclick*="triggerBestSpotFlow"],
+body[data-weather-theme="cloudy"] button[onclick*="triggerBestSpotFlow"] {
+  background: #ffffff !important;
+  color: #020617 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 12px 32px rgba(2, 12, 27, 0.34), 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+body[data-weather-theme="sunny"] button[onclick*="triggerBestSpotFlow"]:hover,
+body[data-weather-theme="cloudy"] button[onclick*="triggerBestSpotFlow"]:hover {
+  background: #f0f9ff !important;
+  transform: translateY(-1px);
+}
+
+/* Legenda de turno de fala (#voiceHintText): apenas texto limpo com contraste garantido */
+#voiceHintText {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #f8fafc !important;
+  font-weight: 500;
+  text-shadow: 0 1px 10px rgba(2, 12, 27, 0.85), 0 1px 3px rgba(2, 12, 27, 0.9) !important;
+}
+
+/* Linha de consulta direta ("Ou testar consulta direta..." + chips de praias) */
+body[data-weather-theme="sunny"] main > section:first-of-type > div:first-child span.text-slate-400,
+body[data-weather-theme="cloudy"] main > section:first-of-type > div:first-child span.text-slate-400 {
+  color: #f8fafc !important;
+  font-weight: 500;
+  text-shadow: 0 1px 10px rgba(2, 12, 27, 0.8);
+}
+
+body[data-weather-theme="sunny"] button[onclick*="triggerSpecificSpot"],
+body[data-weather-theme="cloudy"] button[onclick*="triggerSpecificSpot"] {
+  background: rgba(6, 14, 28, 0.74) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #f8fafc !important;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 18px rgba(2, 12, 27, 0.28);
+}
+body[data-weather-theme="sunny"] button[onclick*="triggerSpecificSpot"]:hover,
+body[data-weather-theme="cloudy"] button[onclick*="triggerSpecificSpot"]:hover {
+  background: rgba(14, 165, 233, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.65) !important;
+  color: #020617 !important;
+}
+
+/* Sobre céu noturno / tempestade: glassmorphism equilibrado com bordas nítidas */
+body[data-weather-theme="night"] #console > div,
+body[data-weather-theme="storm"] #console > div {
+  background: rgba(8, 13, 26, 0.76) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+body[data-weather-theme="night"] button[onclick*="triggerSpecificSpot"],
+body[data-weather-theme="storm"] button[onclick*="triggerSpecificSpot"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #f1f5f9 !important;
+}
+
+/* ==========================================================================
+   13C. ACESSIBILIDADE: REDUCED MOTION (Desativa flashes e movimentos)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .dsysa-weather-stage,
+  .dsysa-weather-stage *,
+  .dsysa-weather-stage *::before,
+  .dsysa-weather-stage *::after {
+    animation: none !important;
+    transition: background 0.3s ease !important;
+  }
+  .dsysa-weather-stage .dsysa-lightning-overlay,
+  .dsysa-weather-stage .dsysa-lightning-svg {
+    opacity: 0 !important;
+    display: none !important;
+  }
+}

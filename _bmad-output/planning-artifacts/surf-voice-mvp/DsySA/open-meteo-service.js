@@ -134,7 +134,7 @@ function roundOrNull(val, decimals = 1) {
 async function fetchSurfForecast({
   lat,
   lon,
-  timezone = 'America/Sao_Paulo',
+  timezone = 'auto',
   forecastDays = 14
 }) {
   if (lat === undefined || lon === undefined) {
@@ -191,14 +191,21 @@ async function fetchSurfForecast({
 
   const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=${marineParams}&timezone=${encodedTz}&forecast_days=${forecastDays}`;
 
-  // 2. Endpoint Atmosférico (NOAA GFS / DWD ICON - Vento a 10m e Rajadas em Nós)
+  // 2. Endpoint Atmosférico (NOAA GFS / DWD ICON - Vento + Estado Atual WMO + Dia/Noite)
   const weatherParams = [
     'wind_speed_10m',
     'wind_direction_10m',
     'wind_gusts_10m'
   ].join(',');
 
-  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=${weatherParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${forecastDays}`;
+  const currentParams = [
+    'weather_code',
+    'is_day',
+    'cloud_cover',
+    'temperature_2m'
+  ].join(',');
+
+  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=${weatherParams}&current=${currentParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${forecastDays}`;
 
   // Execução assíncrona paralela (Promise.all)
   const [marineRes, weatherRes] = await Promise.all([
@@ -291,12 +298,23 @@ async function fetchSurfForecast({
     });
   }
 
+  const currentRaw = weatherRes.current || {};
+  const currentWeather = {
+    weatherCode: typeof currentRaw.weather_code === 'number' ? currentRaw.weather_code : 0,
+    isDay: typeof currentRaw.is_day === 'number' ? currentRaw.is_day : 1,
+    cloudCover: typeof currentRaw.cloud_cover === 'number' ? currentRaw.cloud_cover : 0,
+    temperatureC: roundOrNull(currentRaw.temperature_2m, 0),
+    time: currentRaw.time || null,
+    timezone: weatherRes.timezone || timezone
+  };
+
   const result = {
     spot: {
       lat: Number(lat),
       lon: Number(lon),
-      timezone
+      timezone: weatherRes.timezone || timezone
     },
+    currentWeather,
     timeline
   };
 

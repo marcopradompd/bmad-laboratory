@@ -361,13 +361,20 @@
           energyKj = Math.round(rawH * rawH * rawP * 28);
         }
 
+        const now = new Date();
+        const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
+        const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
+
         slots.push({
           dayLabel: day.label,
           fullDate: day.fullDate,
           hour: hr,
+          displayTime: isNowSlot ? exactNowTime : slotTime,
+          displayVal: (typeof rawH === "number" ? rawH : parseFloat(rawH || 1.5)).toFixed(1),
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
+          isNow: isNowSlot,
           height: rawH,
           period: rawP,
           color: window.getDsySAPeriodColor(rawP),
@@ -452,15 +459,22 @@
                   ${slots
                     .map((s, idx) => {
                       const heightPct = Math.min(96, Math.max(8, (s.height / maxScaleMeters) * 100));
+                      const isSelected = state.selectedSlotIdx === idx || (state.selectedSlotIdx === undefined && s.isNow);
+                      const calloutPosStyle = heightPct > 82 ? "top: 2px;" : `bottom: calc(${heightPct.toFixed(1)}% + 3px);`;
                       return `
-                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""}"
+                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""} ${isSelected ? "is-selected" : ""}"
                              data-slot-idx="${idx}"
                              data-day="${s.dayLabel} (${s.fullDate})"
                              data-hour="${s.hour}"
+                             data-time="${s.displayTime}"
                              data-height="${s.height}m"
                              data-period="${s.period}s"
                              data-dir="${s.dir}"
                              data-energy="${s.energy} kJ">
+                          <div class="dsysa-bar-callout callout-wave" style="${calloutPosStyle}">
+                            <span class="dsysa-bar-callout-time">${s.displayTime}</span>
+                            <span class="dsysa-bar-callout-val wave-val">${s.displayVal}</span>
+                          </div>
                           <div class="dsysa-wave-bar"
                                style="height: ${heightPct.toFixed(1)}%; background-color: ${s.color}; box-shadow: 0 0 12px ${s.color}55, inset 0 1px 0 rgba(255,255,255,0.45);">
                           </div>
@@ -577,16 +591,21 @@
 
     const readout = containerEl.querySelector(".dsysa-wave-readout");
     containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach((col) => {
-      const showInfo = () => {
+      const idx = parseInt(col.getAttribute("data-slot-idx"), 10);
+      const selectSlot = () => {
+        state.selectedSlotIdx = idx;
+        containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach(c => c.classList.remove("is-selected"));
+        col.classList.add("is-selected");
+
         const d = col.getAttribute("data-day");
-        const h = col.getAttribute("data-hour");
+        const t = col.getAttribute("data-time") || col.getAttribute("data-hour");
         const m = col.getAttribute("data-height");
         const p = col.getAttribute("data-period");
         const dir = col.getAttribute("data-dir");
         const e = col.getAttribute("data-energy");
         if (readout) {
           readout.classList.remove("hidden");
-          readout.textContent = `${d} (${h}) → Onda: ${m} | Período: ${p} | Direção: ${dir} | Energia: ${e}`;
+          readout.textContent = `${d} (${t}) → Onda: ${m} | Período: ${p} | Direção: ${dir} | Energia: ${e}`;
         }
         const pNum = parseInt(p, 10);
         containerEl.querySelectorAll("[data-period-cell]").forEach((cell) => {
@@ -600,8 +619,9 @@
           }
         });
       };
-      col.addEventListener("mouseenter", showInfo);
-      col.addEventListener("touchstart", showInfo, { passive: true });
+      col.addEventListener("click", selectSlot);
+      col.addEventListener("mouseenter", selectSlot);
+      col.addEventListener("touchstart", selectSlot, { passive: true });
     });
   };
 
@@ -703,13 +723,20 @@
         const convSustained = +(rawSustainedKmh * activeUnit.factor).toFixed(activeUnit.decimals);
         const convGust = +(rawGustKmh * activeUnit.factor).toFixed(activeUnit.decimals);
 
+        const now = new Date();
+        const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
+        const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
+
         slots.push({
           dayLabel: day.label,
           fullDate: day.fullDate,
           hour: hr,
+          displayTime: isNowSlot ? exactNowTime : slotTime,
+          displayVal: `${convSustained}${activeUnit.label.toLowerCase()}`,
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
+          isNow: isNowSlot,
           sustainedKmh: rawSustainedKmh,
           gustKmh: rawGustKmh,
           convSustained,
@@ -842,19 +869,27 @@
                     .join("")}
 
                   ${slots
-                    .map((s) => {
+                    .map((s, idx) => {
                       const totalHeightPct = Math.min(96, Math.max(8, (s.gustKmh / maxScaleKmh) * 100));
                       const sustainedRatioPct = Math.min(100, Math.max(25, (s.sustainedKmh / s.gustKmh) * 100));
                       const gustRatioPct = Math.max(0, 100 - sustainedRatioPct);
+                      const isSelected = state.selectedSlotIdx === idx || (state.selectedSlotIdx === undefined && s.isNow);
+                      const calloutPosStyle = totalHeightPct > 82 ? "top: 2px;" : `bottom: calc(${totalHeightPct.toFixed(1)}% + 3px);`;
 
                       return `
-                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""}"
+                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""} ${isSelected ? "is-selected" : ""}"
+                             data-slot-idx="${idx}"
                              data-day="${s.dayLabel} (${s.fullDate})"
                              data-hour="${s.hour}"
+                             data-time="${s.displayTime}"
                              data-wind="${s.convSustained} ${activeUnit.label}"
                              data-gust="${s.convGust} ${activeUnit.label}"
                              data-dir="${s.dir}"
                              data-type="${s.arrowType.toUpperCase()}">
+                          <div class="dsysa-bar-callout callout-wind" style="${calloutPosStyle}">
+                            <span class="dsysa-bar-callout-time">${s.displayTime}</span>
+                            <span class="dsysa-bar-callout-val wind-val">${s.displayVal}</span>
+                          </div>
                           <div class="dsysa-wind-bar-stack" style="height: ${totalHeightPct.toFixed(1)}%;">
                             <div class="dsysa-wind-bar-gust-part" style="height: ${gustRatioPct.toFixed(1)}%;"></div>
                             <div class="dsysa-wind-bar-sustained-part" style="height: ${sustainedRatioPct.toFixed(1)}%;"></div>
@@ -987,23 +1022,29 @@
       });
     }
 
-    // Readout interativo no hover / toque nas barras
+    // Readout interativo e seleção ao clicar / tocar / hover nas barras de vento
     const readout = containerEl.querySelector(".dsysa-wind-readout");
     containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach((col) => {
-      const showWindInfo = () => {
+      const idx = parseInt(col.getAttribute("data-slot-idx"), 10);
+      const selectWindSlot = () => {
+        state.selectedSlotIdx = idx;
+        containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach(c => c.classList.remove("is-selected"));
+        col.classList.add("is-selected");
+
         const d = col.getAttribute("data-day");
-        const h = col.getAttribute("data-hour");
+        const t = col.getAttribute("data-time") || col.getAttribute("data-hour");
         const w = col.getAttribute("data-wind");
         const g = col.getAttribute("data-gust");
         const dir = col.getAttribute("data-dir");
-        const t = col.getAttribute("data-type");
+        const type = col.getAttribute("data-type");
         if (readout) {
           readout.classList.remove("hidden");
-          readout.textContent = `${d} (${h}) → Vento: ${w} | Rajadas: ${g} | Direção: ${dir} (${t})`;
+          readout.textContent = `${d} (${t}) → Vento: ${w} | Rajadas: ${g} | Direção: ${dir} (${type})`;
         }
       };
-      col.addEventListener("mouseenter", showWindInfo);
-      col.addEventListener("touchstart", showWindInfo, { passive: true });
+      col.addEventListener("click", selectWindSlot);
+      col.addEventListener("mouseenter", selectWindSlot);
+      col.addEventListener("touchstart", selectWindSlot, { passive: true });
     });
   };
 
@@ -1114,13 +1155,19 @@
         }
 
         const tier = window.getDsySAEnergyTier(rawKj);
+        const now = new Date();
+        const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
+        const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
+
         slots.push({
           dayLabel: day.label,
           fullDate: day.fullDate,
           hour: hr,
+          displayTime: isNowSlot ? exactNowTime : slotTime,
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
-          isNow: Boolean(day.isToday && (new Date().getHours() >= parseInt(hr, 10) && new Date().getHours() < parseInt(hr, 10) + 6)),
+          isNow: isNowSlot,
           kj: rawKj,
           displayVal: Math.round(rawKj * unitFactor),
           tierKey: tier.key,
@@ -1239,18 +1286,26 @@
                     .join("")}
 
                   ${slots
-                    .map((s) => {
+                    .map((s, idx) => {
                       const heightPct = Math.min(92, Math.max(8, (s.kj / maxScaleKj) * 100));
+                      const isSelected = state.selectedSlotIdx === idx || (state.selectedSlotIdx === undefined && s.isNow);
+                      const calloutPosStyle = heightPct > 82 ? "top: 2px;" : `bottom: calc(${heightPct.toFixed(1)}% + 3px);`;
+
                       return `
-                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""}"
+                        <div class="dsysa-wave-slot-col ${s.band} ${s.isDayEnd ? "day-divider" : ""} ${s.isNow ? "is-now" : ""} ${isSelected ? "is-selected" : ""}"
+                             data-slot-idx="${idx}"
                              data-day="${s.dayLabel} (${s.fullDate})"
                              data-hour="${s.hour}"
+                             data-time="${s.displayTime}"
                              data-energy="${s.displayVal} ${unitLabel}"
                              data-tier="${s.tierKey}"
                              data-desc="${s.tierDesc}"
                              data-period="${s.period}s"
                              data-dir="${s.dir}">
-                          <span class="dsysa-energy-val-tag">${s.displayVal}</span>
+                          <div class="dsysa-bar-callout callout-energy" style="${calloutPosStyle}">
+                            <span class="dsysa-bar-callout-time">${s.displayTime}</span>
+                            <span class="dsysa-bar-callout-val energy-val">${s.displayVal}</span>
+                          </div>
                           <div class="dsysa-energy-bar"
                                style="height: ${heightPct.toFixed(1)}%; background: linear-gradient(180deg, ${s.color} 0%, ${s.color}cc 100%); box-shadow: 0 0 12px ${s.color}55, inset 0 1px 0 rgba(255,255,255,0.5);">
                           </div>
@@ -1388,12 +1443,17 @@
       });
     }
 
-    // Readout interativo e destaque na escala cromática de energia
+    // Readout interativo e seleção ao clicar / tocar / hover nas barras de energia
     const readout = containerEl.querySelector(".dsysa-energy-readout");
     containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach((col) => {
-      const showEnergyInfo = () => {
+      const idx = parseInt(col.getAttribute("data-slot-idx"), 10);
+      const selectEnergySlot = () => {
+        state.selectedSlotIdx = idx;
+        containerEl.querySelectorAll(".dsysa-wave-slot-col").forEach(c => c.classList.remove("is-selected"));
+        col.classList.add("is-selected");
+
         const d = col.getAttribute("data-day");
-        const h = col.getAttribute("data-hour");
+        const t = col.getAttribute("data-time") || col.getAttribute("data-hour");
         const e = col.getAttribute("data-energy");
         const desc = col.getAttribute("data-desc");
         const p = col.getAttribute("data-period");
@@ -1402,7 +1462,7 @@
 
         if (readout) {
           readout.classList.remove("hidden");
-          readout.textContent = `${d} (${h}) → Energia: ${e} (${desc}) | Período: ${p} | Direção: ${dir}`;
+          readout.textContent = `${d} (${t}) → Energia: ${e} (${desc}) | Período: ${p} | Direção: ${dir}`;
         }
         containerEl.querySelectorAll("[data-energy-cell]").forEach((cell) => {
           if (cell.getAttribute("data-energy-cell") === tierKey) {
@@ -1415,8 +1475,9 @@
           }
         });
       };
-      col.addEventListener("mouseenter", showEnergyInfo);
-      col.addEventListener("touchstart", showEnergyInfo, { passive: true });
+      col.addEventListener("click", selectEnergySlot);
+      col.addEventListener("mouseenter", selectEnergySlot);
+      col.addEventListener("touchstart", selectEnergySlot, { passive: true });
     });
   };
 
@@ -2066,86 +2127,163 @@
   };
 
   /* ==========================================================================
-     9. ENGINE DE BACKGROUND DINÂMICO REATIVO AO CLIMA (DsySA Weather Aura)
-     (sunny | partly_cloudy | rainy | thunderstorm)
+     9. WEATHER THEME ENGINE & <DynamicWeatherBackground /> (Tempo Real WMO)
+     Hierarquia: night (is_day=0) > storm (95/96/99) > cloudy/rain > sunny (0/1)
      ========================================================================== */
+  const STORM_WMO_CODES = [95, 96, 99];
+  const RAIN_WMO_CODES = [51, 53, 55, 61, 63, 65, 80, 81, 82];
+  const CLOUDY_WMO_CODES = [2, 3, 45, 48, ...RAIN_WMO_CODES];
+
   window.mountDsySAWeatherStage = function () {
     let stage = document.getElementById("dsysaWeatherStage");
     if (stage) return stage;
     stage = document.createElement("div");
     stage.id = "dsysaWeatherStage";
+    stage.setAttribute("aria-hidden", "true");
     stage.className = "dsysa-weather-stage weather-sunny";
     stage.innerHTML = `
-      <!-- Sol Amarelo Radiante (Ensolarado & Parcialmente Nublado) -->
+      <!-- Camada Noturna: Estrelas + Brilho Lunar Difuso (is_day === 0) -->
+      <div class="dsysa-stars-layer"></div>
+      <div class="dsysa-moon-glow"></div>
+      <div class="dsysa-moon-disc"></div>
+
+      <!-- Camada Solar: Sol Radiante Costeiro (Ensolarado) -->
       <div class="dsysa-sun-orb"></div>
       <div class="dsysa-sun-core"></div>
 
-      <!-- Camada de Nuvens Translúcidas (Parcialmente Nublado, Chuvoso & Tempestade) -->
+      <!-- Camada de Nuvens Translúcidas (Nublado & Tempestade) -->
       <div class="dsysa-clouds-layer">
         <div class="dsysa-cloud-blob" style="top: 4%; right: 6%; width: 520px; height: 180px;"></div>
         <div class="dsysa-cloud-blob" style="top: 10%; left: 10%; width: 620px; height: 210px;"></div>
         <div class="dsysa-cloud-blob" style="top: 22%; right: 25%; width: 480px; height: 160px;"></div>
       </div>
 
-      <!-- Camada de Chuva Diagonal (Chuvoso & Chuva com Raios) -->
+      <!-- Camada de Chuva Diagonal Sutil (Chuva & Tempestade) -->
       <div class="dsysa-rain-layer"></div>
 
-      <!-- Camada de Piscar de Raios / Relâmpagos (Chuva com Raios) -->
+      <!-- Camada de Flashes / Raios Orgânicos (Tempestade Diurna ou Noturna) -->
       <div class="dsysa-lightning-overlay"></div>
       <svg class="dsysa-lightning-svg" viewBox="0 0 200 360" fill="none">
         <path d="M115 0 L65 130 L110 135 L50 260 L95 260 L35 360 L135 235 L90 235 L150 115 L102 110 Z"
-              fill="rgba(224, 242, 254, 0.92)" stroke="#38bdf8" stroke-width="2"></path>
+              fill="rgba(224, 242, 254, 0.9)" stroke="#38bdf8" stroke-width="2"></path>
       </svg>
     `;
     document.body.prepend(stage);
     return stage;
   };
 
+  window.WeatherThemeEngine = {
+    resolveTheme({ isDay = 1, weatherCode = 0, cloudCover = 0 } = {}) {
+      const code = Number(weatherCode) || 0;
+      const hasStorm = STORM_WMO_CODES.includes(code);
+      const hasRain = RAIN_WMO_CODES.includes(code) || hasStorm;
+
+      // Estado 1: Noite (Prioridade Máxima)
+      if (Number(isDay) === 0) {
+        return { theme: "night", hasStorm, hasRain, isDay: 0, weatherCode: code, cloudCover };
+      }
+
+      // Estado 2: Tempestade Elétrica (WMO 95, 96, 99)
+      if (hasStorm) {
+        return { theme: "storm", hasStorm: true, hasRain: true, isDay: 1, weatherCode: code, cloudCover };
+      }
+
+      // Estado 3: Nublado / Encoberto / Chuva sem trovoadas
+      if (CLOUDY_WMO_CODES.includes(code) || Number(cloudCover) >= 65) {
+        return { theme: "cloudy", hasStorm: false, hasRain, isDay: 1, weatherCode: code, cloudCover };
+      }
+
+      // Estado 4: Ensolarado / Céu Limpo (WMO 0, 1)
+      return { theme: "sunny", hasStorm: false, hasRain: false, isDay: 1, weatherCode: code, cloudCover };
+    },
+
+    describeWmoCode(weatherCode, isDay = 1, tempC = null) {
+      const code = Number(weatherCode) || 0;
+      const tempSuffix = tempC !== null && tempC !== undefined ? ` (${Math.round(tempC)} °C)` : "";
+      if (STORM_WMO_CODES.includes(code)) return `⛈️ Tempestade elétrica${tempSuffix}`;
+      if (RAIN_WMO_CODES.includes(code)) return `🌧️ Chuvoso${tempSuffix}`;
+      if (Number(isDay) === 0) {
+        return CLOUDY_WMO_CODES.includes(code) ? `☁️ Noite nublada${tempSuffix}` : `🌙 Noite limpa${tempSuffix}`;
+      }
+      if (code === 2) return `⛅ Parcialmente nublado${tempSuffix}`;
+      if (code === 3 || code === 45 || code === 48) return `☁️ Nublado / Encoberto${tempSuffix}`;
+      return `☀️ Ensolarado${tempSuffix}`;
+    },
+
+    applyTheme(stateObj) {
+      const stage = window.mountDsySAWeatherStage();
+      const theme = ["sunny", "cloudy", "storm", "night"].includes(stateObj?.theme) ? stateObj.theme : "sunny";
+      const classes = ["dsysa-weather-stage", `weather-${theme}`];
+      if (stateObj?.hasRain) classes.push("has-rain");
+      if (stateObj?.hasStorm) classes.push("has-storm");
+
+      stage.className = classes.join(" ");
+      document.body.setAttribute("data-weather-theme", theme);
+      window.__currentDsySAWeather = theme;
+
+      const labels = {
+        sunny: "☀️ Ensolarado (Céu Azul + Sol Radiante)",
+        cloudy: stateObj?.hasRain ? "🌧️ Nublado com Chuva Sutil" : "⛅ Nublado / Encoberto",
+        storm: "⛈️ Tempestade Elétrica (Raios Intermitentes)",
+        night: stateObj?.hasStorm ? "🌙⛈️ Noite com Tempestade Elétrica" : "🌙 Noite (Céu Estrelado + Lua)"
+      };
+      const badge = document.getElementById("activeWeatherBgLabel");
+      if (badge) badge.textContent = labels[theme] || labels.sunny;
+
+      return theme;
+    },
+
+    applyFromSpot(spot) {
+      if (spot && spot.currentWeather) {
+        const resolved = this.resolveTheme(spot.currentWeather);
+        return this.applyTheme(resolved);
+      }
+
+      // Fallback inteligente antes da resposta da API: respeita horário local noturno (<6h ou >=18h)
+      const hr = new Date().getHours();
+      const isNightNow = hr < 6 || hr >= 18;
+      const inferred = window.inferDsySAWeatherMode(spot?.weather || "");
+      if (isNightNow) {
+        return this.applyTheme({
+          theme: "night",
+          hasStorm: inferred === "storm",
+          hasRain: inferred === "storm" || inferred === "rainy"
+        });
+      }
+      if (inferred === "storm") return this.applyTheme({ theme: "storm", hasStorm: true, hasRain: true });
+      if (inferred === "rainy") return this.applyTheme({ theme: "cloudy", hasStorm: false, hasRain: true });
+      if (inferred === "cloudy") return this.applyTheme({ theme: "cloudy", hasStorm: false, hasRain: false });
+      return this.applyTheme({ theme: "sunny", hasStorm: false, hasRain: false });
+    }
+  };
+
   window.inferDsySAWeatherMode = function (weatherText) {
     const t = (weatherText || "").toLowerCase();
-    if (t.includes("raio") || t.includes("tempestade") || t.includes("trovoada") || t.includes("⛈")) {
-      return "thunderstorm";
-    }
-    if (t.includes("chuv") || t.includes("🌧")) {
-      return "rainy";
-    }
-    if (t.includes("parcial") || t.includes("nuven") || t.includes("nublado") || t.includes("⛅")) {
-      return "partly_cloudy";
-    }
+    if (t.includes("noite") || t.includes("🌙")) return "night";
+    if (t.includes("raio") || t.includes("tempestade") || t.includes("trovoada") || t.includes("⛈")) return "storm";
+    if (t.includes("chuv") || t.includes("🌧")) return "rainy";
+    if (t.includes("parcial") || t.includes("nuven") || t.includes("nublado") || t.includes("encoberto") || t.includes("⛅") || t.includes("☁")) return "cloudy";
     return "sunny";
   };
 
   window.setDsySAWeatherBackground = function (modeOrText) {
-    const stage = window.mountDsySAWeatherStage();
-    const validModes = ["sunny", "partly_cloudy", "rainy", "thunderstorm"];
-    const mode = validModes.includes(modeOrText)
-      ? modeOrText
-      : window.inferDsySAWeatherMode(modeOrText);
-
-    stage.className = `dsysa-weather-stage weather-${mode}`;
-    window.__currentDsySAWeather = mode;
-
-    // Atualiza botões seletores de clima na interface (se presentes)
-    document.querySelectorAll("[data-weather-btn]").forEach((btn) => {
-      const bMode = btn.getAttribute("data-weather-btn");
-      if (bMode === mode) {
-        btn.classList.add("ring-2", "ring-sky-400", "bg-white/15", "text-white");
-      } else {
-        btn.classList.remove("ring-2", "ring-sky-400", "bg-white/15", "text-white");
-      }
-    });
-
-    const labels = {
-      sunny: "☀️ Ensolarado (BG Azulado + Amarelo Sol)",
-      partly_cloudy: "⛅ Parcialmente Nublado (BG Azul Suave + Sol & Nuvens)",
-      rainy: "🌧️ Chuvoso (BG Acinzentado + Chuva)",
-      thunderstorm: "⛈️ Chuva com Raios (BG Tempestade + Piscar de Raios)"
-    };
-    const badge = document.getElementById("activeWeatherBgLabel");
-    if (badge) {
-      badge.textContent = labels[mode] || labels.sunny;
+    if (modeOrText && typeof modeOrText === "object") {
+      return window.WeatherThemeEngine.applyFromSpot(modeOrText);
     }
-    return mode;
+    const mapLegacy = {
+      sunny: { theme: "sunny", hasRain: false, hasStorm: false },
+      cloudy: { theme: "cloudy", hasRain: false, hasStorm: false },
+      partly_cloudy: { theme: "cloudy", hasRain: false, hasStorm: false },
+      rainy: { theme: "cloudy", hasRain: true, hasStorm: false },
+      storm: { theme: "storm", hasRain: true, hasStorm: true },
+      thunderstorm: { theme: "storm", hasRain: true, hasStorm: true },
+      night: { theme: "night", hasRain: false, hasStorm: false }
+    };
+    if (mapLegacy[modeOrText]) {
+      return window.WeatherThemeEngine.applyTheme(mapLegacy[modeOrText]);
+    }
+    const inferred = window.inferDsySAWeatherMode(modeOrText);
+    return window.WeatherThemeEngine.applyTheme(mapLegacy[inferred] || mapLegacy.sunny);
   };
 
   /* ==========================================================================
@@ -2454,7 +2592,7 @@
     containerEl.__compassState = state;
 
     const compassService = window.DsySACompass?.compass;
-    const isLiveActive = compassService ? compassService.isActive : false;
+    const isLiveActive = compassService ? (compassService.isActive || !compassService.userDisabled) : true;
 
     containerEl.innerHTML = `
       <div class="dsysa-wave-panel mt-4" style="--border-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.32), rgba(16, 185, 129, 0.08)); --border-radius-before: 16px;">
@@ -2596,6 +2734,11 @@
           showCompassToast(containerEl, cState.errorMessage, 5000);
         }
       });
+
+      // Modo ao Vivo ativado automaticamente como default
+      if (typeof compassService.autoStartDefault === "function") {
+        compassService.autoStartDefault();
+      }
     }
 
     if (liveBtn) {
@@ -2606,9 +2749,11 @@
         }
 
         if (compassService.isActive) {
+          compassService.userDisabled = true;
           compassService.stop();
           showCompassToast(containerEl, "Bússola ao vivo desativada.", 2000);
         } else {
+          compassService.userDisabled = false;
           showCompassToast(containerEl, "Calibrando sensores de orientação...", 2200);
           const ok = await compassService.start();
           if (!ok) {
@@ -2822,14 +2967,21 @@
             if (modalLiveBtnText) modalLiveBtnText.textContent = "Bússola ao Vivo";
           }
         });
+
+        // Garante modo ao vivo ativo por padrão também ao abrir o modal
+        if (typeof compassService.autoStartDefault === "function") {
+          compassService.autoStartDefault();
+        }
       }
 
       if (modalLiveBtn) {
         modalLiveBtn.addEventListener("click", async () => {
           if (!compassService) return;
           if (compassService.isActive) {
+            compassService.userDisabled = true;
             compassService.stop();
           } else {
+            compassService.userDisabled = false;
             showCompassToast(modalEl.querySelector(".dsysa-compass-modal-dialog"), "Iniciando Bússola ao Vivo...", 2000);
             const ok = await compassService.start();
             if (!ok) {

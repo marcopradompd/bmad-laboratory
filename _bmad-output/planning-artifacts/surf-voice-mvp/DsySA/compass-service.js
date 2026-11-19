@@ -59,6 +59,9 @@
     constructor(options = {}) {
       this.smoothingFactor = options.smoothingFactor || 0.18; // Fator do filtro passa-baixa
       this.isActive = false;
+      this.defaultLiveEnabled = true; // Modo ao vivo ativado como padrão
+      this.userDisabled = false;      // Só desativa se o usuário clicar explicitamente para desligar
+      this._iosGestureArmed = false;
       this.status = 'idle'; // 'idle' | 'requesting' | 'active' | 'denied' | 'unsupported' | 'insecure_context' | 'error'
       this.errorMessage = null;
 
@@ -98,15 +101,54 @@
     }
 
     /**
+     * Verifica se o dispositivo exige gesto explícito do usuário (iOS Safari 13+)
+     */
+    requiresUserGesture() {
+      return (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      );
+    }
+
+    /**
+     * Ativa automaticamente o modo Bússola ao Vivo como padrão:
+     * - Android / Chrome: inicia imediatamente ao carregar.
+     * - iOS Safari 13+: arma ativação automática no primeiro toque na tela.
+     * - Desktop sem magnetômetro: mantém estado silencioso sem exibir erro intrusivo.
+     */
+    autoStartDefault() {
+      if (this.userDisabled || this.isActive) return;
+
+      if (this.requiresUserGesture()) {
+        if (!this._iosGestureArmed && typeof window !== 'undefined') {
+          this._iosGestureArmed = true;
+          const activateOnFirstTouch = () => {
+            this._iosGestureArmed = false;
+            if (!this.userDisabled && !this.isActive) {
+              this.start({ silentUnsupported: true });
+            }
+          };
+          window.addEventListener('touchend', activateOnFirstTouch, { once: true, passive: true });
+          window.addEventListener('click', activateOnFirstTouch, { once: true, passive: true });
+        }
+        return;
+      }
+
+      this.start({ silentUnsupported: true });
+    }
+
+    /**
      * Inicia a captura de orientação com solicitação de permissão (se necessário)
      */
-    async start() {
+    async start(options = {}) {
+      const silentUnsupported = Boolean(options && options.silentUnsupported);
       if (this.isActive) return true;
+      this.userDisabled = false;
 
       // 1. Verificação de Contexto Seguro (HTTPS / localhost)
       if (!isSecureContext()) {
         this.status = 'insecure_context';
-        this.errorMessage = 'Acesso a sensores bloqueado: requer contexto seguro (HTTPS ou localhost).';
+        this.errorMessage = silentUnsupported ? null : 'Acesso a sensores bloqueado: requer contexto seguro (HTTPS ou localhost).';
         this._notifyListeners();
         return false;
       }
@@ -114,7 +156,7 @@
       // 2. Verificação de Suporte
       if (!this.isSupported()) {
         this.status = 'unsupported';
-        this.errorMessage = 'DeviceOrientationEvent não suportado neste navegador.';
+        this.errorMessage = silentUnsupported ? null : 'DeviceOrientationEvent não suportado neste navegador.';
         this._notifyListeners();
         return false;
       }
@@ -173,8 +215,10 @@
       clearTimeout(this.detectionTimer);
       this.detectionTimer = setTimeout(() => {
         if (!this.hasReceivedEvent) {
-          this.status = 'unsupported';
-          this.errorMessage = 'Nenhum sensor de magnetômetro detectado (comum em desktops). Arraste a rosa dos ventos manualmente!';
+          this.status = silentUnsupported ? 'active' : 'unsupported';
+          this.errorMessage = silentUnsupported
+            ? null
+            : 'Nenhum sensor de magnetômetro detectado (comum em desktops). Arraste a rosa dos ventos manualmente!';
           this._notifyListeners();
         }
       }, 2400);

@@ -15,11 +15,53 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-// Importa o serviço de ingestão e normalização
+// Importa o serviço de ingestão, o serviço de conhecimento de picos e o guardrail LLM
 const { fetchSurfForecast } = require('./DsySA/open-meteo-service.js');
+const SpotKnowledgeService = require('./DsySA/spot-knowledge-service.js');
+const SurfeAgentGuardrail = require('./DsySA/surfeagent-llm-guardrail.js');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = __dirname;
+const SPOTS_DB_PATH = path.join(__dirname, 'data', 'surf_spots.json');
+
+function readSharedSpots() {
+  try {
+    if (!fs.existsSync(SPOTS_DB_PATH)) return [];
+    const raw = fs.readFileSync(SPOTS_DB_PATH, 'utf8');
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('⚠️ Falha ao ler data/surf_spots.json:', e.message);
+    return [];
+  }
+}
+
+function writeSharedSpots(spots) {
+  try {
+    const dir = path.dirname(SPOTS_DB_PATH);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SPOTS_DB_PATH, JSON.stringify(spots, null, 2), 'utf8');
+  } catch (e) {
+    console.warn('⚠️ Falha ao gravar data/surf_spots.json:', e.message);
+  }
+}
+
+function readJsonBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+      if (body.length > 1e6) req.destroy();
+    });
+    req.on('end', () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (e) {
+        reject(e);
+      }
+    });
+    req.on('error', reject);
+  });
+}
 
 // ============================================================================
 // CAMADA DE CACHE DO BACKEND (TTL = 2 HORAS = 7200 SEGUNDOS)
@@ -47,7 +89,7 @@ const server = http.createServer(async (req, res) => {
 
   // Habilita CORS globalmente
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -57,12 +99,118 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ==========================================================================
+  // ROTA BLINDADA DO AGENTE LLM (GUARDRAIL + GROUNDING + JSON ESTRUTURADO)
+  // POST /api/agent/respond  { query, spots }
+  // ==========================================================================
+  if (pathname === '/api/agent/respond' && req.method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      const query = String(body.query || '').trim();
+      const spots = Array.isArray(body.spots) ? body.spots : [];
+      const knownSpots = readSharedSpots();
+
+      const response = await SurfeAgentGuardrail.generateGroundedResponse({
+        userQuery: query,
+        spots,
+        knownSpots,
+        apiKey: process.env.OPENAI_API_KEY || null,
+        model: process.env.SURFEAGENT_LLM_MODEL || 'gpt-4o-mini'
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(response));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Erro no motor de guardrail do surfeAgent', details: err.message }));
+    }
+    return;
+  }
+
+  // ==========================================================================
+  // ROTAS DA BASE GLOBAL COLABORATIVA: surf_spots
+  // ==========================================================================
+  if (pathname === '/api/spots' && req.method === 'GET') {
+    const spots = readSharedSpots().sort((a, b) => (b.searchCount || 0) - (a.searchCount || 0));
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ count: spots.length, spots }));
+    return;
+  }
+
+  if (pathname === '/api/spots/discover' && req.method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      const query = String(body.query || '').trim();
+      if (!query) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: 'Parâmetro query obrigatório' }));
+        return;
+      }
+
+      const spots = readSharedSpots();
+      const cleanedQuery = SpotKnowledgeService.cleanSpotName(query, spots) || query;
+      const existing = SpotKnowledgeService.findSpotBySemanticMatch(spots, cleanedQuery);
+      if (existing) {
+        existing.searchCount = (existing.searchCount || 1) + 1;
+        writeSharedSpots(spots);
+        console.log(`🔎 [surf_spots] Deduplicação semântica: "${query}" → "${cleanedQuery}" → ${existing.name} (searchCount=${existing.searchCount})`);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ spot: existing, isNew: false, source: 'database_dedup' }));
+        return;
+      }
+
+      // Auto-Discovery via Web Grounding (Nominatim + Wikipedia) com nome higienizado
+      const result = await SpotKnowledgeService.discoverAndRegisterSpot(cleanedQuery, []);
+      if (result && result.spot) {
+        spots.push(result.spot);
+        writeSharedSpots(spots);
+        console.log(`✨ [surf_spots] Novo pico aprendido pela IA e salvo globalmente: ${result.spot.name} (${result.spot.lat}, ${result.spot.lon})`);
+        res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(result));
+        return;
+      }
+
+      res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Não foi possível localizar o pico' }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Erro ao descobrir pico', details: err.message }));
+    }
+    return;
+  }
+
+  const enrichMatch = pathname.match(/^\/api\/spots\/([^/]+)\/enrich$/);
+  if (enrichMatch && req.method === 'POST') {
+    try {
+      const spotId = decodeURIComponent(enrichMatch[1]);
+      const spots = readSharedSpots();
+      const idx = spots.findIndex(s => s.id === spotId);
+      if (idx < 0) {
+        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: 'Pico não encontrado na base global' }));
+        return;
+      }
+
+      const enriched = await SpotKnowledgeService.enrichSpotKnowledge(spots[idx]);
+      spots[idx] = { ...spots[idx], ...enriched };
+      writeSharedSpots(spots);
+      console.log(`🧠 [surf_spots] Enriquecimento web concluído para ${spots[idx].name}`);
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ spot: spots[idx] }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Erro ao enriquecer pico', details: err.message }));
+    }
+    return;
+  }
+
+  // ==========================================================================
   // ROTA DA API: GET /api/forecast?lat=-12.95&lon=-38.35
   // ==========================================================================
   if (pathname === '/api/forecast') {
     const lat = parseFloat(parsedUrl.searchParams.get('lat') || '-12.95');
     const lon = parseFloat(parsedUrl.searchParams.get('lon') || '-38.35');
-    const timezone = parsedUrl.searchParams.get('timezone') || 'America/Sao_Paulo';
+    const timezone = parsedUrl.searchParams.get('timezone') || 'auto';
     const forecastDays = parseInt(parsedUrl.searchParams.get('forecast_days') || '14', 10);
 
     const cacheKey = `${lat.toFixed(2)}:${lon.toFixed(2)}:${timezone}:${forecastDays}`;
