@@ -19,15 +19,17 @@
 
   const SETTINGS_STORAGE_KEY = 'surfeAgent_userSettings';
   const ONBOARDING_STORAGE_KEY = 'surfeAgent_onboardingCompleted';
+  const CURRENT_LAYOUT_VERSION = 3;
 
   const DEFAULT_HOME_LAYOUT = [
-    { id: 'card_voice_assistant', label: 'SurfAgent Voice Assistant', type: 'card', visible: true },
-    { id: 'card_condition_balance', label: 'Equilíbrio da Condição', type: 'card', visible: true },
     { id: 'acc_wave_height_period', label: 'ALTURA E PERÍODO DAS ONDAS', type: 'accordion', visible: true },
     { id: 'acc_wave_energy', label: 'ENERGIA DAS ONDAS (POTÊNCIA)', type: 'accordion', visible: true },
     { id: 'acc_surface_wind', label: 'VENTO DE SUPERFÍCIE MÉDIO', type: 'accordion', visible: true },
     { id: 'acc_tide_height', label: 'ALTURA DA MARÉ', type: 'accordion', visible: true },
-    { id: 'acc_beach_compass', label: 'BÚSSOLA DE POSICIONAMENTO DA PRAIA', type: 'accordion', visible: true }
+    { id: 'acc_beach_compass', label: 'BÚSSOLA DE POSICIONAMENTO DA PRAIA', type: 'accordion', visible: true },
+    { id: 'card_weather_forecast', label: 'Previsão do Tempo (3 Dias)', type: 'accordion', visible: true },
+    { id: 'card_condition_balance', label: 'Equilíbrio da Condição', type: 'card', visible: true },
+    { id: 'card_voice_assistant', label: 'SurfAgent Voice Assistant', type: 'card', visible: true }
   ];
 
   // Mapa completo de estados litorâneos brasileiros (UF ↔ Nome + Cidades principais de surfe)
@@ -119,6 +121,7 @@
 
   function getDefaultSettings() {
     return {
+      layoutVersion: CURRENT_LAYOUT_VERSION,
       locationFilter: {
         state: 'Todos',
         city: 'Todas'
@@ -169,10 +172,21 @@
       }
     });
 
+    // Migração suave v1 → v2: posiciona Equilíbrio da Condição e Voice Assistant no fim da coluna preservando visibilidade
+    let finalLayout = mergedLayout;
+    if (!raw.layoutVersion || raw.layoutVersion < CURRENT_LAYOUT_VERSION) {
+      const visById = new Map(mergedLayout.map(m => [m.id, m.visible]));
+      finalLayout = DEFAULT_HOME_LAYOUT.map(canonical => ({
+        ...canonical,
+        visible: visById.has(canonical.id) ? visById.get(canonical.id) : true
+      }));
+    }
+
     return {
+      layoutVersion: CURRENT_LAYOUT_VERSION,
       locationFilter: { state, city },
       skillLevel,
-      homeLayout: mergedLayout
+      homeLayout: finalLayout
     };
   }
 

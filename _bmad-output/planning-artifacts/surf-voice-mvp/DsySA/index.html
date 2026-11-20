@@ -284,8 +284,11 @@
               <!-- DsySA Tide Height & Astronomy Matrix (Porto, Horas dos Astros, Curva Senoidal Enchendo/Vazante, Preamar/Baixamar, Mini-Mapa e GRÁFICOS/TABELAS/MÊS) -->
               <div id="dsysaTideChartRoot" class="w-full"></div>
 
-              <!-- DsySA Functional Beach Compass Card (Último card da coluna dos gráficos: Bússola + Texto + Botão Ampliar Bússola em Modal) -->
+              <!-- DsySA Functional Beach Compass Card (Bússola + Texto + Botão Ampliar Bússola em Modal) -->
               <div id="dsysaCompassCardRoot" class="w-full"></div>
+
+              <!-- DsySA Weather Forecast Accordion Card (Previsão do Tempo — 3 Dias: Hoje, Amanhã e 3º Dia) -->
+              <div id="dsysaWeatherForecastRoot" class="w-full min-w-0"></div>
             </div>
 
             <!-- RIGHT (2 COLS): Condition Doughnut + AI Voice Assistant Panel -->
@@ -1623,6 +1626,10 @@
         }
       }
 
+      if (spot.forecastData && Array.isArray(spot.forecastData.dailyWeather)) {
+        spot.dailyWeather = spot.forecastData.dailyWeather;
+      }
+
       if (now.waterTempC) {
         const temp = Math.round(now.waterTempC);
         spot.waterTemp = `${temp} °C (${temp >= 24 ? 'Boardshort' : 'Wetsuit'})`;
@@ -1726,6 +1733,14 @@
           <p class="dsysa-telemetry-card-sub">Condição Climática + Temp. da Água (${gearLabel})</p>
         </div>
       `;
+
+      // Atualiza o Accordion DsySA de Previsão do Tempo (3 Dias: Hoje, Amanhã e 3º Dia)
+      if (typeof window.renderDsySAWeatherForecastCard === 'function') {
+        window.renderDsySAWeatherForecastCard(
+          document.getElementById('dsysaWeatherForecastRoot'),
+          spot
+        );
+      }
 
       // Atualiza o Gráfico DsySA de Altura, Período e Direção Primária das Ondas
       window.renderDsySAWavePeriodChart(

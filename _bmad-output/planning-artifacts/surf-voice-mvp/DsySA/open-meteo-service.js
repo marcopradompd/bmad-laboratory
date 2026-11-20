@@ -159,7 +159,7 @@ async function fetchSurfForecast({
   }
 
   // 2. Cache Local de Navegador (TTL = 2 horas) como fallback resiliente
-  const clientCacheKey = `dsysa_cache_${Number(lat).toFixed(2)}_${Number(lon).toFixed(2)}_${forecastDays}`;
+  const clientCacheKey = `dsysa_cache_v2_${Number(lat).toFixed(2)}_${Number(lon).toFixed(2)}_${forecastDays}`;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
       const rawCache = localStorage.getItem(clientCacheKey);
@@ -205,7 +205,13 @@ async function fetchSurfForecast({
     'temperature_2m'
   ].join(',');
 
-  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=${weatherParams}&current=${currentParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${forecastDays}`;
+  const dailyParams = [
+    'weather_code',
+    'temperature_2m_max',
+    'temperature_2m_min'
+  ].join(',');
+
+  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=${weatherParams}&current=${currentParams}&daily=${dailyParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${forecastDays}`;
 
   // Execução assíncrona paralela (Promise.all)
   const [marineRes, weatherRes] = await Promise.all([
@@ -308,6 +314,15 @@ async function fetchSurfForecast({
     timezone: weatherRes.timezone || timezone
   };
 
+  const dailyRaw = weatherRes.daily || {};
+  const dailyTimes = Array.isArray(dailyRaw.time) ? dailyRaw.time : [];
+  const dailyWeather = dailyTimes.slice(0, 3).map((dateStr, idx) => ({
+    date: dateStr,
+    weatherCode: typeof dailyRaw.weather_code?.[idx] === 'number' ? dailyRaw.weather_code[idx] : 1,
+    tempMinC: roundOrNull(dailyRaw.temperature_2m_min?.[idx], 0),
+    tempMaxC: roundOrNull(dailyRaw.temperature_2m_max?.[idx], 0)
+  }));
+
   const result = {
     spot: {
       lat: Number(lat),
@@ -315,6 +330,7 @@ async function fetchSurfForecast({
       timezone: weatherRes.timezone || timezone
     },
     currentWeather,
+    dailyWeather,
     timeline
   };
 

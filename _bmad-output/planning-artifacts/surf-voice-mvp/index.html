@@ -285,6 +285,77 @@
             <!-- DYNAMIC CUSTOMIZABLE HOME MODULES CONTAINER (Ordenado e Filtrado via surfeAgent_userSettings) -->
             <div id="homeModulesContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-4 min-w-0 max-w-full bg-transparent border-0">
 
+              <!-- MODULE: acc_wave_height_period -->
+              <div data-home-module="acc_wave_height_period" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWavePeriodChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_wave_energy -->
+              <div data-home-module="acc_wave_energy" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWaveEnergyChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_surface_wind -->
+              <div data-home-module="acc_surface_wind" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWindChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_tide_height -->
+              <div data-home-module="acc_tide_height" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaTideChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_beach_compass -->
+              <div data-home-module="acc_beach_compass" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaCompassCardRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: card_weather_forecast -->
+              <div data-home-module="card_weather_forecast" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWeatherForecastRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: card_condition_balance -->
+              <div data-home-module="card_condition_balance" class="lg:col-span-6 min-w-0 max-w-full">
+                <div class="rounded-2xl bg-slate-950/85 p-4 border border-white/5 h-full">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight text-slate-100">
+                        Equilíbrio da Condição
+                      </h3>
+                      <p class="mt-0.5 text-[11px] text-slate-400">
+                        Peso atual: Swell, Vento e Maré
+                      </p>
+                    </div>
+                    <p id="spotWindTag" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
+                      Terral Liso
+                    </p>
+                  </div>
+                  <div class="mt-4 flex items-center gap-4">
+                    <div class="relative h-28 w-28 shrink-0">
+                      <canvas id="distributionChart"></canvas>
+                    </div>
+                    <div class="space-y-2 text-[11px] text-slate-300 flex-1 min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-sky-400 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Ondulação &amp; Energia</span>
+                        <span class="text-slate-400" id="distSwell">50%</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-blue-400 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Alinhamento do Vento</span>
+                        <span class="text-slate-400" id="distWind">30%</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-slate-600 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Fase da Maré &amp; Lua</span>
+                        <span class="text-slate-400" id="distTide">20%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- MODULE: card_voice_assistant -->
               <div data-home-module="card_voice_assistant" class="lg:col-span-6 min-w-0 max-w-full">
                 <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-full flex flex-col justify-between gap-4 transition-all">
@@ -336,72 +407,6 @@
                     </button>
                   </div>
                 </div>
-              </div>
-
-              <!-- MODULE: card_condition_balance -->
-              <div data-home-module="card_condition_balance" class="lg:col-span-6 min-w-0 max-w-full">
-                <div class="rounded-2xl bg-slate-950/85 p-4 border border-white/5 h-full">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h3 class="text-sm font-medium tracking-tight text-slate-100">
-                        Equilíbrio da Condição
-                      </h3>
-                      <p class="mt-0.5 text-[11px] text-slate-400">
-                        Peso atual: Swell, Vento e Maré
-                      </p>
-                    </div>
-                    <p id="spotWindTag" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
-                      Terral Liso
-                    </p>
-                  </div>
-                  <div class="mt-4 flex items-center gap-4">
-                    <div class="relative h-28 w-28 shrink-0">
-                      <canvas id="distributionChart"></canvas>
-                    </div>
-                    <div class="space-y-2 text-[11px] text-slate-300 flex-1 min-w-0">
-                      <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-4 rounded-full bg-sky-400 shrink-0"></span>
-                        <span class="flex-1 text-slate-300 truncate">Ondulação &amp; Energia</span>
-                        <span class="text-slate-400" id="distSwell">50%</span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-4 rounded-full bg-blue-400 shrink-0"></span>
-                        <span class="flex-1 text-slate-300 truncate">Alinhamento do Vento</span>
-                        <span class="text-slate-400" id="distWind">30%</span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-4 rounded-full bg-slate-600 shrink-0"></span>
-                        <span class="flex-1 text-slate-300 truncate">Fase da Maré &amp; Lua</span>
-                        <span class="text-slate-400" id="distTide">20%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- MODULE: acc_wave_height_period -->
-              <div data-home-module="acc_wave_height_period" class="lg:col-span-12 min-w-0 max-w-full">
-                <div id="dsysaWavePeriodChartRoot" class="w-full min-w-0"></div>
-              </div>
-
-              <!-- MODULE: acc_wave_energy -->
-              <div data-home-module="acc_wave_energy" class="lg:col-span-12 min-w-0 max-w-full">
-                <div id="dsysaWaveEnergyChartRoot" class="w-full min-w-0"></div>
-              </div>
-
-              <!-- MODULE: acc_surface_wind -->
-              <div data-home-module="acc_surface_wind" class="lg:col-span-12 min-w-0 max-w-full">
-                <div id="dsysaWindChartRoot" class="w-full min-w-0"></div>
-              </div>
-
-              <!-- MODULE: acc_tide_height -->
-              <div data-home-module="acc_tide_height" class="lg:col-span-12 min-w-0 max-w-full">
-                <div id="dsysaTideChartRoot" class="w-full min-w-0"></div>
-              </div>
-
-              <!-- MODULE: acc_beach_compass -->
-              <div data-home-module="acc_beach_compass" class="lg:col-span-12 min-w-0 max-w-full">
-                <div id="dsysaCompassCardRoot" class="w-full min-w-0"></div>
               </div>
 
             </div>
@@ -2123,6 +2128,10 @@
         }
       }
 
+      if (spot.forecastData && Array.isArray(spot.forecastData.dailyWeather)) {
+        spot.dailyWeather = spot.forecastData.dailyWeather;
+      }
+
       if (now.waterTempC) {
         const temp = Math.round(now.waterTempC);
         spot.waterTemp = `${temp} °C (${temp >= 24 ? 'Boardshort' : 'Wetsuit'})`;
@@ -2226,6 +2235,14 @@
           <p class="dsysa-telemetry-card-sub">Condição Climática + Temp. da Água (${gearLabel})</p>
         </div>
       `;
+
+      // Atualiza o Accordion DsySA de Previsão do Tempo (3 Dias: Hoje, Amanhã e 3º Dia)
+      if (typeof window.renderDsySAWeatherForecastCard === 'function') {
+        window.renderDsySAWeatherForecastCard(
+          document.getElementById('dsysaWeatherForecastRoot'),
+          spot
+        );
+      }
 
       // Atualiza o Gráfico DsySA de Altura, Período e Direção Primária das Ondas
       window.renderDsySAWavePeriodChart(

@@ -3034,6 +3034,259 @@
     }
   };
 
+  // =========================================================================
+  // 10. DSYSA WEATHER FORECAST ACCORDION CARD (PREVISÃO DO TEMPO — 3 DIAS)
+  //     Reaproveita Open-Meteo `daily` (weather_code, temp_min, temp_max)
+  // =========================================================================
+  const DSYSA_WEEKDAYS_PT = [
+    "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
+  ];
+
+  function getDsySAWeatherIconSvg(iconType) {
+    if (iconType === "sunny") {
+      return `
+        <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#facc15" stroke-width="2.6" stroke-linecap="round">
+            <line x1="32" y1="5" x2="32" y2="10"/>
+            <line x1="32" y1="42" x2="32" y2="47"/>
+            <line x1="11" y1="26" x2="16" y2="26"/>
+            <line x1="48" y1="26" x2="53" y2="26"/>
+            <line x1="17.2" y1="11.2" x2="20.7" y2="14.7"/>
+            <line x1="43.3" y1="37.3" x2="46.8" y2="40.8"/>
+            <line x1="46.8" y1="11.2" x2="43.3" y2="14.7"/>
+            <line x1="20.7" y1="37.3" x2="17.2" y2="40.8"/>
+          </g>
+          <circle cx="32" cy="26" r="12" fill="#fde047" stroke="#f59e0b" stroke-width="1.5"/>
+        </svg>`;
+    }
+
+    if (iconType === "storm") {
+      return `
+        <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#facc15" stroke-width="2.2" stroke-linecap="round">
+            <line x1="41" y1="4" x2="41" y2="8"/>
+            <line x1="51" y1="9" x2="48.5" y2="11.5"/>
+            <line x1="55" y1="19" x2="51.5" y2="19"/>
+            <line x1="31" y1="9" x2="33.5" y2="11.5"/>
+          </g>
+          <circle cx="41" cy="19" r="8.5" fill="#fde047" stroke="#f59e0b" stroke-width="1.2"/>
+          <path d="M18 37h26a8 8 0 0 0 1.2-15.9A11 11 0 0 0 24.4 18a8.5 8.5 0 0 0-6.4 19Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.4" stroke-linejoin="round"/>
+          <polygon points="33,28 26,38 31.5,38 28.5,46 38.5,34.5 33,34.5" fill="#facc15" stroke="#d97706" stroke-width="0.9" stroke-linejoin="round"/>
+          <g stroke="#38bdf8" stroke-width="2" stroke-linecap="round">
+            <line x1="20" y1="42" x2="18" y2="47"/>
+            <line x1="42" y1="42" x2="40" y2="47"/>
+          </g>
+        </svg>`;
+    }
+
+    if (iconType === "rain_sun") {
+      return `
+        <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#facc15" stroke-width="2.2" stroke-linecap="round">
+            <line x1="41" y1="4" x2="41" y2="8"/>
+            <line x1="51" y1="9" x2="48.5" y2="11.5"/>
+            <line x1="55" y1="19" x2="51.5" y2="19"/>
+            <line x1="31" y1="9" x2="33.5" y2="11.5"/>
+          </g>
+          <circle cx="41" cy="19" r="8.5" fill="#fde047" stroke="#f59e0b" stroke-width="1.2"/>
+          <path d="M18 37h26a8 8 0 0 0 1.2-15.9A11 11 0 0 0 24.4 18a8.5 8.5 0 0 0-6.4 19Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.4" stroke-linejoin="round"/>
+          <g stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round">
+            <line x1="23" y1="41" x2="20.5" y2="47"/>
+            <line x1="32" y1="41" x2="29.5" y2="47"/>
+            <line x1="41" y1="41" x2="38.5" y2="47"/>
+          </g>
+        </svg>`;
+    }
+
+    if (iconType === "rain") {
+      return `
+        <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M16 35h30a8.5 8.5 0 0 0 1.3-16.9A12 12 0 0 0 24.2 15a9 9 0 0 0-8.2 20Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round"/>
+          <g stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round">
+            <line x1="22" y1="40" x2="19.5" y2="47"/>
+            <line x1="32" y1="40" x2="29.5" y2="47"/>
+            <line x1="42" y1="40" x2="39.5" y2="47"/>
+          </g>
+        </svg>`;
+    }
+
+    if (iconType === "cloudy") {
+      return `
+        <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M23 28h25a7 7 0 0 0 1-13.9A9.5 9.5 0 0 0 30.8 11.5a7.5 7.5 0 0 0-7.8 16.5Z" fill="#94a3b8" opacity="0.65"/>
+          <path d="M14 40h32a8.5 8.5 0 0 0 1.2-16.9A11.5 11.5 0 0 0 24.5 20a9 9 0 0 0-10.5 20Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>`;
+    }
+
+    // Default: "partly_cloudy" (Sol brilhante atrás de nuvem cinza-clara)
+    return `
+      <svg class="dsysa-weather-fc-svg" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g stroke="#facc15" stroke-width="2.3" stroke-linecap="round">
+          <line x1="39" y1="5" x2="39" y2="9"/>
+          <line x1="49.5" y1="9.5" x2="46.8" y2="12.2"/>
+          <line x1="54" y1="20" x2="50" y2="20"/>
+          <line x1="28.5" y1="9.5" x2="31.2" y2="12.2"/>
+        </g>
+        <circle cx="39" cy="20" r="9.5" fill="#fde047" stroke="#f59e0b" stroke-width="1.2"/>
+        <path d="M16 40h28a8.5 8.5 0 0 0 1.2-16.9A11.5 11.5 0 0 0 23.5 20a9 9 0 0 0-7.5 20Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>`;
+  }
+
+  function translateWmoDaily(code) {
+    const c = Number(code);
+    if (c === 0) return { icon: "sunny", desc: "Céu limpo e ensolarado" };
+    if (c === 1) return { icon: "partly_cloudy", desc: "Sol com poucas nuvens" };
+    if (c === 2) return { icon: "partly_cloudy", desc: "Sol com muitas nuvens" };
+    if (c === 3) return { icon: "cloudy", desc: "Tempo nublado e encoberto" };
+    if (c === 45 || c === 48) return { icon: "cloudy", desc: "Neblina e nuvens baixas" };
+    if (c >= 51 && c <= 57) return { icon: "rain", desc: "Garoa leve ao longo do dia" };
+    if (c >= 61 && c <= 67) return { icon: "rain", desc: "Chuva moderada no litoral" };
+    if (c >= 80 && c <= 82) return { icon: "rain_sun", desc: "Sol entre nuvens e pancadas de chuva" };
+    if (c === 95 || c === 96 || c === 99) {
+      return { icon: "storm", desc: "Sol entre nuvens e pancadas de chuva, com trovoadas" };
+    }
+    return { icon: "partly_cloudy", desc: "Sol com muitas nuvens" };
+  }
+
+  function formatDailyForecastLabel(dateStr, idx) {
+    if (idx === 0) return "Hoje";
+    if (idx === 1) return "Amanhã";
+    if (dateStr && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+      const [y, m, d] = dateStr.slice(0, 10).split("-").map(Number);
+      const dt = new Date(y, m - 1, d);
+      if (!isNaN(dt.getTime())) {
+        return DSYSA_WEEKDAYS_PT[dt.getDay()];
+      }
+    }
+    const fallbackDt = new Date();
+    fallbackDt.setDate(fallbackDt.getDate() + idx);
+    return DSYSA_WEEKDAYS_PT[fallbackDt.getDay()];
+  }
+
+  function resolveWeatherCardLocationName(spotConfig) {
+    if (window.SurfeAgentSettings && typeof window.SurfeAgentSettings.inferSpotLocation === "function") {
+      const loc = window.SurfeAgentSettings.inferSpotLocation(spotConfig);
+      if (loc && loc.city) {
+        return loc.city.split("(")[0].trim();
+      }
+    }
+    return spotConfig?.name || "Litoral";
+  }
+
+  window.renderDsySAWeatherForecastCard = function (containerEl, spotConfig) {
+    if (!containerEl) return;
+
+    const spotKey = spotConfig?.id || "default";
+    if (!containerEl.__weatherFcState) {
+      containerEl.__weatherFcState = { collapsed: false };
+    }
+    const state = containerEl.__weatherFcState;
+
+    const locationLabel = resolveWeatherCardLocationName(spotConfig);
+    const rawDaily =
+      (Array.isArray(spotConfig?.dailyWeather) && spotConfig.dailyWeather.length >= 3 && spotConfig.dailyWeather) ||
+      (Array.isArray(spotConfig?.forecastData?.dailyWeather) && spotConfig.forecastData.dailyWeather.length >= 3 && spotConfig.forecastData.dailyWeather) ||
+      null;
+
+    // Fallback instantâneo enquanto a Open-Meteo retorna os 3 dias reais
+    const baseTemp = typeof spotConfig?.currentWeather?.temperatureC === "number"
+      ? Math.round(spotConfig.currentWeather.temperatureC)
+      : 28;
+    const baseCode = typeof spotConfig?.currentWeather?.weatherCode === "number"
+      ? spotConfig.currentWeather.weatherCode
+      : 2;
+
+    const days = rawDaily
+      ? rawDaily.slice(0, 3)
+      : [
+          { date: null, weatherCode: baseCode, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 1 },
+          { date: null, weatherCode: 80, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 2 },
+          { date: null, weatherCode: 2, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 2 }
+        ];
+
+    const render = () => {
+      const colsHtml = days.map((day, idx) => {
+        const meta = translateWmoDaily(day.weatherCode);
+        const dayLabel = formatDailyForecastLabel(day.date, idx);
+        const minStr = day.tempMinC !== null && day.tempMinC !== undefined ? `${Math.round(day.tempMinC)}°` : "--°";
+        const maxStr = day.tempMaxC !== null && day.tempMaxC !== undefined ? `${Math.round(day.tempMaxC)}°` : "--°";
+
+        return `
+          <div class="dsysa-weather-fc-col">
+            <div class="dsysa-weather-fc-icon-wrap">
+              ${getDsySAWeatherIconSvg(meta.icon)}
+            </div>
+            <div class="dsysa-weather-fc-day">${dayLabel}</div>
+            <div class="dsysa-weather-fc-temps">
+              <span class="dsysa-weather-fc-min" title="Temperatura mínima">${minStr}</span>
+              <span class="dsysa-weather-fc-max" title="Temperatura máxima">${maxStr}</span>
+            </div>
+            <p class="dsysa-weather-fc-desc" title="${meta.desc}">${meta.desc}</p>
+          </div>
+        `;
+      }).join("");
+
+      containerEl.innerHTML = `
+        <div class="dsysa-wave-panel" data-weather-fc-spot="${spotKey}" style="--border-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(250, 204, 21, 0.1)); --border-radius-before: 16px;">
+          <!-- TOP HEADER ACCORDION DsySA: Ícone Sol Linear + "PREVISÃO DO TEMPO" + Collapse -->
+          <div class="dsysa-wave-topbar">
+            <div class="dsysa-wave-topbar-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+              <span>PREVISÃO DO TEMPO</span>
+              <span class="text-[11px] font-inter font-normal text-sky-300/90 ml-2 hidden sm:inline">
+                · Próximos 3 dias
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[11px] font-mono text-sky-300 hidden md:inline">
+                ${locationLabel} · Mín / Máx
+              </span>
+              <button type="button" class="dsysa-WeatherFcCollapseBtn flex h-6 w-6 items-center justify-center rounded bg-slate-800/90 border border-white/10 text-slate-200 hover:text-white text-xs" aria-label="Recolher ou expandir Previsão do tempo">
+                ${state.collapsed ? "▼" : "▲"}
+              </button>
+            </div>
+          </div>
+
+          <div class="${state.collapsed ? "hidden" : "block"} dsysa-weather-fc-body">
+            <!-- Linha de Localização Centralizada com Pino Azul-Oceano -->
+            <div class="dsysa-weather-fc-loc">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>${locationLabel}</span>
+            </div>
+
+            <!-- Grid de 3 Colunas (Hoje | Amanhã | 3º Dia) com divisórias verticais sutis -->
+            <div class="dsysa-weather-fc-grid">
+              ${colsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+
+      const btn = containerEl.querySelector(".dsysa-WeatherFcCollapseBtn");
+      if (btn) {
+        btn.addEventListener("click", () => {
+          state.collapsed = !state.collapsed;
+          render();
+        });
+      }
+    };
+
+    render();
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     window.mountDsySAWeatherStage();
     window.initDsySAAnimations();
