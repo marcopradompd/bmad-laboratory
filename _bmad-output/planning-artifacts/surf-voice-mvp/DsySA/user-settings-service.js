@@ -26,7 +26,7 @@
     { id: 'acc_wave_energy', label: 'ENERGIA DAS ONDAS (POTÊNCIA)', type: 'accordion', visible: true },
     { id: 'acc_surface_wind', label: 'VENTO DE SUPERFÍCIE MÉDIO', type: 'accordion', visible: true },
     { id: 'acc_tide_height', label: 'ALTURA DA MARÉ', type: 'accordion', visible: true },
-    { id: 'acc_beach_compass', label: 'BÚSSOLA DE POSICIONAMENTO DA PRAIA', type: 'accordion', visible: true },
+    { id: 'acc_beach_compass', label: 'BÚSSOLA', type: 'accordion', visible: true },
     { id: 'card_weather_forecast', label: 'Previsão do Tempo (3 Dias)', type: 'accordion', visible: true },
     { id: 'card_condition_balance', label: 'Equilíbrio da Condição', type: 'card', visible: true },
     { id: 'card_voice_assistant', label: 'SurfAgent Voice Assistant', type: 'card', visible: true }

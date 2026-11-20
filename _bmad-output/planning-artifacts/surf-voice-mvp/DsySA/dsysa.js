@@ -394,7 +394,11 @@
       <div class="dsysa-wave-panel" style="--border-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(59, 130, 246, 0.04)); --border-radius-before: 16px;">
         <div class="dsysa-wave-topbar">
           <div class="dsysa-wave-topbar-title">
-            <span class="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <path d="M2 7c1.2.9 2.4 1.3 4 1.3 3.2 0 3.2-2.6 6.4-2.6 3.2 0 3.2 2.6 6.4 2.6 1.6 0 2.4-.4 3.2-1.3"></path>
+              <path d="M2 13c1.2.9 2.4 1.3 4 1.3 3.2 0 3.2-2.6 6.4-2.6 3.2 0 3.2 2.6 6.4 2.6 1.6 0 2.4-.4 3.2-1.3"></path>
+              <path d="M2 19c1.2.9 2.4 1.3 4 1.3 3.2 0 3.2-2.6 6.4-2.6 3.2 0 3.2 2.6 6.4 2.6 1.6 0 2.4-.4 3.2-1.3"></path>
+            </svg>
             <span>ALTURA E PERÍODO DAS ONDAS</span>
             <span class="text-[11px] font-inter font-normal text-sky-300/90 ml-2 hidden sm:inline">
               · ${activeMod.label}
@@ -769,7 +773,11 @@
         <!-- TOP HEADER: VENTO DE SUPERFÍCIE MÉDIO -->
         <div class="dsysa-wave-topbar">
           <div class="dsysa-wave-topbar-title">
-            <span class="h-2 w-2 rounded-full bg-amber-400 shadow-[0_0_8px_#facc15]"></span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path>
+              <path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path>
+              <path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path>
+            </svg>
             <span>VENTO DE SUPERFÍCIE MÉDIO</span>
             <span class="text-[11px] font-inter font-normal text-amber-300/90 ml-2 hidden sm:inline">
               · ${state.zone === "costeiro" ? "Zona Costeira (Praia)" : "Zona Marítima (Alto-Mar)"}
@@ -1200,7 +1208,9 @@
         <!-- TOP HEADER: ENERGIA DAS ONDAS -->
         <div class="dsysa-wave-topbar">
           <div class="dsysa-wave-topbar-title">
-            <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
             <span>ENERGIA DAS ONDAS (POTÊNCIA)</span>
             <span class="text-[11px] font-inter font-normal text-emerald-300/90 ml-2 hidden sm:inline">
               · ${activeMod.label}
@@ -1671,7 +1681,12 @@
         <!-- TOP HEADER: ALTURA DA MARÉ -->
         <div class="dsysa-wave-topbar">
           <div class="dsysa-wave-topbar-title">
-            <span class="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00e5ff]"></span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <path d="M12 3v9"></path>
+              <path d="m8.5 6.5 3.5-3.5 3.5 3.5"></path>
+              <path d="M2 16c1.5 1 3 1.5 5 1.5 3.5 0 3.5-2.5 7-2.5 3.5 0 3.5 2.5 7 2.5 1 0 1.8-.2 2.5-.6"></path>
+              <path d="M2 20.5c1.5 1 3 1.5 5 1.5 3.5 0 3.5-2.5 7-2.5 3.5 0 3.5 2.5 7 2.5 1 0 1.8-.2 2.5-.6"></path>
+            </svg>
             <span>ALTURA DA MARÉ</span>
             <span class="text-[11px] font-inter font-normal text-cyan-300/90 ml-2 hidden sm:inline">
               · Tábua de Marés & Horas dos Astros
@@ -2599,8 +2614,11 @@
         <!-- TOP HEADER: BÚSSOLA DE POSICIONAMENTO DA PRAIA -->
         <div class="dsysa-wave-topbar">
           <div class="dsysa-wave-topbar-title">
-            <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
-            <span>BÚSSOLA DE POSICIONAMENTO DA PRAIA</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+            </svg>
+            <span>BÚSSOLA</span>
             <span class="text-[11px] font-inter font-normal text-sky-300/90 ml-2 hidden sm:inline">
               · Orientação Costeira (${info.beachFaceCardinal})
             </span>
