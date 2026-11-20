@@ -55,43 +55,55 @@
        NAVIGATION HEADER (DsySA Navbar)
        ===================================================================== -->
   <header class="z-30 sticky top-0 bg-black/80 backdrop-blur-xl border-b border-white/5">
-    <div class="flex lg:px-8 w-full max-w-6xl mx-auto py-4 px-4 items-center justify-between">
+    <div class="flex lg:px-8 w-full max-w-6xl mx-auto py-4 px-4 items-center justify-between gap-3">
       <!-- Brand Logo -->
-      <a href="#top" class="inline-flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400/20 to-blue-600/20 border border-sky-400/30 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.25)] group-hover:border-sky-400/60 transition-colors">
+      <a href="#top" class="inline-flex items-center gap-3 group min-w-0">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400/20 to-blue-600/20 border border-sky-400/30 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.25)] group-hover:border-sky-400/60 transition-colors shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
             <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
             <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
           </svg>
         </div>
-        <div>
+        <div class="min-w-0">
           <div class="flex items-center gap-2">
             <span class="text-sm font-semibold tracking-tight text-white">SurfAgent</span>
           </div>
-          <p class="text-[10px] text-slate-400 tracking-tight">Voice AI Surf Console</p>
+          <p class="text-[10px] text-slate-400 tracking-tight truncate">Voice AI Surf Console</p>
         </div>
       </a>
 
-      <!-- Desktop Nav -->
-      <div class="hidden lg:flex items-center gap-8">
-        <nav class="flex items-center gap-7">
-          <a href="#console" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE & ABAS</a>
-          <a href="#dsysaWavePeriodChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS & ENERGIA</a>
-          <a href="#dsysaWindChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO & MARÉ</a>
-        </nav>
+      <!-- Right: Desktop Nav + Settings Gear Trigger (1º da direita para a esquerda) -->
+      <div class="flex items-center gap-3 lg:gap-6 shrink-0">
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-8">
+          <nav class="flex items-center gap-7">
+            <a href="#console" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE & ABAS</a>
+            <a href="#dsysaWavePeriodChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS & ENERGIA</a>
+            <a href="#dsysaWindChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO & MARÉ</a>
+          </nav>
 
-        <div class="h-5 w-px bg-white/15"></div>
+          <div class="h-5 w-px bg-white/15"></div>
 
-        <div class="flex items-center gap-3">
-          <button onclick="refreshSavedTabs()" class="text-[11px] font-semibold text-white tracking-tight bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors px-4 py-2 inline-flex items-center gap-1.5">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-            ABAS ATUALIZADAS (<span id="navSyncTime">AGORA</span>)
-          </button>
-          <button onclick="toggleVoiceMute()" id="navMuteBtn" class="text-[11px] font-semibold text-black tracking-tight bg-white hover:bg-white/90 transition-colors px-4 py-2">
-            🔊 VOZ IA ATIVA
-          </button>
+          <div class="flex items-center gap-3">
+            <button onclick="refreshSavedTabs()" class="text-[11px] font-semibold text-white tracking-tight bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors px-4 py-2 inline-flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              ABAS ATUALIZADAS (<span id="navSyncTime">AGORA</span>)
+            </button>
+            <button onclick="toggleVoiceMute()" id="navMuteBtn" class="text-[11px] font-semibold text-black tracking-tight bg-white hover:bg-white/90 transition-colors px-4 py-2">
+              🔊 VOZ IA ATIVA
+            </button>
+          </div>
         </div>
+
+        <!-- Settings Gear Trigger (Primeiro item da direita para a esquerda) -->
+        <button type="button" id="openSettingsDrawerBtn" onclick="openSettingsDrawer()" class="dsysa-settings-trigger" aria-label="Abrir Configurações" title="Configurações do SurfAgent">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span class="dsysa-settings-active-dot" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </header>
@@ -221,15 +233,15 @@
             </span>
           </div>
 
-          <!-- Main Console Grid (5 Cols: 3 Left Telemetry+Charts, 2 Right Doughnut+AI Assistant) -->
-          <div class="grid gap-4 rounded-2xl p-0 lg:grid-cols-5 border border-white/5">
+          <!-- Main Console Content (Spot Header + Telemetry + Dynamic Customizable Home Modules) -->
+          <div class="space-y-4 p-0 bg-transparent border-0 min-w-0">
 
-            <!-- LEFT (3 COLS): Active Spot Header + Swell Energy Bar Chart + 10 Mandatory Surf Metrics -->
-            <div class="space-y-4 rounded-2xl bg-slate-950/85 p-3 sm:p-4 lg:col-span-3 border border-white/5">
+            <!-- ACTIVE SPOT HEADER + AI INSIGHTS + 4 MANDATORY TELEMETRY CARDS -->
+            <div class="space-y-4 rounded-2xl bg-slate-950/85 p-3 sm:p-4 border border-white/5 min-w-0 max-w-full overflow-hidden">
               <!-- Active Spot Title & Status -->
               <div class="flex items-start justify-between gap-2 flex-wrap">
                 <div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
                     <h2 id="spotTitle" class="text-base sm:text-lg font-semibold tracking-tight text-slate-50">
                       Itacimirim (A Espera)
                     </h2>
@@ -264,118 +276,134 @@
                 <div id="spotTechBadges" class="flex flex-wrap gap-1.5 pt-1"></div>
               </div>
 
-              <!-- ALL 10 MANDATORY SURF METRICS (4 Simplified Equal-Height Telemetry Cards — Positioned BEFORE Wave Period Chart) -->
+              <!-- ALL 10 MANDATORY SURF METRICS (4 Simplified Equal-Height Telemetry Cards) -->
               <div class="dsysa-telemetry-grid" id="tenMetricsGrid">
                 <!-- Populated dynamically by renderActiveSpot() -->
               </div>
-
-              <!-- DsySA Wave Height, Primary Period & Direction Matrix (Reconstruído no padrão DsySA) -->
-              <div id="dsysaWavePeriodChartRoot" class="w-full"></div>
-
-              <!-- DsySA Wave Energy Forecast Matrix (Energia total / Vagas / Swell A / Swell B em kJ & Joules) -->
-              <div id="dsysaWaveEnergyChartRoot" class="w-full"></div>
-
-              <!-- DsySA Surface Wind & Gusts Forecast Matrix (Costeiro/Marítimo + KT/KmH/MS/MPH + Cores das Setas) -->
-              <div id="dsysaWindChartRoot" class="w-full"></div>
-
-              <!-- DsySA Tide Height & Astronomy Matrix (Porto, Horas dos Astros, Curva Senoidal Enchendo/Vazante, Preamar/Baixamar, Mini-Mapa e GRÁFICOS/TABELAS/MÊS) -->
-              <div id="dsysaTideChartRoot" class="w-full"></div>
-
-              <!-- DsySA Functional Beach Compass Card (Último card da coluna dos gráficos: Bússola + Texto + Botão Ampliar Bússola em Modal) -->
-              <div id="dsysaCompassCardRoot" class="w-full"></div>
             </div>
 
-            <!-- RIGHT (2 COLS): Condition Doughnut + AI Voice Assistant Panel -->
-            <div class="space-y-4 lg:col-span-2 flex flex-col">
-              <!-- Doughnut Distribution Card (Copied from Mira Client Distribution) -->
-              <div class="rounded-2xl bg-slate-950/85 p-4 border border-white/5">
-                <div class="flex items-center justify-between">
+            <!-- DYNAMIC CUSTOMIZABLE HOME MODULES CONTAINER (Ordenado e Filtrado via surfeAgent_userSettings) -->
+            <div id="homeModulesContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-4 min-w-0 max-w-full bg-transparent border-0">
+
+              <!-- MODULE: card_voice_assistant -->
+              <div data-home-module="card_voice_assistant" class="lg:col-span-6 min-w-0 max-w-full">
+                <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-full flex flex-col justify-between gap-4 transition-all">
                   <div>
-                    <h3 class="text-sm font-medium tracking-tight text-slate-100">
-                      Equilíbrio da Condição
-                    </h3>
-                    <p class="mt-0.5 text-[11px] text-slate-400">
-                      Peso atual: Swell, Vento e Maré
-                    </p>
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="text-sm font-medium tracking-tight text-slate-50 flex items-center gap-1.5">
+                          <span class="h-2 w-2 rounded-full bg-sky-400"></span>
+                          SurfAgent Voice Assistant
+                        </h3>
+                        <p class="mt-1 text-[11px] text-slate-300">
+                          Comandos rápidos de voz ou consulta aberta de qualquer praia.
+                        </p>
+                      </div>
+                      <button onclick="startVoiceRecognition()" class="flex h-7 w-7 items-center justify-center rounded-full bg-sky-400/20 border border-sky-400/40 text-sky-300 hover:bg-sky-400/30" title="Falar por voz">
+                        <i data-lucide="mic" class="h-3.5 w-3.5"></i>
+                      </button>
+                    </div>
+
+                    <div class="mt-4 grid gap-2.5 text-[11px] sm:grid-cols-2">
+                      <button onclick="triggerBestSpotFlow()" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                        <span>Melhor pico hoje (4 próximos)</span>
+                        <i data-lucide="radar" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
+                      </button>
+                      <button onclick="applyLevelRecommendation('iniciante', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-emerald-400/30 transition-all">
+                        <span>Melhor p/ Nível Iniciante</span>
+                        <i data-lucide="shield-check" class="ml-2 h-3.5 w-3.5 text-emerald-300 shrink-0"></i>
+                      </button>
+                      <button onclick="applyLevelRecommendation('sem_nivel', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                        <span>Onda boa, formada e forte</span>
+                        <i data-lucide="flame" class="ml-2 h-3.5 w-3.5 text-amber-300 shrink-0"></i>
+                      </button>
+                      <button onclick="triggerSpecificSpot('Pipeline')" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                        <span>Consultar pico: Pipeline</span>
+                        <i data-lucide="compass" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
+                      </button>
+                    </div>
                   </div>
-                  <p id="spotWindTag" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
-                    Terral Liso
-                  </p>
-                </div>
-                <div class="mt-4 flex items-center gap-4">
-                  <div class="relative h-28 w-28 shrink-0">
-                    <canvas id="distributionChart"></canvas>
-                  </div>
-                  <div class="space-y-2 text-[11px] text-slate-300 flex-1">
-                    <div class="flex items-center gap-2">
-                      <span class="h-1.5 w-4 rounded-full bg-sky-400"></span>
-                      <span class="flex-1 text-slate-300">Ondulação & Energia</span>
-                      <span class="text-slate-400" id="distSwell">50%</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="h-1.5 w-4 rounded-full bg-blue-400"></span>
-                      <span class="flex-1 text-slate-300">Alinhamento do Vento</span>
-                      <span class="text-slate-400" id="distWind">30%</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="h-1.5 w-4 rounded-full bg-slate-600"></span>
-                      <span class="flex-1 text-slate-300">Fase da Maré & Lua</span>
-                      <span class="text-slate-400" id="distTide">20%</span>
-                    </div>
+
+                  <!-- Voice / Text Input Pill -->
+                  <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5 min-w-0">
+                    <i data-lucide="sparkles" class="mr-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
+                    <input id="consoleQueryInput"
+                           onkeydown="if(event.key==='Enter') handleConsoleInput()"
+                           class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
+                           placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
+                    <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
+                      <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <!-- AI Voice Assistant Panel (Copied from Mira AI Expansion Assistant) -->
-              <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-fit flex-none flex flex-col gap-4 transition-all">
-                <div>
+              <!-- MODULE: card_condition_balance -->
+              <div data-home-module="card_condition_balance" class="lg:col-span-6 min-w-0 max-w-full">
+                <div class="rounded-2xl bg-slate-950/85 p-4 border border-white/5 h-full">
                   <div class="flex items-center justify-between">
                     <div>
-                      <h3 class="text-sm font-medium tracking-tight text-slate-50 flex items-center gap-1.5">
-                        <span class="h-2 w-2 rounded-full bg-sky-400"></span>
-                        SurfAgent Voice Assistant
+                      <h3 class="text-sm font-medium tracking-tight text-slate-100">
+                        Equilíbrio da Condição
                       </h3>
-                      <p class="mt-1 text-[11px] text-slate-300">
-                        Comandos rápidos de voz ou consulta aberta de qualquer praia.
+                      <p class="mt-0.5 text-[11px] text-slate-400">
+                        Peso atual: Swell, Vento e Maré
                       </p>
                     </div>
-                    <button onclick="startVoiceRecognition()" class="flex h-7 w-7 items-center justify-center rounded-full bg-sky-400/20 border border-sky-400/40 text-sky-300 hover:bg-sky-400/30" title="Falar por voz">
-                      <i data-lucide="mic" class="h-3.5 w-3.5"></i>
-                    </button>
+                    <p id="spotWindTag" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
+                      Terral Liso
+                    </p>
                   </div>
-
-                  <div class="mt-4 grid gap-2.5 text-[11px] sm:grid-cols-2">
-                    <button onclick="triggerBestSpotFlow()" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
-                      <span>Melhor pico hoje (4 próximos)</span>
-                      <i data-lucide="radar" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
-                    </button>
-                    <button onclick="applyLevelRecommendation('iniciante', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-emerald-400/30 transition-all">
-                      <span>Melhor p/ Nível Iniciante</span>
-                      <i data-lucide="shield-check" class="ml-2 h-3.5 w-3.5 text-emerald-300 shrink-0"></i>
-                    </button>
-                    <button onclick="applyLevelRecommendation('sem_nivel', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
-                      <span>Onda boa, formada e forte</span>
-                      <i data-lucide="flame" class="ml-2 h-3.5 w-3.5 text-amber-300 shrink-0"></i>
-                    </button>
-                    <button onclick="triggerSpecificSpot('Pipeline')" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
-                      <span>Consultar pico: Pipeline</span>
-                      <i data-lucide="compass" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
-                    </button>
+                  <div class="mt-4 flex items-center gap-4">
+                    <div class="relative h-28 w-28 shrink-0">
+                      <canvas id="distributionChart"></canvas>
+                    </div>
+                    <div class="space-y-2 text-[11px] text-slate-300 flex-1 min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-sky-400 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Ondulação &amp; Energia</span>
+                        <span class="text-slate-400" id="distSwell">50%</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-blue-400 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Alinhamento do Vento</span>
+                        <span class="text-slate-400" id="distWind">30%</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-4 rounded-full bg-slate-600 shrink-0"></span>
+                        <span class="flex-1 text-slate-300 truncate">Fase da Maré &amp; Lua</span>
+                        <span class="text-slate-400" id="distTide">20%</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                <!-- Voice / Text Input Pill -->
-                <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5 min-w-0">
-                  <i data-lucide="sparkles" class="mr-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
-                  <input id="consoleQueryInput"
-                         onkeydown="if(event.key==='Enter') handleConsoleInput()"
-                         class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
-                         placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
-                  <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
-                    <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                  </button>
                 </div>
               </div>
+
+              <!-- MODULE: acc_wave_height_period -->
+              <div data-home-module="acc_wave_height_period" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWavePeriodChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_wave_energy -->
+              <div data-home-module="acc_wave_energy" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWaveEnergyChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_surface_wind -->
+              <div data-home-module="acc_surface_wind" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaWindChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_tide_height -->
+              <div data-home-module="acc_tide_height" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaTideChartRoot" class="w-full min-w-0"></div>
+              </div>
+
+              <!-- MODULE: acc_beach_compass -->
+              <div data-home-module="acc_beach_compass" class="lg:col-span-12 min-w-0 max-w-full">
+                <div id="dsysaCompassCardRoot" class="w-full min-w-0"></div>
+              </div>
+
             </div>
 
           </div>
@@ -438,6 +466,19 @@
             Toque nas barras de <strong>Ondas</strong>, <strong>Energia</strong> e <strong>Vento</strong> para ver a hora exata e o valor sobre cada barra. Use o botão <strong>✨ Detalhes / Insights da IA</strong> (ou diga <em>"Me fale mais sobre esse pico"</em>) para pesquisar bancada, fundo e melhor maré, e aproveite a <strong>Bússola ao Vivo</strong> alinhada automaticamente com o Norte real no celular.
           </p>
         </div>
+
+        <!-- 5. Painel de Configurações (Engrenagem no Topo Direito) -->
+        <div class="rounded-2xl bg-emerald-950/35 border border-emerald-400/25 p-4">
+          <h3 class="font-semibold text-emerald-300 text-sm mb-1.5">⚙️ 5. Painel de Configurações &amp; Tela Personalizável</h3>
+          <p class="text-slate-200">
+            Toque no <strong>ícone de engrenagem (⚙️) no canto superior direito</strong> para abrir o painel de configurações e deixar o SurfAgent do seu jeito (tudo salvo automaticamente no seu dispositivo):
+          </p>
+          <ul class="mt-2 space-y-1 text-xs text-slate-300">
+            <li>📍 <strong>Filtro por Estado e Cidade:</strong> Restrinja as recomendações a um Estado (e, opcionalmente, uma Cidade) ou deixe em <em>"Todos"</em> para buscar no Brasil inteiro. Se pedir o nome de uma praia de outro local, ela continua abrindo normalmente.</li>
+            <li>🏄 <strong>Nível de Surfe Predefinido:</strong> Defina <em>Iniciante</em>, <em>Intermediário</em> ou <em>Avançado</em> para que o agente de voz pule a pergunta de nível e já entregue a previsão filtrada para você — ou deixe em <em>"Todos"</em> para melhores condições gerais.</li>
+            <li>↕️ <strong>Personalização da Home (Arrastar e Soltar):</strong> Escolha quais cards e gráficos ficam visíveis (<strong>Exibir / Ocultar</strong>) e arraste pela alça <strong>⋮⋮</strong> (no mouse ou no dedo) para definir a ordem exata em que aparecem na tela principal.</li>
+          </ul>
+        </div>
       </div>
 
       <div class="pt-2 flex justify-end">
@@ -446,6 +487,119 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- =====================================================================
+       DRAWER DE CONFIGURAÇÕES (Filtro Geográfico + Nível + Drag-and-Drop Home)
+       ===================================================================== -->
+  <div id="settingsDrawerBackdrop" class="dsysa-settings-backdrop" onclick="if(event.target === this) closeSettingsDrawer()" role="dialog" aria-modal="true" aria-labelledby="settingsDrawerTitle">
+    <aside id="settingsDrawer" class="dsysa-settings-drawer">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10 shrink-0">
+        <div>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">PERSONALIZAÇÃO · SURFEAGENT</span>
+          <h2 id="settingsDrawerTitle" class="text-base font-semibold text-white mt-0.5 flex items-center gap-2">
+            <span>⚙️</span>
+            <span>Configurações</span>
+          </h2>
+        </div>
+        <button type="button" onclick="closeSettingsDrawer()" aria-label="Fechar configurações" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-base font-bold shrink-0">
+          ×
+        </button>
+      </div>
+
+      <!-- Drawer Scrollable Body -->
+      <div class="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+        <!-- SEÇÃO 1: FILTRO GEOGRÁFICO (ESTADO E CIDADE EM CASCATA) -->
+        <section class="space-y-3 rounded-2xl bg-slate-900/60 border border-white/10 p-4">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-[0.14em] text-sky-300 flex items-center gap-1.5">
+              <span>📍</span>
+              <span>1. Filtro Geográfico</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">
+              Restrinja as recomendações por Estado e Cidade. Pedidos explícitos por nome de outra praia continuam funcionando.
+            </p>
+          </div>
+
+          <div class="space-y-2.5">
+            <div>
+              <label for="settingsStateSelect" class="block text-[11px] font-medium text-slate-200 mb-1">Estado</label>
+              <select id="settingsStateSelect" class="dsysa-settings-select" onchange="handleSettingsStateChange(this.value)">
+                <option value="Todos">Todos</option>
+              </select>
+            </div>
+
+            <!-- Select de Cidade: totalmente oculto quando Estado === "Todos" -->
+            <div id="settingsCityGroup" class="hidden">
+              <label for="settingsCitySelect" class="block text-[11px] font-medium text-slate-200 mb-1">Cidade</label>
+              <select id="settingsCitySelect" class="dsysa-settings-select" onchange="handleSettingsCityChange(this.value)">
+                <option value="Todas">Todas</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2: FILTRO DE NÍVEL DE SURFE PREDEFINIDO -->
+        <section class="space-y-3 rounded-2xl bg-slate-900/60 border border-white/10 p-4">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 flex items-center gap-1.5">
+              <span>🏄</span>
+              <span>2. Nível de Surfe Predefinido</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">
+              Sincronizado com a voz: ao definir um nível, o surfeAgent pula a pergunta de triagem e narra direto para o seu perfil.
+            </p>
+          </div>
+
+          <div id="settingsSkillRadioGroup" class="dsysa-skill-radio-grid" role="radiogroup" aria-label="Nível de surfe predefinido">
+            <label class="dsysa-skill-radio-option" data-skill-option="Todos">
+              <input type="radio" name="settingsSkillLevel" value="Todos" onchange="handleSettingsSkillChange(this.value)">
+              <span>🌊 Todos</span>
+            </label>
+            <label class="dsysa-skill-radio-option" data-skill-option="Iniciante">
+              <input type="radio" name="settingsSkillLevel" value="Iniciante" onchange="handleSettingsSkillChange(this.value)">
+              <span>🟢 Iniciante</span>
+            </label>
+            <label class="dsysa-skill-radio-option" data-skill-option="Intermediário">
+              <input type="radio" name="settingsSkillLevel" value="Intermediário" onchange="handleSettingsSkillChange(this.value)">
+              <span>🟡 Intermediário</span>
+            </label>
+            <label class="dsysa-skill-radio-option" data-skill-option="Avançado">
+              <input type="radio" name="settingsSkillLevel" value="Avançado" onchange="handleSettingsSkillChange(this.value)">
+              <span>🔴 Avançado</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3: PERSONALIZAÇÃO E ORDENAÇÃO DA HOME (VISIBILIDADE + DRAG-AND-DROP) -->
+        <section class="space-y-3 rounded-2xl bg-slate-900/60 border border-white/10 p-4">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-[0.14em] text-amber-300 flex items-center gap-1.5">
+              <span>↕️</span>
+              <span>3. Ordem e Visibilidade da Home</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">
+              Arraste pela alça <strong>⋮⋮</strong> para reordenar os cards e gráficos (mouse ou toque) e escolha <strong>Exibir</strong> ou <strong>Ocultar</strong>.
+            </p>
+          </div>
+
+          <div id="settingsSortableList" class="dsysa-sortable-list">
+            <!-- Populado dinamicamente por renderSettingsSortableList() -->
+          </div>
+        </section>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="px-5 py-3.5 border-t border-white/10 bg-slate-950/90 flex items-center justify-between gap-2 shrink-0">
+        <button type="button" onclick="resetUserSettingsToDefault()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 transition-colors">
+          Restaurar padrão
+        </button>
+        <button type="button" onclick="saveAndCloseSettingsDrawer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-[11px] font-semibold text-slate-950 shadow-[0_8px_24px_rgba(56,189,248,0.3)] transition-all">
+          Salvar Configurações
+        </button>
+      </div>
+    </aside>
   </div>
 
   <!-- Open-Meteo Surf & Marine Ingestion Service -->
@@ -459,6 +613,9 @@
 
   <!-- surfeAgent Guardrail, Strict Grounding & Deterministic LLM Service -->
   <script src="./DsySA/surfeagent-llm-guardrail.js"></script>
+
+  <!-- surfeAgent User Settings Service (Persistent localStorage + Geo Filter + Home Layout) -->
+  <script src="./DsySA/user-settings-service.js"></script>
 
   <!-- DsySA Core JS -->
   <script src="./DsySA/dsysa.js"></script>
@@ -792,12 +949,36 @@
     let voiceState = 'IDLE'; // 'IDLE' | 'PROMPTING_LEVEL' | 'WAITING_REPLY' | 'LISTENING_RESPONSE' | 'PROCESSING'
     let userCoords = null;
 
+    let userSettings = window.SurfeAgentSettings
+      ? window.SurfeAgentSettings.loadSettings()
+      : { locationFilter: { state: 'Todos', city: 'Todas' }, skillLevel: 'Todos', homeLayout: [] };
+
     function isOnboardingCompleted() {
+      if (userSettings && userSettings.skillLevel && userSettings.skillLevel !== 'Todos') {
+        return true;
+      }
       return localStorage.getItem(ONBOARDING_KEY) === 'true';
     }
 
     function markOnboardingCompleted() {
       localStorage.setItem(ONBOARDING_KEY, 'true');
+    }
+
+    function getConfiguredSkillIntent() {
+      if (window.SurfeAgentSettings && userSettings && userSettings.skillLevel) {
+        return window.SurfeAgentSettings.mapSkillLevelToIntent(userSettings.skillLevel);
+      }
+      return 'INTENT_NO_LEVEL';
+    }
+
+    function getFilteredSpotPool() {
+      if (!window.SurfeAgentSettings || !userSettings || !userSettings.locationFilter) {
+        return SPOTS_DATABASE;
+      }
+      const { state } = userSettings.locationFilter;
+      if (!state || state === 'Todos') return SPOTS_DATABASE;
+      const filtered = window.SurfeAgentSettings.filterSpotsByLocation(SPOTS_DATABASE, userSettings.locationFilter);
+      return filtered.length > 0 ? filtered : SPOTS_DATABASE;
     }
 
     // Normaliza e garante metadados da coleção global `surf_spots`
@@ -890,7 +1071,8 @@
     // 3. GEOLOCALIZAÇÃO E OBTENÇÃO DOS 4 PICOS MAIS PRÓXIMOS
     // =========================================================================
     function getNearest4Spots(lat, lon) {
-      const sorted = SPOTS_DATABASE.map(spot => {
+      const pool = getFilteredSpotPool();
+      const sorted = pool.map(spot => {
         const dist = calculateHaversineDistanceKm(lat, lon, spot.lat, spot.lon);
         return {
           ...spot,
@@ -903,8 +1085,9 @@
     }
 
     function getDefault4Spots() {
-      // Fallback: 4 picos mais populares (searchCount) da base global compartilhada
-      return [...SPOTS_DATABASE]
+      // Fallback: 4 picos mais populares (searchCount) dentro do filtro geográfico configurado
+      const pool = getFilteredSpotPool();
+      return [...pool]
         .sort((a, b) => (b.searchCount || 0) - (a.searchCount || 0))
         .slice(0, 4)
         .map((spot) => ({
@@ -1271,12 +1454,12 @@
         return;
       }
 
-      // Cenário C: Próximas interações (onboarding já concluído — nunca repete triagem!)
+      // Cenário C: Próximas interações (onboarding concluído ou nível predefinido nas Configurações — nunca repete triagem!)
       if (SpeechRec) {
         listenForVoiceResponse();
       } else {
-        // Fallback sem microfone: retorna diretamente sem filtro de nível (INTENT_NO_LEVEL)
-        applyVoiceIntent('INTENT_NO_LEVEL', true);
+        // Fallback sem microfone: usa nível predefinido (ou INTENT_NO_LEVEL se "Todos")
+        applyVoiceIntent(getConfiguredSkillIntent(), true);
       }
     }
 
@@ -1297,11 +1480,11 @@
     }
 
     function triggerBestSpotFlow() {
-      // Se ainda não completou onboarding, faz a triagem única; se já completou, entrega direto INTENT_NO_LEVEL
+      // Se há nível predefinido nas Configurações ou onboarding concluído, executa direto sem perguntar nível
       if (!isOnboardingCompleted()) {
         triggerOnboardingTriage();
       } else {
-        applyVoiceIntent('INTENT_NO_LEVEL', true);
+        applyVoiceIntent(getConfiguredSkillIntent(), true);
       }
     }
 
@@ -1370,8 +1553,19 @@
       // Grava memória persistente de que a triagem foi concluída (nunca mais pergunta!)
       markOnboardingCompleted();
 
+      // Respeita o filtro geográfico (Estado / Cidade) nas recomendações
+      let candidates = appState.tabs;
+      if (userSettings && userSettings.locationFilter && userSettings.locationFilter.state !== 'Todos') {
+        const geoSpots = userCoords
+          ? getNearest4Spots(userCoords.lat, userCoords.lon)
+          : getDefault4Spots();
+        if (geoSpots.length > 0) {
+          candidates = geoSpots;
+        }
+      }
+
       setVoiceButtonState('processing', 'Ranqueando picos...');
-      rankSpotsForSurfer(appState.tabs, intent, shouldSpeak);
+      rankSpotsForSurfer(candidates, intent, shouldSpeak);
       if (!shouldSpeak) {
         setVoiceButtonState('success');
       }
@@ -1729,6 +1923,10 @@
         if (parsed.skillLevelFilter && parsed.skillLevelFilter !== 'INTENT_NO_LEVEL') {
           return applyVoiceIntent(parsed.skillLevelFilter, true);
         }
+        const configuredIntent = getConfiguredSkillIntent();
+        if (configuredIntent !== 'INTENT_NO_LEVEL') {
+          return applyVoiceIntent(configuredIntent, true);
+        }
         return fromVoice ? applyVoiceIntent('INTENT_NO_LEVEL', true) : triggerBestSpotFlow();
       }
 
@@ -1739,7 +1937,7 @@
         return triggerSpecificSpot(parsed.spots[0]);
       }
 
-      return applyVoiceIntent('INTENT_NO_LEVEL', true);
+      return applyVoiceIntent(getConfiguredSkillIntent(), true);
     }
 
     function handleConsoleInput() {
@@ -2094,6 +2292,13 @@
       // 1. Sincroniza coleção global `surf_spots` (backend compartilhado + cache local)
       await syncGlobalSpotsFromBackend();
 
+      // 1B. Carrega e aplica Configurações Persistentes do Usuário (Filtro Geo + Nível + Ordem/Visibilidade da Home)
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.loadSettings();
+        applyHomeLayoutFromSettings();
+        updateSettingsTriggerIndicator();
+      }
+
       // 2. Restaura abas salvas do usuário no localStorage e revalida previsão na API
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -2125,6 +2330,299 @@
       requestUserGeolocation();
     });
 
+    // =========================================================================
+    // 11. PAINEL DE CONFIGURAÇÕES (DRAWER + FILTRO GEO + NÍVEL + DRAG-AND-DROP)
+    // =========================================================================
+    function updateSettingsTriggerIndicator() {
+      const btn = document.getElementById('openSettingsDrawerBtn');
+      if (!btn || !userSettings) return;
+      const hasGeo = userSettings.locationFilter && userSettings.locationFilter.state !== 'Todos';
+      const hasSkill = userSettings.skillLevel && userSettings.skillLevel !== 'Todos';
+      const hasHidden = Array.isArray(userSettings.homeLayout) && userSettings.homeLayout.some(m => !m.visible);
+      btn.classList.toggle('has-active-filters', Boolean(hasGeo || hasSkill || hasHidden));
+    }
+
+    function applyHomeLayoutFromSettings() {
+      const container = document.getElementById('homeModulesContainer');
+      if (!container || !userSettings || !Array.isArray(userSettings.homeLayout)) return;
+
+      const visibleList = userSettings.homeLayout.filter(item => item.visible !== false);
+
+      userSettings.homeLayout.forEach((item) => {
+        const el = container.querySelector(`[data-home-module="${item.id}"]`);
+        if (!el) return;
+        // Reordena fisicamente no DOM seguindo a sequência exata escolhida pelo usuário
+        container.appendChild(el);
+        el.classList.toggle('hidden', item.visible === false);
+      });
+
+      // Ajusta colunas responsivas no desktop: dois cards adjacentes visíveis dividem a linha (6+6),
+      // caso contrário cada card ocupa a largura total (12) para manter o grid harmônico.
+      visibleList.forEach((item, idx) => {
+        const el = container.querySelector(`[data-home-module="${item.id}"]`);
+        if (!el) return;
+        if (item.type === 'card') {
+          const prevIsCard = idx > 0 && visibleList[idx - 1].type === 'card';
+          const nextIsCard = idx < visibleList.length - 1 && visibleList[idx + 1].type === 'card';
+          const pairInRow = prevIsCard || nextIsCard;
+          el.classList.toggle('lg:col-span-6', pairInRow);
+          el.classList.toggle('lg:col-span-12', !pairInRow);
+        } else {
+          el.classList.remove('lg:col-span-6');
+          el.classList.add('lg:col-span-12');
+        }
+      });
+    }
+
+    function openSettingsDrawer() {
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.loadSettings();
+      }
+      renderSettingsDrawerUI();
+      const backdrop = document.getElementById('settingsDrawerBackdrop');
+      if (backdrop) {
+        backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeSettingsDrawer() {
+      const backdrop = document.getElementById('settingsDrawerBackdrop');
+      if (backdrop) {
+        backdrop.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function saveAndCloseSettingsDrawer() {
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+      }
+      applyHomeLayoutFromSettings();
+      updateSettingsTriggerIndicator();
+      closeSettingsDrawer();
+    }
+
+    function renderSettingsDrawerUI() {
+      if (!window.SurfeAgentSettings || !userSettings) return;
+
+      // 1. Select de Estado
+      const stateSelect = document.getElementById('settingsStateSelect');
+      const cityGroup = document.getElementById('settingsCityGroup');
+      const citySelect = document.getElementById('settingsCitySelect');
+
+      if (stateSelect) {
+        const states = window.SurfeAgentSettings.getAvailableStates(SPOTS_DATABASE);
+        stateSelect.innerHTML = `<option value="Todos">Todos</option>` +
+          states.map(st => `<option value="${st}">${st}</option>`).join('');
+        stateSelect.value = userSettings.locationFilter.state || 'Todos';
+      }
+
+      // 2. Select de Cidade (condicional: oculto quando Estado === "Todos")
+      if (cityGroup && citySelect) {
+        const curState = userSettings.locationFilter.state || 'Todos';
+        if (curState === 'Todos') {
+          cityGroup.classList.add('hidden');
+          citySelect.innerHTML = '<option value="Todas">Todas</option>';
+          citySelect.value = 'Todas';
+        } else {
+          const cities = window.SurfeAgentSettings.getAvailableCitiesForState(curState, SPOTS_DATABASE);
+          citySelect.innerHTML = `<option value="Todas">Todas</option>` +
+            cities.map(c => `<option value="${c}">${c}</option>`).join('');
+          citySelect.value = userSettings.locationFilter.city || 'Todas';
+          cityGroup.classList.remove('hidden');
+        }
+      }
+
+      // 3. Radio Group de Nível de Surfe
+      const skillGroup = document.getElementById('settingsSkillRadioGroup');
+      if (skillGroup) {
+        const curSkill = userSettings.skillLevel || 'Todos';
+        skillGroup.querySelectorAll('.dsysa-skill-radio-option').forEach(label => {
+          const val = label.getAttribute('data-skill-option');
+          const input = label.querySelector('input[type="radio"]');
+          const active = val === curSkill;
+          label.classList.toggle('is-active', active);
+          if (input) input.checked = active;
+        });
+      }
+
+      // 4. Lista Ordenável (Drag-and-Drop + Exibir/Ocultar)
+      renderSettingsSortableList();
+    }
+
+    function applyLocationFilterRefresh() {
+      const geoSpots = userCoords
+        ? getNearest4Spots(userCoords.lat, userCoords.lon)
+        : getDefault4Spots();
+      if (geoSpots.length > 0) {
+        const intent = getConfiguredSkillIntent();
+        rankSpotsForSurfer(geoSpots, intent, false);
+        appState.tabs.forEach(s => loadSpotForecast(s));
+      }
+    }
+
+    function handleSettingsStateChange(newState) {
+      if (!userSettings) return;
+      userSettings.locationFilter.state = newState || 'Todos';
+      // Ao voltar para "Todos" ou trocar de Estado, reseta Cidade para "Todas"
+      userSettings.locationFilter.city = 'Todas';
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+      }
+      renderSettingsDrawerUI();
+      updateSettingsTriggerIndicator();
+      applyLocationFilterRefresh();
+    }
+
+    function handleSettingsCityChange(newCity) {
+      if (!userSettings) return;
+      userSettings.locationFilter.city = newCity || 'Todas';
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+      }
+      updateSettingsTriggerIndicator();
+      applyLocationFilterRefresh();
+    }
+
+    function handleSettingsSkillChange(newSkill) {
+      if (!userSettings) return;
+      userSettings.skillLevel = newSkill || 'Todos';
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+      }
+      // Se um nível específico foi definido, marca onboarding como concluído
+      if (userSettings.skillLevel !== 'Todos') {
+        markOnboardingCompleted();
+      }
+      renderSettingsDrawerUI();
+      updateSettingsTriggerIndicator();
+      const intent = getConfiguredSkillIntent();
+      rankSpotsForSurfer(appState.tabs, intent, false);
+    }
+
+    function handleModuleVisibilityChange(moduleId, isChecked) {
+      if (!userSettings || !Array.isArray(userSettings.homeLayout)) return;
+      const item = userSettings.homeLayout.find(m => m.id === moduleId);
+      if (!item) return;
+      item.visible = Boolean(isChecked);
+      if (window.SurfeAgentSettings) {
+        userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+      }
+      applyHomeLayoutFromSettings();
+      renderSettingsSortableList();
+      updateSettingsTriggerIndicator();
+    }
+
+    function renderSettingsSortableList() {
+      const listEl = document.getElementById('settingsSortableList');
+      if (!listEl || !userSettings || !Array.isArray(userSettings.homeLayout)) return;
+
+      listEl.innerHTML = userSettings.homeLayout.map((item, idx) => {
+        const typeLabel = item.type === 'card' ? 'Card' : 'Accordion';
+        const typeColor = item.type === 'card'
+          ? 'bg-sky-500/15 text-sky-300 border-sky-400/30'
+          : 'bg-indigo-500/15 text-indigo-300 border-indigo-400/30';
+        const isVisible = item.visible !== false;
+
+        return `
+          <div class="dsysa-sortable-item ${isVisible ? '' : 'is-hidden-module'}" data-module-id="${item.id}" data-index="${idx}">
+            <span class="dsysa-drag-handle" title="Arrastar para reordenar" aria-label="Arrastar ${item.label}">⋮⋮</span>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11.5px] font-semibold text-slate-100 truncate">${item.label}</div>
+              <span class="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase tracking-wider border ${typeColor}">${typeLabel}</span>
+            </div>
+            <label class="dsysa-sortable-vis-check" title="${isVisible ? 'Exibindo na Home' : 'Oculto na Home'}">
+              <input type="checkbox"
+                     ${isVisible ? 'checked' : ''}
+                     aria-label="Exibir ${item.label}"
+                     onchange="handleModuleVisibilityChange('${item.id}', this.checked)">
+              <span class="dsysa-vis-checkbox-box" aria-hidden="true"></span>
+            </label>
+          </div>
+        `;
+      }).join('');
+
+      bindSortablePointerDrag(listEl);
+    }
+
+    /**
+     * Drag-and-Drop unificado com Pointer Events (funciona 100% com mouse no Desktop e toque no Mobile)
+     */
+    function bindSortablePointerDrag(listEl) {
+      let draggingItem = null;
+      let activePointerId = null;
+
+      function syncOrderFromDom() {
+        const ids = Array.from(listEl.querySelectorAll('.dsysa-sortable-item'))
+          .map(el => el.getAttribute('data-module-id'));
+        const byId = new Map(userSettings.homeLayout.map(m => [m.id, m]));
+        userSettings.homeLayout = ids.map(id => byId.get(id)).filter(Boolean);
+        if (window.SurfeAgentSettings) {
+          userSettings = window.SurfeAgentSettings.saveSettings(userSettings);
+        }
+        applyHomeLayoutFromSettings();
+        updateSettingsTriggerIndicator();
+      }
+
+      listEl.querySelectorAll('.dsysa-drag-handle').forEach(handle => {
+        handle.addEventListener('pointerdown', (ev) => {
+          const item = handle.closest('.dsysa-sortable-item');
+          if (!item) return;
+          ev.preventDefault();
+          draggingItem = item;
+          activePointerId = ev.pointerId;
+          item.classList.add('is-dragging');
+          if (handle.setPointerCapture) {
+            try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+          }
+        });
+
+        handle.addEventListener('pointermove', (ev) => {
+          if (!draggingItem || ev.pointerId !== activePointerId) return;
+          ev.preventDefault();
+
+          const siblings = Array.from(listEl.querySelectorAll('.dsysa-sortable-item:not(.is-dragging)'));
+          let inserted = false;
+          for (const sib of siblings) {
+            const rect = sib.getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
+            if (ev.clientY < midY) {
+              listEl.insertBefore(draggingItem, sib);
+              inserted = true;
+              break;
+            }
+          }
+          if (!inserted) {
+            listEl.appendChild(draggingItem);
+          }
+        });
+
+        const finishDrag = (ev) => {
+          if (!draggingItem || ev.pointerId !== activePointerId) return;
+          draggingItem.classList.remove('is-dragging');
+          if (handle.releasePointerCapture) {
+            try { handle.releasePointerCapture(ev.pointerId); } catch (e) {}
+          }
+          draggingItem = null;
+          activePointerId = null;
+          syncOrderFromDom();
+        };
+
+        handle.addEventListener('pointerup', finishDrag);
+        handle.addEventListener('pointercancel', finishDrag);
+      });
+    }
+
+    function resetUserSettingsToDefault() {
+      if (!window.SurfeAgentSettings) return;
+      userSettings = window.SurfeAgentSettings.saveSettings(window.SurfeAgentSettings.getDefaultSettings());
+      renderSettingsDrawerUI();
+      applyHomeLayoutFromSettings();
+      updateSettingsTriggerIndicator();
+      applyLocationFilterRefresh();
+    }
+
     function openHowToUseModal(ev) {
       if (ev) ev.preventDefault();
       const modal = document.getElementById('howToUseModal');
@@ -2145,7 +2643,10 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeHowToUseModal();
+      if (e.key === 'Escape') {
+        closeHowToUseModal();
+        closeSettingsDrawer();
+      }
     });
   </script>
 </body>
