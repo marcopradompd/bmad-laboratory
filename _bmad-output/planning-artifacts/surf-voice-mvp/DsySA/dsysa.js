@@ -17,7 +17,7 @@
     return `${y}-${m}-${day}`;
   }
 
-  function generateDynamicForecastDays(count = 14) {
+  function generateDynamicForecastDays(count = 15) {
     const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
     const fullDayNames = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
     const days = [];
@@ -41,7 +41,7 @@
     return days;
   }
 
-  const ALL_FORECAST_DAYS = generateDynamicForecastDays(14);
+  const ALL_FORECAST_DAYS = generateDynamicForecastDays(15);
   const LAST_FORECAST_DATE_LABEL = ALL_FORECAST_DAYS[ALL_FORECAST_DAYS.length - 1].fullDate;
 
   /* 4. Helper Universal de Scroll Horizontal Infinito com Suporte a Toque (Celular) + Mouse Drag + Wheel */
@@ -268,10 +268,20 @@
       });
 
       if (daysMap.size > 0) {
-        return Array.from(daysMap.values());
+        const resultDays = Array.from(daysMap.values()).slice(0, 15);
+        // Garante sempre 15 dias completos na linha do tempo (complementando dias extras além do limite da API Marinha)
+        if (resultDays.length < 15) {
+          const full15 = generateDynamicForecastDays(15);
+          full15.forEach((d) => {
+            if (resultDays.length < 15 && !daysMap.has(d.dateStr)) {
+              resultDays.push(d);
+            }
+          });
+        }
+        return resultDays;
       }
     }
-    return generateDynamicForecastDays(14);
+    return generateDynamicForecastDays(15);
   }
 
   /* ==========================================================================
@@ -290,7 +300,7 @@
 
     const state = containerEl.__waveChartState || {
       subTab: "total",
-      loadedDaysCount: 5,
+      loadedDaysCount: 15,
       collapsed: false,
       savedScrollLeft: 0,
       reachedEnd: false
@@ -643,7 +653,7 @@
       zone: "costeiro", // 'costeiro' | 'maritimo'
       unit: "kmh",      // 'kt' | 'kmh' | 'ms' | 'mph'
       showHelp: false,
-      loadedDaysCount: 5,
+      loadedDaysCount: 15,
       collapsed: false,
       savedScrollLeft: 0,
       reachedEnd: false
@@ -1093,7 +1103,7 @@
       subTab: "total", // 'total' | 'vagas' | 'swellA' | 'swellB'
       unit: "kj",      // 'kj' | 'joules'
       showHelp: false,
-      loadedDaysCount: 5,
+      loadedDaysCount: 15,
       collapsed: false,
       savedScrollLeft: 0,
       reachedEnd: false
@@ -1493,10 +1503,106 @@
 
   /* ==========================================================================
      9. COMPONENTE 4: TÁBUA DE MARÉS E HORAS DOS ASTROS ("ALTURA DA MARÉ")
-     (Porto de Referência, Nascer/Pôr do Sol e Lua, Fase Lunar, Curva Senoidal Bicolor
-      Enchendo/Vazante, Marcador 20:30h 1.7m, Caixas Preamar/Baixamar, Mini-Mapa e
+     (Porto de Referência, Nascer/Pôr do Sol e Lua, Fase Lunar Real em SVG, Curva Senoidal Bicolor
+      Enchendo/Vazante, Marcador de Hora, Caixas Preamar/Baixamar, Mini-Mapa e
       Modos GRÁFICOS | TABELAS | MÊS + Scroll Horizontal Infinito por Toque/Mouse)
      ========================================================================== */
+  function getDsySALunarPhase(dateStr) {
+    // Ciclo sinódico médio: 29.53058867 dias a partir da Lua Nova de referência J2000 (2000-01-06 18:14 UTC)
+    const SYNODIC_MONTH = 29.53058867;
+    const REF_NEW_MOON_MS = Date.UTC(2000, 0, 6, 18, 14, 0);
+
+    let targetMs;
+    if (dateStr && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+      const [y, m, d] = dateStr.slice(0, 10).split("-").map(Number);
+      targetMs = Date.UTC(y, m - 1, d, 12, 0, 0);
+    } else {
+      targetMs = Date.now();
+    }
+
+    const daysSinceRef = (targetMs - REF_NEW_MOON_MS) / 86400000;
+    const phase = ((daysSinceRef % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH / SYNODIC_MONTH; // 0.0 .. 1.0
+    const illuminationPct = Math.round(((1 - Math.cos(phase * 2 * Math.PI)) / 2) * 100);
+
+    let shortLabel = "";
+    let fullLabel = "Lua Crescente";
+
+    if (phase < 0.035 || phase >= 0.965) {
+      shortLabel = "nova";
+      fullLabel = "Lua Nova";
+    } else if (phase < 0.215) {
+      shortLabel = "crescente";
+      fullLabel = "Lua Crescente";
+    } else if (phase < 0.285) {
+      shortLabel = "crescente";
+      fullLabel = "Quarto Crescente";
+    } else if (phase < 0.465) {
+      shortLabel = "crescente";
+      fullLabel = "Gibosa Crescente";
+    } else if (phase < 0.535) {
+      shortLabel = "cheia";
+      fullLabel = "Lua Cheia";
+    } else if (phase < 0.715) {
+      shortLabel = "minguante";
+      fullLabel = "Gibosa Minguante";
+    } else if (phase < 0.785) {
+      shortLabel = "minguante";
+      fullLabel = "Quarto Minguante";
+    } else {
+      shortLabel = "minguante";
+      fullLabel = "Lua Minguante";
+    }
+
+    return { phase, illuminationPct, shortLabel, fullLabel };
+  }
+
+  function buildDsySAMoonPhaseSvg(phase, isSouthHemisphere = true) {
+    const p = ((Number(phase) || 0) % 1 + 1) % 1;
+    const r = 10;
+    const cx = 12;
+    const cy = 12;
+    const illumination = (1 - Math.cos(p * 2 * Math.PI)) / 2;
+
+    // Lua Nova (< 2% iluminada): disco escuro com contorno suave
+    if (illumination <= 0.02) {
+      return `
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#090f1f" stroke="#94a3b8" stroke-width="1.2" />
+        </svg>`;
+    }
+
+    // Lua Cheia (> 98% iluminada): disco totalmente iluminado com brilho sutil
+    if (illumination >= 0.98) {
+      return `
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.1" />
+          <circle cx="9.2" cy="9.5" r="1.4" fill="#cbd5e1" opacity="0.45" />
+          <circle cx="14.8" cy="13.5" r="1.8" fill="#cbd5e1" opacity="0.35" />
+          <circle cx="11.5" cy="15.8" r="1.1" fill="#cbd5e1" opacity="0.35" />
+        </svg>`;
+    }
+
+    // Geometria esférica real do terminador lunar
+    const isWaxing = p < 0.5;
+    const isGibbous = illumination > 0.5;
+    // Hemisfério Sul (Brasil): crescente ilumina pela esquerda, minguante pela direita
+    const litOnLeft = isSouthHemisphere ? isWaxing : !isWaxing;
+    const rx = +(Math.abs(Math.cos(p * 2 * Math.PI)) * r).toFixed(2);
+
+    const sweepOuter = litOnLeft ? 0 : 1;
+    const sweepInner = litOnLeft ? (isGibbous ? 0 : 1) : (isGibbous ? 1 : 0);
+
+    const litPath = rx < 0.25
+      ? `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} L ${cx} ${cy - r} Z`
+      : `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} A ${rx} ${r} 0 0 ${sweepInner} ${cx} ${cy - r} Z`;
+
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#090f1f" stroke="#cbd5e1" stroke-width="1.15" />
+        <path d="${litPath}" fill="#f1f5f9" />
+      </svg>`;
+  }
+
   window.renderDsySATideChart = function (containerEl, spotConfig) {
     if (!containerEl) return;
 
@@ -1586,12 +1692,19 @@
         .replace("DOM ", "DOMINGO ")
         .replace("SEG ", "SEGUNDA ");
 
+      const lunar = getDsySALunarPhase(day.dateStr);
+      const isSouthHemisphere = typeof spotConfig?.lat === "number" ? spotConfig.lat < 0 : true;
+
       return {
         ...day,
         fullHeaderLabel,
         sunrise: "4:57h",
         sunset: dIdx === 0 ? "17:40h" : "17:41h",
-        moonPhaseLabel: dIdx === 1 ? "crescente" : dIdx >= 4 ? "cheia" : "",
+        moonPhase: lunar.phase,
+        moonIllumination: lunar.illuminationPct,
+        moonPhaseLabel: lunar.shortLabel,
+        moonPhaseTitle: `${lunar.fullLabel} (${lunar.illuminationPct}% iluminada)`,
+        moonSvg: buildDsySAMoonPhaseSvg(lunar.phase, isSouthHemisphere),
         moonRise: "10:42h",
         moonSet: "23:35h",
         extrema
@@ -1782,13 +1895,12 @@
                           <span class="mt-0.5">${d.sunrise}</span>
                         </div>
 
-                        <!-- Fase da Lua Central (ex: crescente) -->
-                        <div class="absolute left-1/2 -translate-x-1/2 top-2 flex flex-col items-center">
-                          <div class="w-6 h-6 rounded-full border border-slate-300 overflow-hidden flex bg-slate-950 shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-                            <div class="w-1/2 h-full bg-slate-950"></div>
-                            <div class="w-1/2 h-full bg-slate-100"></div>
+                        <!-- Fase da Lua Central (Aparência Astronômica Real da Fase Lunar) -->
+                        <div class="absolute left-1/2 -translate-x-1/2 top-2 flex flex-col items-center" title="${d.moonPhaseTitle}">
+                          <div class="w-6 h-6 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                            ${d.moonSvg}
                           </div>
-                          ${d.moonPhaseLabel ? `<span class="mt-0.5 text-[9.5px] text-amber-200 font-bold">${d.moonPhaseLabel}</span>` : ""}
+                          ${d.moonPhaseLabel ? `<span class="mt-0.5 text-[9.5px] text-amber-200 font-bold whitespace-nowrap">${d.moonPhaseLabel}</span>` : ""}
                         </div>
 
                         <!-- Pôr do Sol (17:40h / 17:41h) -->

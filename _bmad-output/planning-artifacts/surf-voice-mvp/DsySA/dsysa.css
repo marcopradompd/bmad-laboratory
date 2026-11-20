@@ -2611,9 +2611,9 @@ body[data-weather-theme="cloudy"] header {
 
 body[data-weather-theme="sunny"] #console > div,
 body[data-weather-theme="cloudy"] #console > div {
-  background: rgba(6, 14, 28, 0.78) !important;
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
 }
 
 /* Hero Headline & Subheadline com alto contraste sobre céus claros */
@@ -2682,12 +2682,12 @@ body[data-weather-theme="cloudy"] button[onclick*="triggerSpecificSpot"]:hover {
   color: #020617 !important;
 }
 
-/* Sobre céu noturno / tempestade: glassmorphism equilibrado com bordas nítidas */
+/* Sobre céu noturno / tempestade: wrapper externo do console sem background */
 body[data-weather-theme="night"] #console > div,
 body[data-weather-theme="storm"] #console > div {
-  background: rgba(8, 13, 26, 0.76) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
 }
 
 body[data-weather-theme="night"] button[onclick*="triggerSpecificSpot"],

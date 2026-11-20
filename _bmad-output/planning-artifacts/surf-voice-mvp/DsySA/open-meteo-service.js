@@ -135,7 +135,7 @@ async function fetchSurfForecast({
   lat,
   lon,
   timezone = 'auto',
-  forecastDays = 14
+  forecastDays = 15
 }) {
   if (lat === undefined || lon === undefined) {
     throw new Error('Parâmetros obrigatórios ausentes: lat e lon');

@@ -211,7 +211,7 @@ const server = http.createServer(async (req, res) => {
     const lat = parseFloat(parsedUrl.searchParams.get('lat') || '-12.95');
     const lon = parseFloat(parsedUrl.searchParams.get('lon') || '-38.35');
     const timezone = parsedUrl.searchParams.get('timezone') || 'auto';
-    const forecastDays = parseInt(parsedUrl.searchParams.get('forecast_days') || '14', 10);
+    const forecastDays = parseInt(parsedUrl.searchParams.get('forecast_days') || '15', 10);
 
     const cacheKey = `${lat.toFixed(2)}:${lon.toFixed(2)}:${timezone}:${forecastDays}`;
     const now = Date.now();
