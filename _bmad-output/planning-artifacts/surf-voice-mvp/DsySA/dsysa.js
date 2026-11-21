@@ -49,7 +49,10 @@
     if (!viewport) return;
 
     if (state.savedScrollLeft > 0) {
+      const prevBehavior = viewport.style.scrollBehavior;
+      viewport.style.scrollBehavior = "auto";
       viewport.scrollLeft = state.savedScrollLeft;
+      viewport.style.scrollBehavior = prevBehavior || "";
     }
 
     const allDaysLoaded = state.loadedDaysCount >= totalAvailableDays;
@@ -1621,7 +1624,7 @@
     const curHour = new Date().getHours() + new Date().getMinutes() / 60;
     const state = containerEl.__tideChartState || {
       viewMode: "graficos", // 'graficos' | 'tabelas' | 'mes'
-      loadedDaysCount: 5,
+      loadedDaysCount: 15,
       collapsed: false,
       savedScrollLeft: 0,
       reachedEnd: false,
@@ -1960,18 +1963,18 @@
                     <svg width="${visibleDays.length * dayWidthPx}" height="${plotHeightPx}" viewBox="0 0 ${visibleDays.length * dayWidthPx} ${plotHeightPx}" class="overflow-visible">
                       ${svgSegments.join("")}
 
-                      <!-- Linha vertical tracejada vermelha + Triângulo no ponto ativo (20:30h 1.7m) -->
-                      <line x1="${markerX.toFixed(1)}" y1="${(markerY - 22).toFixed(1)}" x2="${markerX.toFixed(1)}" y2="${plotHeightPx}"
+                      <!-- Linha vertical tracejada vermelha + Triângulo no ponto ativo -->
+                      <line class="dsysa-tide-marker-line" x1="${markerX.toFixed(1)}" y1="${(markerY - 22).toFixed(1)}" x2="${markerX.toFixed(1)}" y2="${plotHeightPx}"
                             stroke="#f43f5e" stroke-width="1.8" stroke-dasharray="3 3" />
-                      <polygon points="${markerX.toFixed(1)},${(markerY - 5).toFixed(1)} ${(markerX - 5).toFixed(1)},${(markerY + 5).toFixed(1)} ${(markerX + 5).toFixed(1)},${(markerY + 5).toFixed(1)}"
+                      <polygon class="dsysa-tide-marker-tri" points="${markerX.toFixed(1)},${(markerY - 5).toFixed(1)} ${(markerX - 5).toFixed(1)},${(markerY + 5).toFixed(1)} ${(markerX + 5).toFixed(1)},${(markerY + 5).toFixed(1)}"
                                fill="#be123c" stroke="#ffffff" stroke-width="1.2" />
                     </svg>
 
-                    <!-- Callout Vermelho: 20:30h / 1.7 m -->
+                    <!-- Callout Vermelho -->
                     <div class="dsysa-tide-now-callout absolute -translate-x-1/2"
                          style="left: ${markerX.toFixed(1)}px; top: ${Math.max(-28, markerY - 48).toFixed(1)}px;">
-                      <div>${markerTimeStr}</div>
-                      <div>${markerMeters.toFixed(1)} m</div>
+                      <div class="dsysa-tide-marker-time">${markerTimeStr}</div>
+                      <div class="dsysa-tide-marker-val">${markerMeters.toFixed(1)} m</div>
                     </div>
                   </div>
                 </div>
@@ -2010,18 +2013,16 @@
             </div>
           </div>
 
-          <!-- MINI-MAPA PANORÂMICO DE 8 DIAS (ONTEM | TER 17 | QUA 18 | QUI 19 | SEX 20 | SAB 21 | DOM 22 | SEG 23) -->
+          <!-- MINI-MAPA PANORÂMICO DE 8 DIAS -->
           <div class="dsysa-tide-ministrip-wrap">
             <div class="grid grid-cols-8 text-[9.5px] font-bold text-center border-b border-white/10">
               ${miniDays
                 .map(
                   (md, idx) => `
                 <button type="button" data-jump-day="${idx}" class="py-1 px-1 truncate transition-colors ${
-                    idx === 0
+                    idx === (state.activeMiniDay ?? 0)
                       ? "bg-[#072238] text-white"
-                      : idx <= 2
-                      ? "bg-sky-500/20 text-sky-300"
-                      : "bg-slate-900/90 text-slate-300 hover:text-white"
+                      : "bg-slate-900/90 text-slate-300 hover:bg-sky-500/20 hover:text-sky-200"
                   } border-r border-white/10 last:border-r-0">
                   ${md.label.toUpperCase()}
                 </button>
@@ -2150,19 +2151,58 @@
       );
     }
 
-    // Interatividade no clique/toque sobre a curva de maré para reposicionar o marcador vermelho (20:30h 1.7m)
+    // Interatividade no clique/toque sobre a curva de maré para reposicionar o marcador vermelho IN-PLACE (sem re-render e sem scroll automático)
     const svgArea = containerEl.querySelector("#dsysaTideSvgInteractive");
     const readout = containerEl.querySelector(".dsysa-tide-readout");
     if (svgArea) {
       svgArea.addEventListener("click", (ev) => {
         const rect = svgArea.getBoundingClientRect();
-        const clickX = ev.clientX - rect.left;
+        const clickX = Math.max(0, ev.clientX - rect.left);
         const totalHoursClicked = (clickX / dayWidthPx) * 24;
         const dayIdx = Math.max(0, Math.min(visibleDays.length - 1, Math.floor(totalHoursClicked / 24)));
         const hrFloat = Math.max(0, Math.min(23.75, totalHoursClicked % 24));
         state.cursorDayIdx = dayIdx;
         state.cursorHourFloat = hrFloat;
-        window.renderDsySATideChart(containerEl, spotConfig);
+        if (viewport) state.savedScrollLeft = viewport.scrollLeft;
+
+        // Atualiza marcador, triângulo, callout e readout diretamente no DOM (sem scroll automático!)
+        const gHours = dayIdx * 24 + hrFloat;
+        const newX = (gHours / 24) * dayWidthPx;
+        const newMeters = getTideHeightAt(gHours);
+        const newY = plotHeightPx - (newMeters / maxTideMeters) * plotHeightPx;
+        const hh = String(Math.floor(hrFloat)).padStart(2, "0");
+        const mm = String(Math.round((hrFloat % 1) * 60)).padStart(2, "0");
+        const timeText = `${hh}:${mm === "60" ? "00" : mm}h`;
+
+        const lineEl = svgArea.querySelector(".dsysa-tide-marker-line");
+        const triEl = svgArea.querySelector(".dsysa-tide-marker-tri");
+        const calloutEl = svgArea.querySelector(".dsysa-tide-now-callout");
+        const timeEl = svgArea.querySelector(".dsysa-tide-marker-time");
+        const valEl = svgArea.querySelector(".dsysa-tide-marker-val");
+
+        if (lineEl) {
+          lineEl.setAttribute("x1", newX.toFixed(1));
+          lineEl.setAttribute("x2", newX.toFixed(1));
+          lineEl.setAttribute("y1", (newY - 22).toFixed(1));
+        }
+        if (triEl) {
+          triEl.setAttribute(
+            "points",
+            `${newX.toFixed(1)},${(newY - 5).toFixed(1)} ${(newX - 5).toFixed(1)},${(newY + 5).toFixed(1)} ${(newX + 5).toFixed(1)},${(newY + 5).toFixed(1)}`
+          );
+        }
+        if (calloutEl) {
+          calloutEl.style.left = `${newX.toFixed(1)}px`;
+          calloutEl.style.top = `${Math.max(-28, newY - 48).toFixed(1)}px`;
+        }
+        if (timeEl) timeEl.textContent = timeText;
+        if (valEl) valEl.textContent = `${newMeters.toFixed(1)} m`;
+
+        if (readout) {
+          const rising = isTideRisingAt(gHours);
+          readout.classList.remove("hidden");
+          readout.textContent = `${visibleDays[dayIdx].label} (${timeText}) → Maré: ${newMeters.toFixed(1)}m (${rising ? "Enchendo ↑" : "Vazante ↓"})`;
+        }
       });
       svgArea.addEventListener("mousemove", (ev) => {
         if (!readout) return;
@@ -2180,15 +2220,34 @@
       });
     }
 
-    // Mini-mapa: pular para o dia clicado
+    // Mini-mapa: pular exatamente para o dia clicado (sem deslocamento de -1 dia)
     containerEl.querySelectorAll("[data-jump-day]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const targetDay = parseInt(btn.getAttribute("data-jump-day"), 10);
-        if (targetDay >= state.loadedDaysCount) {
-          state.loadedDaysCount = Math.min(ALL_FORECAST_DAYS.length, targetDay + 2);
+        const targetScrollLeft = Math.max(0, targetDay * dayWidthPx);
+        state.activeMiniDay = targetDay;
+        state.savedScrollLeft = targetScrollLeft;
+
+        // Garante dias suficientes carregados para que o dia clicado alinhe exatamente no início do gráfico
+        const neededDays = Math.min(allDays.length, targetDay + 4);
+        if (neededDays > state.loadedDaysCount) {
+          state.loadedDaysCount = neededDays;
+          window.renderDsySATideChart(containerEl, spotConfig);
+          return;
         }
-        state.savedScrollLeft = Math.max(0, (targetDay - 1) * dayWidthPx);
-        window.renderDsySATideChart(containerEl, spotConfig);
+
+        // Atualiza destaque do botão selecionado e rola diretamente até o dia clicado
+        containerEl.querySelectorAll("[data-jump-day]").forEach((b) => {
+          const isSel = parseInt(b.getAttribute("data-jump-day"), 10) === targetDay;
+          b.className = `py-1 px-1 truncate transition-colors ${
+            isSel
+              ? "bg-[#072238] text-white"
+              : "bg-slate-900/90 text-slate-300 hover:bg-sky-500/20 hover:text-sky-200"
+          } border-r border-white/10 last:border-r-0`;
+        });
+        if (viewport) {
+          viewport.scrollTo({ left: targetScrollLeft, behavior: "smooth" });
+        }
       });
     });
 
@@ -3165,7 +3224,7 @@
   };
 
   // =========================================================================
-  // 10. DSYSA WEATHER FORECAST ACCORDION CARD (PREVISÃO DO TEMPO — 3 DIAS)
+  // 10. DSYSA WEATHER FORECAST ACCORDION CARD (PREVISÃO DO TEMPO — 15 DIAS)
   //     Reaproveita Open-Meteo `daily` (weather_code, temp_min, temp_max)
   // =========================================================================
   const DSYSA_WEEKDAYS_PT = [
@@ -3279,18 +3338,21 @@
   }
 
   function formatDailyForecastLabel(dateStr, idx) {
-    if (idx === 0) return "Hoje";
-    if (idx === 1) return "Amanhã";
+    let dt = null;
     if (dateStr && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
       const [y, m, d] = dateStr.slice(0, 10).split("-").map(Number);
-      const dt = new Date(y, m - 1, d);
-      if (!isNaN(dt.getTime())) {
-        return DSYSA_WEEKDAYS_PT[dt.getDay()];
-      }
+      const parsed = new Date(y, m - 1, d);
+      if (!isNaN(parsed.getTime())) dt = parsed;
     }
-    const fallbackDt = new Date();
-    fallbackDt.setDate(fallbackDt.getDate() + idx);
-    return DSYSA_WEEKDAYS_PT[fallbackDt.getDay()];
+    if (!dt) {
+      dt = new Date();
+      dt.setDate(dt.getDate() + idx);
+    }
+    const dd = String(dt.getDate()).padStart(2, "0");
+    const mm = String(dt.getMonth() + 1).padStart(2, "0");
+    const dateShort = `${dd}/${mm}`;
+    const title = idx === 0 ? "Hoje" : idx === 1 ? "Amanhã" : DSYSA_WEEKDAYS_PT[dt.getDay()];
+    return { title, dateShort };
   }
 
   function resolveWeatherCardLocationName(spotConfig) {
@@ -3314,39 +3376,44 @@
 
     const locationLabel = resolveWeatherCardLocationName(spotConfig);
     const rawDaily =
-      (Array.isArray(spotConfig?.dailyWeather) && spotConfig.dailyWeather.length >= 3 && spotConfig.dailyWeather) ||
-      (Array.isArray(spotConfig?.forecastData?.dailyWeather) && spotConfig.forecastData.dailyWeather.length >= 3 && spotConfig.forecastData.dailyWeather) ||
+      (Array.isArray(spotConfig?.dailyWeather) && spotConfig.dailyWeather.length > 0 && spotConfig.dailyWeather) ||
+      (Array.isArray(spotConfig?.forecastData?.dailyWeather) && spotConfig.forecastData.dailyWeather.length > 0 && spotConfig.forecastData.dailyWeather) ||
       null;
 
-    // Fallback instantâneo enquanto a Open-Meteo retorna os 3 dias reais
+    // Fallback instantâneo de 15 dias enquanto a Open-Meteo retorna os dados reais
     const baseTemp = typeof spotConfig?.currentWeather?.temperatureC === "number"
       ? Math.round(spotConfig.currentWeather.temperatureC)
       : 28;
     const baseCode = typeof spotConfig?.currentWeather?.weatherCode === "number"
       ? spotConfig.currentWeather.weatherCode
       : 2;
+    const fallbackCodes = [baseCode, 80, 2, 1, 0, 2, 61, 80, 1, 0, 2, 3, 80, 1, 0];
 
-    const days = rawDaily
-      ? rawDaily.slice(0, 3)
-      : [
-          { date: null, weatherCode: baseCode, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 1 },
-          { date: null, weatherCode: 80, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 2 },
-          { date: null, weatherCode: 2, tempMinC: baseTemp - 3, tempMaxC: baseTemp + 2 }
-        ];
+    const days = Array.from({ length: 15 }, (_, idx) => {
+      if (rawDaily && rawDaily[idx]) return rawDaily[idx];
+      const delta = (idx % 3) - 1;
+      return {
+        date: null,
+        weatherCode: fallbackCodes[idx % fallbackCodes.length],
+        tempMinC: baseTemp - 3 + delta,
+        tempMaxC: baseTemp + 1 + ((idx + 1) % 2)
+      };
+    });
 
     const render = () => {
       const colsHtml = days.map((day, idx) => {
         const meta = translateWmoDaily(day.weatherCode);
-        const dayLabel = formatDailyForecastLabel(day.date, idx);
+        const { title, dateShort } = formatDailyForecastLabel(day.date, idx);
         const minStr = day.tempMinC !== null && day.tempMinC !== undefined ? `${Math.round(day.tempMinC)}°` : "--°";
         const maxStr = day.tempMaxC !== null && day.tempMaxC !== undefined ? `${Math.round(day.tempMaxC)}°` : "--°";
 
         return `
-          <div class="dsysa-weather-fc-col">
+          <div class="dsysa-weather-fc-col${idx === 0 ? " is-today" : ""}">
             <div class="dsysa-weather-fc-icon-wrap">
               ${getDsySAWeatherIconSvg(meta.icon)}
             </div>
-            <div class="dsysa-weather-fc-day">${dayLabel}</div>
+            <div class="dsysa-weather-fc-day">${title}</div>
+            <div class="dsysa-weather-fc-date">${dateShort}</div>
             <div class="dsysa-weather-fc-temps">
               <span class="dsysa-weather-fc-min" title="Temperatura mínima">${minStr}</span>
               <span class="dsysa-weather-fc-max" title="Temperatura máxima">${maxStr}</span>
@@ -3374,7 +3441,7 @@
               </svg>
               <span>PREVISÃO DO TEMPO</span>
               <span class="text-[11px] font-inter font-normal text-sky-300/90 ml-2 hidden sm:inline">
-                · Próximos 3 dias
+                · Próximos 15 dias
               </span>
             </div>
             <div class="flex items-center gap-3">
@@ -3397,13 +3464,25 @@
               <span>${locationLabel}</span>
             </div>
 
-            <!-- Grid de 3 Colunas (Hoje | Amanhã | 3º Dia) com divisórias verticais sutis -->
-            <div class="dsysa-weather-fc-grid">
-              ${colsHtml}
+            <!-- Viewport com Scroll Horizontal (15 Dias) + Touch/Mouse Drag -->
+            <div class="dsysa-weather-fc-scroll dsysa-touch-scroll">
+              <div class="dsysa-weather-fc-grid">
+                ${colsHtml}
+              </div>
+            </div>
+
+            <div class="dsysa-scroll-status-bar dsysa-weather-fc-footer">
+              <span>Exibindo <strong>${days.length} dias</strong> · Mín / Máx</span>
+              <span>Arraste para o lado →</span>
             </div>
           </div>
         </div>
       `;
+
+      const scrollEl = containerEl.querySelector(".dsysa-weather-fc-scroll");
+      if (scrollEl && typeof window.enableDsySAHorizontalTouchDrag === "function") {
+        window.enableDsySAHorizontalTouchDrag(scrollEl);
+      }
 
       const btn = containerEl.querySelector(".dsysa-WeatherFcCollapseBtn");
       if (btn) {

@@ -159,7 +159,7 @@ async function fetchSurfForecast({
   }
 
   // 2. Cache Local de Navegador (TTL = 2 horas) como fallback resiliente
-  const clientCacheKey = `dsysa_cache_v2_${Number(lat).toFixed(2)}_${Number(lon).toFixed(2)}_${forecastDays}`;
+  const clientCacheKey = `dsysa_cache_v3_${Number(lat).toFixed(2)}_${Number(lon).toFixed(2)}_${forecastDays}`;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
       const rawCache = localStorage.getItem(clientCacheKey);
@@ -316,7 +316,7 @@ async function fetchSurfForecast({
 
   const dailyRaw = weatherRes.daily || {};
   const dailyTimes = Array.isArray(dailyRaw.time) ? dailyRaw.time : [];
-  const dailyWeather = dailyTimes.slice(0, 3).map((dateStr, idx) => ({
+  const dailyWeather = dailyTimes.slice(0, 15).map((dateStr, idx) => ({
     date: dateStr,
     weatherCode: typeof dailyRaw.weather_code?.[idx] === 'number' ? dailyRaw.weather_code[idx] : 1,
     tempMinC: roundOrNull(dailyRaw.temperature_2m_min?.[idx], 0),
