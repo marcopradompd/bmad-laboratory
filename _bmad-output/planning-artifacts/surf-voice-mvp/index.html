@@ -133,7 +133,7 @@
                 <line x1="8" y1="21" x2="16" y2="21"/>
               </svg>
               <span class="voice-status-dot" aria-hidden="true"></span>
-              <span id="heroMicLabel" class="voice-label-text">Pergunte ao SurfAgent</span>
+              <span id="heroMicLabel" class="voice-label-text">Fale o nome de uma praia ou pergunte qual é o melhor pico agora.</span>
             </button>
 
             <button onclick="triggerBestSpotFlow()" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all w-full sm:w-auto text-center">
@@ -148,7 +148,7 @@
                    type="text"
                    onkeydown="if(event.key==='Enter') handleConsoleInput('heroQueryInput')"
                    class="flex-1 min-w-0 bg-transparent text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none py-1"
-                   placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
+                   placeholder="Digite uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
             <button type="button" onclick="handleConsoleInput('heroQueryInput')" aria-label="Enviar consulta" title="Enviar consulta" class="ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 shadow-[0_6px_18px_rgba(56,189,248,0.4)] transition-all shrink-0">
               <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
             </button>
@@ -400,7 +400,7 @@
                     <input id="consoleQueryInput"
                            onkeydown="if(event.key==='Enter') handleConsoleInput()"
                            class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
-                           placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
+                           placeholder="Digite uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
                     <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
                       <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
                     </button>
@@ -1390,7 +1390,7 @@
       }
 
       const defaultLabels = {
-        idle: 'Pergunte ao SurfAgent',
+        idle: 'Fale o nome de uma praia ou pergunte qual é o melhor pico agora.',
         waiting_reply: 'Clique para responder',
         speaking: 'surfeAgent falando...',
         listening: 'Ouvindo... pode falar agora',
