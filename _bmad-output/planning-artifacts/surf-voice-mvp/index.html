@@ -151,6 +151,19 @@
             </button>
           </div>
 
+          <!-- Hero Text / Query Input Pill (Cópia ampliada e responsiva do campo de consulta) -->
+          <div class="w-full max-w-2xl flex items-center rounded-full bg-slate-950/85 border border-white/15 focus-within:border-sky-400/60 focus-within:ring-2 focus-within:ring-sky-400/20 px-4 py-1.5 min-h-[46px] shadow-[0_12px_36px_rgba(2,6,23,0.55)] backdrop-blur-md transition-all min-w-0">
+            <i data-lucide="sparkles" class="mr-2.5 h-4 w-4 text-sky-300 shrink-0"></i>
+            <input id="heroQueryInput"
+                   type="text"
+                   onkeydown="if(event.key==='Enter') handleConsoleInput('heroQueryInput')"
+                   class="flex-1 min-w-0 bg-transparent text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none py-1"
+                   placeholder="Pergunte uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
+            <button type="button" onclick="handleConsoleInput('heroQueryInput')" aria-label="Enviar consulta" title="Enviar consulta" class="ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 shadow-[0_6px_18px_rgba(56,189,248,0.4)] transition-all shrink-0">
+              <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
+            </button>
+          </div>
+
           <a href="#como-usar" onclick="openHowToUseModal(event)" class="text-xs font-medium text-white/95 hover:text-sky-200 underline underline-offset-4 decoration-white/50 hover:decoration-sky-300 transition-colors cursor-pointer" style="text-shadow: 0 1px 10px rgba(2, 12, 27, 0.85);">
             Como usar o SurfAgent
           </a>
@@ -1350,7 +1363,7 @@
       const badge = document.getElementById('activeFilterBadge');
       if (badge) badge.textContent = modeLabels[intent] || 'Onda Boa, Bem Formada e Forte';
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      saveAppState();
       updateSyncTime();
       renderTabsBar();
       renderActiveSpot();
@@ -1699,7 +1712,7 @@
         appState.activeTabId = spotObj.id;
       }
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      saveAppState();
       updateSyncTime();
       renderTabsBar();
       renderActiveSpot();
@@ -1764,7 +1777,7 @@
         else SPOTS_DATABASE.push(enriched);
 
         persistGlobalSpotsLocal();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        saveAppState();
 
         renderSpotInsightsPanel(enriched, true);
 
@@ -1850,7 +1863,7 @@
 
       // Define como aba ativa o PRIMEIRO pico mencionado na frase
       appState.activeTabId = resolvedSpots[0].id;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      saveAppState();
 
       const filterBadge = document.getElementById('activeFilterBadge');
       if (filterBadge) {
@@ -1932,8 +1945,9 @@
       return applyVoiceIntent(getConfiguredSkillIntent(), true);
     }
 
-    function handleConsoleInput() {
-      const input = document.getElementById('consoleQueryInput');
+    function handleConsoleInput(inputId = 'consoleQueryInput') {
+      const input = document.getElementById(inputId);
+      if (!input) return;
       const q = input.value.trim();
       if (!q) return;
       input.value = '';
@@ -1991,11 +2005,27 @@
     // =========================================================================
     // 8. GERENCIAMENTO DE ABAS (TABS), SELEÇÃO E FECHAMENTO
     // =========================================================================
+    function saveAppState() {
+      try {
+        const compactState = {
+          ...appState,
+          tabs: (appState.tabs || []).map((tab) => {
+            if (!tab || typeof tab !== 'object') return tab;
+            const { forecastData, ...lightTab } = tab;
+            return lightTab;
+          })
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(compactState));
+      } catch (e) {
+        console.warn('⚠️ Falha ao salvar abas no localStorage (quota):', e);
+      }
+    }
+
     function selectTab(id) {
       appState.activeTabId = id;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       renderTabsBar();
       renderActiveSpot();
+      saveAppState();
     }
 
     function closeTab(ev, id) {
@@ -2005,9 +2035,9 @@
       if (appState.activeTabId === id) {
         appState.activeTabId = appState.tabs[0].id;
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       renderTabsBar();
       renderActiveSpot();
+      saveAppState();
     }
 
     function refreshSavedTabs() {
@@ -2125,25 +2155,31 @@
         spot.waterTemp = `${temp} °C (${temp >= 24 ? 'Boardshort' : 'Wetsuit'})`;
       }
 
-      const spotNameLower = (spot.name || '').toLowerCase();
-      let harborName = 'Porto de Salvador';
-      if (spotNameLower.includes('maresias') || spotNameLower.includes('sebasti')) {
-        harborName = 'Porto de São Sebastião';
-      } else if (spotNameLower.includes('arpoador') || spotNameLower.includes('rio')) {
-        harborName = 'Porto do Rio de Janeiro';
-      } else if (spotNameLower.includes('itamambuca') || spotNameLower.includes('ubatuba')) {
-        harborName = 'Porto de Ubatuba';
-      }
+      if (window.DsySATideHarmonic && typeof window.DsySATideHarmonic.getCurrentSummary === 'function') {
+        const tideSummary = window.DsySATideHarmonic.getCurrentSummary(spot);
+        spot.tidePhase = tideSummary.tidePhase;
+        spot.tideSub = tideSummary.tideSub;
+      } else {
+        const spotNameLower = (spot.name || '').toLowerCase();
+        let harborName = 'Porto de Salvador';
+        if (spotNameLower.includes('maresias') || spotNameLower.includes('sebasti')) {
+          harborName = 'Porto de São Sebastião';
+        } else if (spotNameLower.includes('arpoador') || spotNameLower.includes('rio')) {
+          harborName = 'Porto do Rio de Janeiro';
+        } else if (spotNameLower.includes('itamambuca') || spotNameLower.includes('ubatuba')) {
+          harborName = 'Porto de Ubatuba';
+        }
 
-      const nextExtrema = timeline.slice(nowIdx).find(p => p.tide && p.tide.type);
-      if (nextExtrema) {
-        const extType = nextExtrema.tide.type === 'HIGH' ? 'Preia-mar' : 'Baixa-mar';
-        const extH = nextExtrema.tide.peakNauticalHeightM || +(nextExtrema.tide.heightM + 1.25).toFixed(1);
-        const extTime = nextExtrema.tide.exactTime || (nextExtrema.timestamp.slice(11, 16) + 'h');
-        const curH = now.tide?.nauticalHeightM || +(now.tide?.heightM + 1.25).toFixed(1);
-        const isRising = nextExtrema.tide.type === 'HIGH';
-        spot.tidePhase = `${isRising ? 'Enchendo' : 'Vazante'} (${curH}m → ${extH}m)`;
-        spot.tideSub = `Próxima ${extType} às ${extTime} · ${harborName}`;
+        const nextExtrema = timeline.slice(nowIdx).find(p => p.tide && p.tide.type);
+        if (nextExtrema) {
+          const extType = nextExtrema.tide.type === 'HIGH' ? 'Preia-mar' : 'Baixa-mar';
+          const extH = nextExtrema.tide.peakNauticalHeightM || +(nextExtrema.tide.heightM + 1.25).toFixed(1);
+          const extTime = nextExtrema.tide.exactTime || (nextExtrema.timestamp.slice(11, 16) + 'h');
+          const curH = now.tide?.nauticalHeightM || +(now.tide?.heightM + 1.25).toFixed(1);
+          const isRising = nextExtrema.tide.type === 'HIGH';
+          spot.tidePhase = `${isRising ? 'Enchendo' : 'Vazante'} (${curH}m → ${extH}m)`;
+          spot.tideSub = `Próxima ${extType} às ${extTime} · ${harborName}`;
+        }
       }
     }
 

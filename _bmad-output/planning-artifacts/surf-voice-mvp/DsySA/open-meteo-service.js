@@ -334,14 +334,34 @@ async function fetchSurfForecast({
     timeline
   };
 
-  // Salva no cache do navegador por 2 horas (TTL = 7200s)
+  // Salva no cache do navegador por 2 horas (TTL = 7200s), limpando caches antigos para evitar QuotaExceededError
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
+      for (let k = localStorage.length - 1; k >= 0; k--) {
+        const key = localStorage.key(k);
+        if (key && (key.startsWith('dsysa_cache_v1_') || key.startsWith('dsysa_cache_v2_'))) {
+          localStorage.removeItem(key);
+        }
+      }
       localStorage.setItem(clientCacheKey, JSON.stringify({
         data: result,
         expiresAt: Date.now() + 2 * 60 * 60 * 1000 // 2 horas
       }));
-    } catch (_) {}
+    } catch (_) {
+      // Se ainda estiver sem espaço, remove caches v3 antigos e tenta salvar novamente
+      try {
+        for (let k = localStorage.length - 1; k >= 0; k--) {
+          const key = localStorage.key(k);
+          if (key && key.startsWith('dsysa_cache_v3_')) {
+            localStorage.removeItem(key);
+          }
+        }
+        localStorage.setItem(clientCacheKey, JSON.stringify({
+          data: result,
+          expiresAt: Date.now() + 2 * 60 * 60 * 1000
+        }));
+      } catch (__) {}
+    }
   }
 
   return result;

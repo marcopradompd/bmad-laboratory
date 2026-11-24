@@ -44,6 +44,88 @@
   const ALL_FORECAST_DAYS = generateDynamicForecastDays(15);
   const LAST_FORECAST_DATE_LABEL = ALL_FORECAST_DAYS[ALL_FORECAST_DAYS.length - 1].fullDate;
 
+  /* 4A. Sincronização Horizontal Global entre todos os Gráficos e Previsão do Tempo */
+  const dsysaSyncRegistry = new Set();
+  let dsysaSyncingSource = null;
+  let dsysaSyncRafId = null;
+  let dsysaLastSyncedDayOffset = 0;
+
+  function getDsySASyncDayWidth(el) {
+    if (!el) return 0;
+    const cell = el.querySelector(".dsysa-wave-day-cell, .dsysa-weather-fc-col");
+    if (cell && cell.offsetWidth > 0) return cell.offsetWidth;
+    return 0;
+  }
+
+  function registerDsySASyncScroll(el, stateObj) {
+    if (!el || el.__dsysaSyncBound) return;
+    el.__dsysaSyncBound = true;
+
+    // Limpa referências antigas desconectadas após re-renderizações
+    dsysaSyncRegistry.forEach((entry) => {
+      if (!entry.el || !entry.el.isConnected) {
+        dsysaSyncRegistry.delete(entry);
+      }
+    });
+
+    const entry = { el, stateObj };
+    dsysaSyncRegistry.add(entry);
+
+    // Alinha o novo viewport à posição do dia atualmente visualizado nos demais módulos
+    if (dsysaLastSyncedDayOffset > 0) {
+      const dw = getDsySASyncDayWidth(el);
+      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+      if (dw > 0 && maxScroll > 0) {
+        const targetLeft = Math.max(0, Math.min(maxScroll, dsysaLastSyncedDayOffset * dw));
+        const prevB = el.style.scrollBehavior;
+        el.style.scrollBehavior = "auto";
+        el.scrollLeft = targetLeft;
+        el.style.scrollBehavior = prevB || "";
+        if (stateObj) stateObj.savedScrollLeft = targetLeft;
+      }
+    }
+
+    el.addEventListener(
+      "scroll",
+      () => {
+        if (dsysaSyncingSource && dsysaSyncingSource !== el) return;
+
+        const srcDayW = getDsySASyncDayWidth(el);
+        const srcMax = Math.max(1, el.scrollWidth - el.clientWidth);
+        const dayOffset = srcDayW > 0 ? el.scrollLeft / srcDayW : null;
+        const ratio = el.scrollLeft / srcMax;
+        if (dayOffset !== null) dsysaLastSyncedDayOffset = dayOffset;
+        if (stateObj) stateObj.savedScrollLeft = el.scrollLeft;
+
+        dsysaSyncingSource = el;
+        if (dsysaSyncRafId) cancelAnimationFrame(dsysaSyncRafId);
+
+        dsysaSyncRegistry.forEach((other) => {
+          if (!other.el || other.el === el || !other.el.isConnected) return;
+          const dstMax = other.el.scrollWidth - other.el.clientWidth;
+          if (dstMax <= 0) return;
+
+          const dstDayW = getDsySASyncDayWidth(other.el);
+          let targetLeft = dayOffset !== null && dstDayW > 0 ? dayOffset * dstDayW : ratio * dstMax;
+          targetLeft = Math.max(0, Math.min(dstMax, targetLeft));
+
+          if (Math.abs(other.el.scrollLeft - targetLeft) > 0.5) {
+            const prevBehavior = other.el.style.scrollBehavior;
+            other.el.style.scrollBehavior = "auto";
+            other.el.scrollLeft = targetLeft;
+            other.el.style.scrollBehavior = prevBehavior || "";
+          }
+          if (other.stateObj) other.stateObj.savedScrollLeft = other.el.scrollLeft;
+        });
+
+        dsysaSyncRafId = requestAnimationFrame(() => {
+          dsysaSyncingSource = null;
+        });
+      },
+      { passive: true }
+    );
+  }
+
   /* 4. Helper Universal de Scroll Horizontal Infinito com Suporte a Toque (Celular) + Mouse Drag + Wheel */
   window.attachDsySAInfiniteTouchScroll = function (viewport, state, totalAvailableDays, onRenderMore, statusBarEl, endBannerEl) {
     if (!viewport) return;
@@ -54,6 +136,8 @@
       viewport.scrollLeft = state.savedScrollLeft;
       viewport.style.scrollBehavior = prevBehavior || "";
     }
+
+    registerDsySASyncScroll(viewport, state);
 
     const allDaysLoaded = state.loadedDaysCount >= totalAvailableDays;
 
@@ -164,10 +248,12 @@
     if (!el || el.__touchDragBound) return;
     el.__touchDragBound = true;
     let isDown = false;
+    let hasDragged = false;
     let startX = 0;
     let scrollLeft = 0;
     el.addEventListener("mousedown", (e) => {
       isDown = true;
+      hasDragged = false;
       startX = e.pageX - el.offsetLeft;
       scrollLeft = el.scrollLeft;
     });
@@ -175,8 +261,10 @@
     el.addEventListener("mouseup", () => { isDown = false; });
     el.addEventListener("mousemove", (e) => {
       if (!isDown) return;
-      e.preventDefault();
       const x = e.pageX - el.offsetLeft;
+      if (!hasDragged && Math.abs(x - startX) < 5) return;
+      hasDragged = true;
+      e.preventDefault();
       el.scrollLeft = scrollLeft - (x - startX) * 1.2;
     });
   };
@@ -1531,95 +1619,257 @@
     let fullLabel = "Lua Crescente";
 
     if (phase < 0.035 || phase >= 0.965) {
-      shortLabel = "nova";
+      shortLabel = "Nova";
       fullLabel = "Lua Nova";
     } else if (phase < 0.215) {
-      shortLabel = "crescente";
+      shortLabel = "Crescente";
       fullLabel = "Lua Crescente";
     } else if (phase < 0.285) {
-      shortLabel = "crescente";
+      shortLabel = "Quarto Crescente";
       fullLabel = "Quarto Crescente";
     } else if (phase < 0.465) {
-      shortLabel = "crescente";
-      fullLabel = "Gibosa Crescente";
+      shortLabel = "Crescente Gibosa";
+      fullLabel = "Crescente Gibosa";
     } else if (phase < 0.535) {
-      shortLabel = "cheia";
+      shortLabel = "Cheia";
       fullLabel = "Lua Cheia";
     } else if (phase < 0.715) {
-      shortLabel = "minguante";
-      fullLabel = "Gibosa Minguante";
+      shortLabel = "Minguante Gibosa";
+      fullLabel = "Minguante Gibosa";
     } else if (phase < 0.785) {
-      shortLabel = "minguante";
+      shortLabel = "Quarto Minguante";
       fullLabel = "Quarto Minguante";
     } else {
-      shortLabel = "minguante";
+      shortLabel = "Minguante";
       fullLabel = "Lua Minguante";
     }
 
     return { phase, illuminationPct, shortLabel, fullLabel };
   }
 
-  function buildDsySAMoonPhaseSvg(phase, isSouthHemisphere = true) {
+  let __dsysaMoonSvgSeq = 0;
+  function buildDsySAMoonPhaseSvg(phase, isSouthHemisphere = true, sizePx = 26) {
     const p = ((Number(phase) || 0) % 1 + 1) % 1;
-    const r = 10;
+    const r = 10.5;
     const cx = 12;
     const cy = 12;
     const illumination = (1 - Math.cos(p * 2 * Math.PI)) / 2;
+    const uid = `dsysaMoonClip_${++__dsysaMoonSvgSeq}`;
 
-    // Lua Nova (< 2% iluminada): disco escuro com contorno suave
-    if (illumination <= 0.02) {
-      return `
-        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#090f1f" stroke="#94a3b8" stroke-width="1.2" />
-        </svg>`;
+    // Superfície lunar realista com mares e crateras suaves (visível tanto na face iluminada quanto na penumbra)
+    const moonBaseSurface = `
+      <defs>
+        <clipPath id="${uid}">
+          <circle cx="${cx}" cy="${cy}" r="${r}" />
+        </clipPath>
+        <radialGradient id="${uid}_grad" cx="42%" cy="38%" r="65%">
+          <stop offset="0%" stop-color="#f8fafc" />
+          <stop offset="68%" stop-color="#dbe4ee" />
+          <stop offset="100%" stop-color="#b8c4d4" />
+        </radialGradient>
+      </defs>
+      <g clip-path="url(#${uid})">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${uid}_grad)" />
+        <!-- Mares lunares sutis -->
+        <ellipse cx="9.2" cy="8.4" rx="2.7" ry="2.2" fill="#94a3b8" opacity="0.45" />
+        <ellipse cx="14.5" cy="9.2" rx="2.4" ry="2.9" fill="#94a3b8" opacity="0.38" />
+        <ellipse cx="11.4" cy="13.8" rx="3.1" ry="2.1" fill="#94a3b8" opacity="0.34" />
+        <circle cx="15.8" cy="14.4" r="1.7" fill="#64748b" opacity="0.32" />
+        <circle cx="7.4" cy="14.2" r="1.4" fill="#64748b" opacity="0.28" />
+        <circle cx="11.2" cy="6.2" r="1.1" fill="#64748b" opacity="0.26" />
+      </g>
+    `;
+
+    let shadowOverlay = "";
+
+    if (illumination <= 0.03) {
+      // LUA NOVA: disco totalmente na sombra (mantendo textura sutil visível)
+      shadowOverlay = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#141821" fill-opacity="0.90" />`;
+    } else if (illumination >= 0.97) {
+      // LUA CHEIA: totalmente iluminada, sem sombra
+      shadowOverlay = "";
+    } else {
+      // Terminador esférico exato (Hemisfério Sul: Crescente ilumina à ESQUERDA, Minguante à DIREITA)
+      const isWaxing = p < 0.5;
+      const isGibbous = illumination > 0.5;
+      const litOnLeft = isSouthHemisphere ? isWaxing : !isWaxing;
+      // Sombra ocupa o lado oposto ao lado iluminado
+      const shadowOnRight = litOnLeft;
+      const rx = +(Math.abs(Math.cos(p * 2 * Math.PI)) * r).toFixed(2);
+
+      const sweepOuter = shadowOnRight ? 1 : 0;
+      const sweepInner = shadowOnRight
+        ? (isGibbous ? 0 : 1)
+        : (isGibbous ? 1 : 0);
+
+      const shadowPath = rx < 0.25
+        ? `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} L ${cx} ${cy - r} Z`
+        : `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} A ${rx} ${r} 0 0 ${sweepInner} ${cx} ${cy - r} Z`;
+
+      shadowOverlay = `<path d="${shadowPath}" fill="#141821" fill-opacity="0.88" clip-path="url(#${uid})" />`;
     }
-
-    // Lua Cheia (> 98% iluminada): disco totalmente iluminado com brilho sutil
-    if (illumination >= 0.98) {
-      return `
-        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.1" />
-          <circle cx="9.2" cy="9.5" r="1.4" fill="#cbd5e1" opacity="0.45" />
-          <circle cx="14.8" cy="13.5" r="1.8" fill="#cbd5e1" opacity="0.35" />
-          <circle cx="11.5" cy="15.8" r="1.1" fill="#cbd5e1" opacity="0.35" />
-        </svg>`;
-    }
-
-    // Geometria esférica real do terminador lunar
-    const isWaxing = p < 0.5;
-    const isGibbous = illumination > 0.5;
-    // Hemisfério Sul (Brasil): crescente ilumina pela esquerda, minguante pela direita
-    const litOnLeft = isSouthHemisphere ? isWaxing : !isWaxing;
-    const rx = +(Math.abs(Math.cos(p * 2 * Math.PI)) * r).toFixed(2);
-
-    const sweepOuter = litOnLeft ? 0 : 1;
-    const sweepInner = litOnLeft ? (isGibbous ? 0 : 1) : (isGibbous ? 1 : 0);
-
-    const litPath = rx < 0.25
-      ? `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} L ${cx} ${cy - r} Z`
-      : `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweepOuter} ${cx} ${cy + r} A ${rx} ${r} 0 0 ${sweepInner} ${cx} ${cy - r} Z`;
 
     return `
-      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#090f1f" stroke="#cbd5e1" stroke-width="1.15" />
-        <path d="${litPath}" fill="#f1f5f9" />
+      <svg width="${sizePx}" height="${sizePx}" viewBox="0 0 24 24" aria-hidden="true">
+        ${moonBaseSurface}
+        ${shadowOverlay}
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(203, 213, 225, 0.55)" stroke-width="0.9" />
       </svg>`;
   }
+
+  // Motor Harmônico Astronômico de Maré calibrado com a Tábua Oficial da Marinha do Brasil (DHN)
+  // Constituintes principais: M2 (12.4206012h), S2 (12.0000h) e K1 (23.9344696h)
+  // Época de referência exata: Preamar DHN Porto de Salvador em 23/11/2026 às 02:32 (UTC-3 = 05:32 UTC)
+  const DHN_REF_EPOCH_MS = Date.UTC(2026, 10, 23, 5, 32, 0);
+  const TIDE_M2_H = 12.4206012;
+  const TIDE_S2_H = 12.0;
+  const TIDE_K1_H = 23.9344696;
+
+  function resolveDsySAHarborProfile(spotConfig) {
+    const raw = `${spotConfig?.name || ""} ${spotConfig?.region || ""}`.toLowerCase();
+    if (raw.includes("maresias") || raw.includes("sebasti")) {
+      return { name: "porto de são sebastião", phaseOffsetH: -0.65, z0: 0.78, ampScale: 0.56, maxM: 2.0, tzOffsetH: -3 };
+    }
+    if (raw.includes("itamambuca") || raw.includes("ubatuba")) {
+      return { name: "porto de ubatuba", phaseOffsetH: -0.65, z0: 0.78, ampScale: 0.56, maxM: 2.0, tzOffsetH: -3 };
+    }
+    if (raw.includes("arpoador") || raw.includes("saquarema") || raw.includes("rio de janeiro")) {
+      return { name: "porto do rio de janeiro", phaseOffsetH: -0.75, z0: 0.76, ampScale: 0.54, maxM: 2.0, tzOffsetH: -3 };
+    }
+    if (raw.includes("florian") || raw.includes("joaquina") || raw.includes("rosa") || raw.includes("garopaba")) {
+      return { name: "porto de florianópolis", phaseOffsetH: -0.9, z0: 0.68, ampScale: 0.48, maxM: 2.0, tzOffsetH: -3 };
+    }
+    if (raw.includes("recife") || raw.includes("porto de galinhas") || raw.includes("noronha")) {
+      return { name: "porto do recife", phaseOffsetH: 0.35, z0: 1.30, ampScale: 1.04, maxM: 2.6, tzOffsetH: -3 };
+    }
+    if (raw.includes("fortaleza") || raw.includes("paracuru") || raw.includes("jericoacoara")) {
+      return { name: "porto do mucuripe · fortaleza", phaseOffsetH: 1.15, z0: 1.55, ampScale: 1.18, maxM: 3.0, tzOffsetH: -3 };
+    }
+    if (raw.includes("pipeline") || raw.includes("oahu")) {
+      return { name: "haleiwa harbor · oahu", phaseOffsetH: 3.2, z0: 0.45, ampScale: 0.38, maxM: 1.6, tzOffsetH: -10 };
+    }
+    // Padrão calibrado DHN: Porto de Salvador / Litoral Norte da Bahia (Itacimirim, Stella Maris, Guarajuba, Pedra do Sal, Praia do Forte)
+    return { name: "porto de salvador", phaseOffsetH: 0.0, z0: 1.26, ampScale: 1.0, maxM: 2.5, tzOffsetH: -3 };
+  }
+
+  function computeHarmonicHeightAtMs(utcMs, profile) {
+    const tHours = (utcMs - DHN_REF_EPOCH_MS) / 3600000 - (profile.phaseOffsetH || 0);
+    const aM2 = 0.82 * profile.ampScale;
+    const aS2 = 0.30 * profile.ampScale;
+    const aK1 = 0.04 * profile.ampScale;
+    const h =
+      profile.z0 +
+      aM2 * Math.cos((2 * Math.PI * tHours) / TIDE_M2_H) +
+      aS2 * Math.cos((2 * Math.PI * tHours) / TIDE_S2_H) +
+      aK1 * Math.cos((2 * Math.PI * tHours) / TIDE_K1_H);
+    return Math.max(0.05, h);
+  }
+
+  function dateStrToLocalMidnightUtcMs(dateStr, tzOffsetH = -3) {
+    if (dateStr && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+      const [y, m, d] = dateStr.slice(0, 10).split("-").map(Number);
+      // 00:00 local em fuso tzOffsetH (ex: UTC-3 => 03:00 UTC)
+      return Date.UTC(y, m - 1, d, -tzOffsetH, 0, 0);
+    }
+    const now = new Date();
+    return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), -tzOffsetH, 0, 0);
+  }
+
+  function findDayHarmonicExtrema(dateStr, profile) {
+    const dayStartMs = dateStrToLocalMidnightUtcMs(dateStr, profile.tzOffsetH);
+    const extrema = [];
+    const stepMin = 5; // Varredura fina de 5 min + refinamento de 1 min
+    let prevH = computeHarmonicHeightAtMs(dayStartMs - stepMin * 60000, profile);
+    let currH = computeHarmonicHeightAtMs(dayStartMs, profile);
+
+    for (let min = stepMin; min <= 24 * 60; min += stepMin) {
+      const nextH = computeHarmonicHeightAtMs(dayStartMs + min * 60000, profile);
+      const centerMin = min - stepMin;
+      const isHigh = currH > prevH && currH >= nextH;
+      const isLow = currH < prevH && currH <= nextH;
+
+      if ((isHigh || isLow) && centerMin >= 0 && centerMin < 24 * 60) {
+        // Refinamento em passos de 1 minuto ao redor do extremo
+        let bestMin = centerMin;
+        let bestVal = currH;
+        for (let m = Math.max(0, centerMin - stepMin); m <= Math.min(24 * 60 - 1, centerMin + stepMin); m++) {
+          const v = computeHarmonicHeightAtMs(dayStartMs + m * 60000, profile);
+          if ((isHigh && v > bestVal) || (isLow && v < bestVal)) {
+            bestVal = v;
+            bestMin = m;
+          }
+        }
+        const hh = String(Math.floor(bestMin / 60)).padStart(2, "0");
+        const mm = String(bestMin % 60).padStart(2, "0");
+        extrema.push({
+          type: isHigh ? "high" : "low",
+          str: `${hh}:${mm}h`,
+          hourFloat: +(bestMin / 60).toFixed(2),
+          height: +bestVal.toFixed(2)
+        });
+      }
+      prevH = currH;
+      currH = nextH;
+    }
+    return extrema;
+  }
+
+  window.DsySATideHarmonic = {
+    resolveProfile: resolveDsySAHarborProfile,
+    getHeightAtMs: computeHarmonicHeightAtMs,
+    getDayExtrema: findDayHarmonicExtrema,
+    getCurrentSummary(spotConfig) {
+      const profile = resolveDsySAHarborProfile(spotConfig);
+      const nowMs = Date.now();
+      const curH = computeHarmonicHeightAtMs(nowMs, profile);
+      const nextH = computeHarmonicHeightAtMs(nowMs + 10 * 60000, profile);
+      const isRising = nextH >= curH;
+
+      // Encontra o próximo extremo (preamar ou baixamar) nas próximas 12h
+      let prev = curH;
+      let curr = computeHarmonicHeightAtMs(nowMs + 5 * 60000, profile);
+      let nextExt = null;
+      for (let min = 10; min <= 12 * 60; min += 5) {
+        const nxt = computeHarmonicHeightAtMs(nowMs + min * 60000, profile);
+        const isHigh = curr > prev && curr >= nxt;
+        const isLow = curr < prev && curr <= nxt;
+        if (isHigh || isLow) {
+          const extUtcMs = nowMs + (min - 5) * 60000;
+          const localDate = new Date(extUtcMs + profile.tzOffsetH * 3600000);
+          const hh = String(localDate.getUTCHours()).padStart(2, "0");
+          const mm = String(localDate.getUTCMinutes()).padStart(2, "0");
+          nextExt = {
+            type: isHigh ? "HIGH" : "LOW",
+            label: isHigh ? "Preia-mar" : "Baixa-mar",
+            timeStr: `${hh}:${mm}h`,
+            heightM: +curr.toFixed(1)
+          };
+          break;
+        }
+        prev = curr;
+        curr = nxt;
+      }
+
+      const harborTitle = profile.name.replace(/\b\w/g, (c) => c.toUpperCase());
+      return {
+        harborName: harborTitle,
+        currentHeightM: +curH.toFixed(1),
+        isRising,
+        tidePhase: nextExt
+          ? `${isRising ? "Enchendo" : "Vazante"} (${curH.toFixed(1)}m → ${nextExt.heightM.toFixed(1)}m)`
+          : `${isRising ? "Enchendo" : "Vazante"} (${curH.toFixed(1)}m)`,
+        tideSub: nextExt
+          ? `Próxima ${nextExt.label} às ${nextExt.timeStr} · ${harborTitle}`
+          : harborTitle
+      };
+    }
+  };
 
   window.renderDsySATideChart = function (containerEl, spotConfig) {
     if (!containerEl) return;
 
-    const spotNameLower = (spotConfig?.name || "").toLowerCase();
-    let harborName = "porto de salvador";
-    if (spotNameLower.includes("maresias") || spotNameLower.includes("sebasti")) {
-      harborName = "porto de são sebastião";
-    } else if (spotNameLower.includes("arpoador") || spotNameLower.includes("rio")) {
-      harborName = "porto do rio de janeiro";
-    } else if (spotNameLower.includes("itamambuca") || spotNameLower.includes("ubatuba")) {
-      harborName = "porto de ubatuba";
-    } else if (spotNameLower.includes("pipeline")) {
-      harborName = "haleiwa harbor · oahu";
-    }
+    const harborProfile = resolveDsySAHarborProfile(spotConfig);
+    const harborName = harborProfile.name;
 
     const curHour = new Date().getHours() + new Date().getMinutes() / 60;
     const state = containerEl.__tideChartState || {
@@ -1639,52 +1889,9 @@
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
-    // Gera dados astronômicos e extremos de maré reais (Open-Meteo) calibrados com a Marinha do Brasil
+    // Gera dados astronômicos e extremos de maré pelo Motor Harmônico DHN (Marinha do Brasil)
     const dayTideData = visibleDays.map((day, dIdx) => {
-      let extrema = [];
-      if (day.points && day.points.length > 0) {
-        day.points.forEach((pt) => {
-          if (pt.tide && pt.tide.type) {
-            const h = parseInt(pt.timestamp.slice(11, 13), 10);
-            const m = parseInt(pt.timestamp.slice(14, 16), 10) || 0;
-            const hourFloat = pt.tide.hourFloat !== null && pt.tide.hourFloat !== undefined ? pt.tide.hourFloat : (h + m / 60);
-            const nauticalHeight = pt.tide.peakNauticalHeightM || +(pt.tide.heightM + 1.25).toFixed(1);
-            extrema.push({
-              type: pt.tide.type === "HIGH" ? "high" : "low",
-              str: pt.tide.exactTime || `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}h`,
-              hourFloat: Math.max(0, Math.min(23.9, hourFloat)),
-              height: Math.max(0.1, nauticalHeight)
-            });
-          }
-        });
-      }
-
-      if (extrema.length === 0) {
-        // Fallback astronômico harmônico preciso calibrado com a tábua da Marinha do Brasil (Salvador)
-        const shiftMin = dIdx * 50; // Atraso lunar diário de ~50 min
-        const fmtTime = (baseMinutes) => {
-          const total = (baseMinutes + shiftMin) % (24 * 60);
-          const hh = String(Math.floor(total / 60)).padStart(2, "0");
-          const mm = String(total % 60).padStart(2, "0");
-          return { str: `${hh}:${mm}h`, hourFloat: +(total / 60).toFixed(2) };
-        };
-
-        const ampCoeff = 0.55 + 0.35 * Math.sin((dIdx / 14) * Math.PI);
-        const low1 = fmtTime(4 * 60 + 30);
-        const high1 = fmtTime(11 * 60 + 10);
-        const low2 = fmtTime(17 * 60 + 10);
-        const high2 = fmtTime(23 * 60 + 15);
-
-        extrema = [
-          { type: "low",  ...low1,  height: +(1.25 - ampCoeff * 0.9).toFixed(1) },
-          { type: "high", ...high1, height: +(1.25 + ampCoeff * 1.0).toFixed(1) },
-          { type: "low",  ...low2,  height: +(1.25 - ampCoeff * 0.8).toFixed(1) },
-          { type: "high", ...high2, height: +(1.25 + ampCoeff * 1.1).toFixed(1) }
-        ];
-      }
-
-      // Ordena cronologicamente os extremos do dia
-      extrema.sort((a, b) => a.hourFloat - b.hourFloat);
+      const extrema = findDayHarmonicExtrema(day.dateStr, harborProfile);
 
       const fullHeaderLabel = day.label
         .replace("TER ", "TERÇA ")
@@ -1718,45 +1925,41 @@
     const endCapWidthPx = allDaysLoaded ? 190 : 0;
     const totalTrackWidthPx = visibleDays.length * dayWidthPx + endCapWidthPx;
     const plotHeightPx = 138;
-    const maxTideMeters = 2.4;
+    const maxTideMeters = harborProfile.maxM || 2.5;
 
-    // Função de altura da maré (m): interpolação precisa com conversão para cota náutica da Marinha
+    // Curva harmônica analítica contínua (100% sincronizada com a DHN e com os badges Preamar/Baixamar)
+    const totalHours = visibleDays.length * 24;
+    const firstDayMidnightUtcMs = dateStrToLocalMidnightUtcMs(visibleDays[0]?.dateStr, harborProfile.tzOffsetH);
+
     const getTideHeightAt = (globalHours) => {
-      const dIdx = Math.floor(globalHours / 24);
-      const hInDay = Math.max(0, globalHours - dIdx * 24);
-      const targetDay = visibleDays[Math.min(visibleDays.length - 1, Math.max(0, dIdx))];
-      if (targetDay && targetDay.points && targetDay.points.length > 0) {
-        const pts = targetDay.points;
-        const h1 = Math.max(0, Math.min(pts.length - 1, Math.floor(hInDay)));
-        const h2 = Math.max(0, Math.min(pts.length - 1, Math.ceil(hInDay)));
-        const frac = hInDay - Math.floor(hInDay);
-        const m1 = (pts[h1].tide?.nauticalHeightM || ((pts[h1].tide?.heightM || 0) + 1.25));
-        const m2 = (pts[h2].tide?.nauticalHeightM || ((pts[h2].tide?.heightM || 0) + 1.25));
-        return +(m1 * (1 - frac) + m2 * frac).toFixed(2);
-      }
-      const rad = ((globalHours - 4.5) / 12.42) * 2 * Math.PI;
-      return +(1.35 - 0.75 * Math.cos(rad)).toFixed(2);
+      const clampedH = Math.max(0, Math.min(totalHours, globalHours));
+      const utcMs = firstDayMidnightUtcMs + clampedH * 3600000;
+      const val = computeHarmonicHeightAtMs(utcMs, harborProfile);
+      return +Math.min(maxTideMeters, val).toFixed(2);
     };
     const isTideRisingAt = (globalHours) => {
-      return getTideHeightAt(globalHours + 0.25) >= getTideHeightAt(globalHours - 0.25);
+      const utcMs = firstDayMidnightUtcMs + globalHours * 3600000;
+      return computeHarmonicHeightAtMs(utcMs + 6 * 60000, harborProfile) >= computeHarmonicHeightAtMs(utcMs - 6 * 60000, harborProfile);
     };
 
-    // Constrói os polígonos SVG bicolores (Enchendo = #00E5FF | Vazante = #0284C7) ao longo dos dias visíveis
-    const totalHours = visibleDays.length * 24;
-    const stepHours = 0.5; // 1 ponto a cada 30 min
+    // Constrói os polígonos SVG bicolores (Enchendo = #00E5FF | Vazante = #0284C7) e contorno contínuo suave
+    const stepHours = 0.25; // 1 ponto a cada 15 min (curva perfeitamente suave)
     const svgSegments = [];
+    const fullOutlinePts = [];
     let currentSegmentPoints = [];
     let currentRising = isTideRisingAt(0);
 
-    for (let h = 0; h <= totalHours; h += stepHours) {
-      const x = (h / 24) * dayWidthPx;
-      const m = getTideHeightAt(h);
+    for (let h = 0; h <= totalHours + 0.0001; h += stepHours) {
+      const clampedH = Math.min(totalHours, h);
+      const x = (clampedH / 24) * dayWidthPx;
+      const m = getTideHeightAt(clampedH);
       const y = plotHeightPx - (m / maxTideMeters) * plotHeightPx;
-      const rising = isTideRisingAt(h);
+      const rising = isTideRisingAt(clampedH);
 
-      currentSegmentPoints.push({ x, y, m, h });
+      currentSegmentPoints.push({ x, y, m, h: clampedH });
+      fullOutlinePts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
 
-      if (rising !== currentRising || h === totalHours) {
+      if (rising !== currentRising || clampedH >= totalHours) {
         if (currentSegmentPoints.length >= 2) {
           const firstX = currentSegmentPoints[0].x.toFixed(1);
           const lastX = currentSegmentPoints[currentSegmentPoints.length - 1].x.toFixed(1);
@@ -1764,7 +1967,6 @@
           const fillColor = currentRising ? "#00E5FF" : "#0284C7";
           svgSegments.push(`
             <polygon points="${firstX},${plotHeightPx} ${polyPts} ${lastX},${plotHeightPx}" fill="${fillColor}" fill-opacity="0.92" />
-            <polyline points="${polyPts}" fill="none" stroke="#e0f2fe" stroke-width="1.5" />
           `);
         }
         const lastPt = currentSegmentPoints[currentSegmentPoints.length - 1];
@@ -1772,6 +1974,9 @@
         currentRising = rising;
       }
     }
+    svgSegments.push(`
+      <polyline points="${fullOutlinePts.join(" ")}" fill="none" stroke="#e0f2fe" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" />
+    `);
 
     // Posição do marcador vermelho de hora/altura atual (ex: TERÇA 17 às 20:30h -> 1.7 m)
     const markerGlobalHours = state.cursorDayIdx * 24 + state.cursorHourFloat;
@@ -2082,24 +2287,24 @@
               : `
           <!-- MODO 3: VISÃO MENSAL DE COEFICIENTES E FASES DA LUA -->
           <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center">
-              <div class="text-xl mb-1">🌑</div>
+            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center flex flex-col items-center">
+              <div class="mb-1.5">${buildDsySAMoonPhaseSvg(0.0, true, 30)}</div>
               <div class="text-xs font-bold text-white">Lua Nova · Sizígia</div>
               <div class="text-[11px] text-cyan-300 mt-1">Amplitude: 0.2m → 2.3m</div>
             </div>
-            <div class="rounded-xl bg-sky-500/15 border border-sky-400/40 p-3 text-center">
-              <div class="text-xl mb-1">🌓</div>
-              <div class="text-xs font-bold text-sky-300">Lua Crescente (Atual)</div>
+            <div class="rounded-xl bg-sky-500/15 border border-sky-400/40 p-3 text-center flex flex-col items-center">
+              <div class="mb-1.5">${buildDsySAMoonPhaseSvg(0.25, true, 30)}</div>
+              <div class="text-xs font-bold text-sky-300">Quarto Crescente</div>
               <div class="text-[11px] text-slate-200 mt-1">Amplitude: 0.8m → 1.8m</div>
             </div>
-            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center">
-              <div class="text-xl mb-1">🌕</div>
+            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center flex flex-col items-center">
+              <div class="mb-1.5">${buildDsySAMoonPhaseSvg(0.5, true, 30)}</div>
               <div class="text-xs font-bold text-white">Lua Cheia · Maré Viva</div>
               <div class="text-[11px] text-emerald-300 mt-1">Amplitude: 0.1m → 2.4m</div>
             </div>
-            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center">
-              <div class="text-xl mb-1">🌗</div>
-              <div class="text-xs font-bold text-white">Lua Minguante</div>
+            <div class="rounded-xl bg-slate-900/80 border border-white/10 p-3 text-center flex flex-col items-center">
+              <div class="mb-1.5">${buildDsySAMoonPhaseSvg(0.75, true, 30)}</div>
+              <div class="text-xs font-bold text-white">Quarto Minguante</div>
               <div class="text-[11px] text-slate-300 mt-1">Amplitude: 0.7m → 1.7m</div>
             </div>
           </div>
@@ -3480,8 +3685,21 @@
       `;
 
       const scrollEl = containerEl.querySelector(".dsysa-weather-fc-scroll");
-      if (scrollEl && typeof window.enableDsySAHorizontalTouchDrag === "function") {
-        window.enableDsySAHorizontalTouchDrag(scrollEl);
+      if (scrollEl) {
+        if (typeof window.enableDsySAHorizontalTouchDrag === "function") {
+          window.enableDsySAHorizontalTouchDrag(scrollEl);
+        }
+        scrollEl.addEventListener(
+          "wheel",
+          (ev) => {
+            if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
+              ev.preventDefault();
+              scrollEl.scrollLeft += ev.deltaY;
+            }
+          },
+          { passive: false }
+        );
+        registerDsySASyncScroll(scrollEl, state);
       }
 
       const btn = containerEl.querySelector(".dsysa-WeatherFcCollapseBtn");
