@@ -1617,10 +1617,20 @@
       const now = timeline[nowIdx] || timeline[0];
 
       if (now.swell) {
-        spot.swellSize = `${now.swell.totalHeightM.toFixed(1)} m`;
-        spot.swellPeriod = `${now.swell.primary.periodS} s`;
+        const expFactor = Number(spot.swellExposureFactor) > 0 ? Number(spot.swellExposureFactor) : 1.0;
+        const adjTotalH = Number(((now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
+        const adjH1 = Number(((now.swell.primary.heightM || now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
+        const t1 = now.swell.primary.periodS || 9;
+        const adjH2 = Number(((now.swell.secondary?.heightM || 0) * expFactor).toFixed(1));
+        const t2 = now.swell.secondary?.periodS || 0;
+        const energyJ = typeof window.calculateCombinedWaveEnergyJoules === 'function'
+          ? window.calculateCombinedWaveEnergyJoules(adjH1, t1, adjH2, t2)
+          : Math.round(72 * (adjH1 * adjH1 * t1 + adjH2 * adjH2 * t2));
+
+        spot.swellSize = `${adjTotalH.toFixed(1)} m`;
+        spot.swellPeriod = `${t1} s`;
         spot.swellDir = `${now.swell.primary.directionCardinal} ${now.swell.primary.directionDeg}°`;
-        spot.energy = `${Math.round(now.swell.totalHeightM * now.swell.totalHeightM * now.swell.primary.periodS * 28)} kJ`;
+        spot.energy = `${energyJ} J`;
       }
 
       if (now.wind) {

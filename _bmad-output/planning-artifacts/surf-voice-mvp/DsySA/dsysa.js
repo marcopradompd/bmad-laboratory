@@ -411,6 +411,8 @@
     };
     const activeMod = modeMultipliers[state.subTab] || modeMultipliers.total;
 
+    const exposureFactor = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
+    const ENERGY_K = 72;
     const slots = [];
     const hours = ["00h", "06h", "12h", "18h"];
     const bandTypes = ["night", "twilight", "daylight", "twilight"];
@@ -419,39 +421,52 @@
       hours.forEach((hr, hIdx) => {
         const globalIdx = dIdx * 4 + hIdx;
         let rawH, rawP, dirCode, angle, energyKj;
+        let s1H = 0, s1P = 0, s1Dir = baseDir || "SE", s1Deg = 135;
+        let s2H = 0, s2P = 0, s2Dir = "", s2Deg = null;
 
         if (day.points && day.points.length > 0) {
           const targetHourInt = parseInt(hr, 10);
           const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
             day.points[Math.min(day.points.length - 1, hIdx * 6)];
 
+          s1H = Number(((pt.swell.primary.heightM || 0.8) * exposureFactor).toFixed(1));
+          s1P = pt.swell.primary.periodS || 9;
+          s1Dir = pt.swell.primary.directionCardinal || "SE";
+          s1Deg = pt.swell.primary.directionDeg !== null && pt.swell.primary.directionDeg !== undefined ? pt.swell.primary.directionDeg : 135;
+
+          s2H = pt.swell.secondary.heightM ? Number((pt.swell.secondary.heightM * exposureFactor).toFixed(1)) : 0;
+          s2P = pt.swell.secondary.periodS || 0;
+          s2Dir = pt.swell.secondary.directionCardinal || "";
+          s2Deg = pt.swell.secondary.directionDeg !== null && pt.swell.secondary.directionDeg !== undefined ? pt.swell.secondary.directionDeg : null;
+
           if (state.subTab === "swellA") {
-            rawH = pt.swell.primary.heightM || 0.8;
-            rawP = pt.swell.primary.periodS || 9;
-            dirCode = pt.swell.primary.directionCardinal || "SE";
-            angle = pt.swell.primary.directionDeg !== null ? pt.swell.primary.directionDeg : 135;
+            rawH = s1H;
+            rawP = s1P;
+            dirCode = s1Dir;
+            angle = s1Deg;
           } else if (state.subTab === "swellB") {
-            rawH = pt.swell.secondary.heightM || 0.4;
-            rawP = pt.swell.secondary.periodS || 8;
-            dirCode = pt.swell.secondary.directionCardinal || "E";
-            angle = pt.swell.secondary.directionDeg !== null ? pt.swell.secondary.directionDeg : 90;
+            rawH = s2H || Number((0.4 * exposureFactor).toFixed(1));
+            rawP = s2P || 8;
+            dirCode = s2Dir || "E";
+            angle = s2Deg !== null ? s2Deg : 90;
           } else if (state.subTab === "vagas") {
-            rawH = Math.max(0.2, Number(((pt.swell.totalHeightM || 1.0) - ((pt.swell.primary.heightM || 0.7) * 0.75)).toFixed(1)));
-            rawP = Math.max(4, Math.round((pt.swell.primary.periodS || 10) * 0.55));
+            const totalAdj = (pt.swell.totalHeightM || 1.0) * exposureFactor;
+            rawH = Math.max(0.2, Number((totalAdj - s1H * 0.75).toFixed(1)));
+            rawP = Math.max(4, Math.round(s1P * 0.55));
             dirCode = pt.wind.directionCardinal || "E";
             angle = pt.wind.directionDeg !== null ? pt.wind.directionDeg : 90;
           } else {
-            rawH = pt.swell.totalHeightM || 1.1;
-            rawP = pt.swell.primary.periodS || 9;
-            dirCode = pt.swell.primary.directionCardinal || "SE";
-            angle = pt.swell.primary.directionDeg !== null ? pt.swell.primary.directionDeg : 135;
+            rawH = Number(((pt.swell.totalHeightM || 1.1) * exposureFactor).toFixed(1));
+            rawP = s1P;
+            dirCode = s1Dir;
+            angle = s1Deg;
           }
-          energyKj = Math.round(rawH * rawH * rawP * 28);
+          energyKj = Math.round(ENERGY_K * (s1H * s1H * s1P + s2H * s2H * s2P));
         } else {
           const waveEnvelope = Math.sin((globalIdx / 22) * Math.PI) * 0.42 + 0.78;
           rawH = Math.max(
             0.3,
-            Math.min(3.1, +(baseHeight * activeMod.hMult * waveEnvelope + (hIdx % 2 === 0 ? 0.08 : -0.05)).toFixed(1))
+            Math.min(3.4, +((baseHeight * activeMod.hMult * waveEnvelope + (hIdx % 2 === 0 ? 0.08 : -0.05)) * exposureFactor).toFixed(1))
           );
           rawP = Math.max(
             4,
@@ -459,8 +474,17 @@
           );
           dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
           angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300;
-          energyKj = Math.round(rawH * rawH * rawP * 28);
+          s1H = rawH;
+          s1P = rawP;
+          s1Dir = dirCode;
+          s1Deg = angle;
+          energyKj = Math.round(ENERGY_K * rawH * rawH * rawP);
         }
+
+        const degDiff = s2Deg !== null ? Math.abs(((s1Deg - s2Deg + 540) % 360) - 180) : 0;
+        const isCrossSwell = s2H >= 0.3 && degDiff >= 35;
+        const swell1Summary = `${s1H.toFixed(1)}m ${s1P}s ${s1Dir}`;
+        const swell2Summary = s2H >= 0.2 && s2P > 0 ? `${s2H.toFixed(1)}m ${s2P}s ${s2Dir || "E"}` : "";
 
         const now = new Date();
         const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -481,7 +505,10 @@
           color: window.getDsySAPeriodColor(rawP),
           dir: dirCode,
           angle: angle,
-          energy: energyKj
+          energy: energyKj,
+          swell1Summary,
+          swell2Summary,
+          isCrossSwell
         });
       });
     });
@@ -575,7 +602,10 @@
                              data-height="${s.height}m"
                              data-period="${s.period}s"
                              data-dir="${s.dir}"
-                             data-energy="${s.energy} kJ">
+                             data-energy="${s.energy} J"
+                             data-swell1="${s.swell1Summary}"
+                             data-swell2="${s.swell2Summary}"
+                             data-cross="${s.isCrossSwell ? "1" : "0"}">
                           <div class="dsysa-bar-callout callout-wave" style="${calloutPosStyle}">
                             <span class="dsysa-bar-callout-time">${s.displayTime}</span>
                             <span class="dsysa-bar-callout-val wave-val">${s.displayVal}</span>
@@ -708,9 +738,15 @@
         const p = col.getAttribute("data-period");
         const dir = col.getAttribute("data-dir");
         const e = col.getAttribute("data-energy");
+        const s1 = col.getAttribute("data-swell1");
+        const s2 = col.getAttribute("data-swell2");
+        const isCross = col.getAttribute("data-cross") === "1";
         if (readout) {
           readout.classList.remove("hidden");
-          readout.textContent = `${d} (${t}) → Onda: ${m} | Período: ${p} | Direção: ${dir} | Energia: ${e}`;
+          const swellDetail = s2
+            ? `Swell 1: ${s1} · Swell 2: ${s2}${isCross ? " (Cruzado)" : ""}`
+            : `Swell 1: ${s1 || `${m} ${p} ${dir}`}`;
+          readout.textContent = `${d} (${t}) → ${m} | ${swellDetail} | Potência: ${e}`;
         }
         const pNum = parseInt(p, 10);
         containerEl.querySelectorAll("[data-period-cell]").forEach((cell) => {
@@ -1216,6 +1252,8 @@
     const unitFactor = state.unit === "joules" ? 10 : 1; // Exibição em kJ ou J/m² (x10)
     const unitLabel = state.unit === "joules" ? "J/m²" : "kJ";
 
+    const exposureFactor = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
+    const ENERGY_K = 72;
     const slots = [];
     const hours = ["00h", "06h", "12h", "18h"];
     const bandTypes = ["night", "twilight", "daylight", "twilight"];
@@ -1230,28 +1268,36 @@
           const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
             day.points[Math.min(day.points.length - 1, hIdx * 6)];
 
-          let h = pt.swell.totalHeightM || 1.1;
-          let p = pt.swell.primary.periodS || 9;
+          const h1 = (pt.swell.primary.heightM || pt.swell.totalHeightM || 1.0) * exposureFactor;
+          const t1 = pt.swell.primary.periodS || 9;
+          const h2 = (pt.swell.secondary.heightM || 0) * exposureFactor;
+          const t2 = pt.swell.secondary.periodS || 0;
+
           dirCode = pt.swell.primary.directionCardinal || "SE";
           angle = pt.swell.primary.directionDeg !== null && pt.swell.primary.directionDeg !== undefined ? pt.swell.primary.directionDeg : 135;
 
           if (state.subTab === "swellA") {
-            h = pt.swell.primary.heightM || 1.0;
-            p = pt.swell.primary.periodS || 9;
+            rawKj = Math.round(ENERGY_K * h1 * h1 * t1);
+            period = t1;
           } else if (state.subTab === "swellB") {
-            h = pt.swell.secondary.heightM || 0.4;
-            p = pt.swell.secondary.periodS || 8;
+            const hSec = h2 > 0 ? h2 : 0.4 * exposureFactor;
+            const tSec = t2 > 0 ? t2 : 8;
+            rawKj = Math.round(ENERGY_K * hSec * hSec * tSec);
+            period = tSec;
             dirCode = pt.swell.secondary.directionCardinal || "E";
             angle = pt.swell.secondary.directionDeg !== null && pt.swell.secondary.directionDeg !== undefined ? pt.swell.secondary.directionDeg : 90;
           } else if (state.subTab === "vagas") {
-            h = Math.max(0.2, Number((pt.swell.totalHeightM - (pt.swell.primary.heightM * 0.75)).toFixed(1)));
-            p = Math.max(4, Math.round((pt.swell.primary.periodS || 10) * 0.55));
+            const hWind = Math.max(0.2, (pt.swell.totalHeightM || 1.0) * exposureFactor - h1 * 0.75);
+            const tWind = Math.max(4, Math.round(t1 * 0.55));
+            rawKj = Math.round(ENERGY_K * hWind * hWind * tWind);
+            period = tWind;
             dirCode = pt.wind.directionCardinal || "E";
             angle = pt.wind.directionDeg !== null && pt.wind.directionDeg !== undefined ? pt.wind.directionDeg : 90;
+          } else {
+            // Fórmula física combinada: E_joules = k * (H1^2 * T1 + H2^2 * T2)
+            rawKj = Math.round(ENERGY_K * (h1 * h1 * t1 + h2 * h2 * t2));
+            period = t1;
           }
-
-          rawKj = Math.round(h * h * p * 28);
-          period = p;
         } else {
           const envelope = Math.sin((globalIdx / 20) * Math.PI) * 0.55 + 0.72;
           rawKj = Math.max(
@@ -2729,6 +2775,29 @@
       coastlineNote = "No North Shore de Oahu, a bancada de Pipeline olha para NO (315°), recebendo swells de inverno de O-NO e terral de Leste.";
     }
 
+    // Extrai Swell Secundário atual do forecastData (para leitura de cruzamento na bússola)
+    let secondarySwellDeg = null;
+    let secondarySwellLabel = null;
+    let isCrossSwell = false;
+    const timeline = spotConfig?.forecastData?.timeline;
+    if (Array.isArray(timeline) && timeline.length > 0) {
+      const todayIso = getTodayIsoDate();
+      const curHr = new Date().getHours();
+      const nowPt =
+        timeline.find((p) => p.timestamp?.startsWith(todayIso) && parseInt(p.timestamp.slice(11, 13), 10) === curHr) ||
+        timeline[0];
+      const sec = nowPt?.swell?.secondary;
+      const exp = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
+      if (sec && sec.heightM >= 0.2 && sec.directionDeg !== null && sec.directionDeg !== undefined) {
+        secondarySwellDeg = sec.directionDeg;
+        const secH = (sec.heightM * exp).toFixed(1);
+        const secP = sec.periodS ? `${sec.periodS}s` : "";
+        secondarySwellLabel = `${sec.directionCardinal || ""} ${sec.directionDeg}° (${secH}m${secP ? " · " + secP : ""})`.trim();
+        const degDiff = Math.abs(((swellDeg - secondarySwellDeg + 540) % 360) - 180);
+        isCrossSwell = sec.heightM * exp >= 0.3 && degDiff >= 35;
+      }
+    }
+
     return {
       spotName: spotConfig?.name || "Itacimirim (A Espera)",
       region: spotConfig?.region || "Litoral Norte · A 5,8 km de você",
@@ -2736,6 +2805,9 @@
       beachFaceCardinal,
       swellDeg,
       swellLabel: spotConfig?.swellDir || "SE 135°",
+      secondarySwellDeg,
+      secondarySwellLabel,
+      isCrossSwell,
       windDeg,
       windLabel: spotConfig?.windDir || "NO 315°",
       windRelation: spotConfig?.windRelation || "Terral Liso",
@@ -2850,12 +2922,20 @@
           <text x="96" y="209" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(-135 96 205)">SW</text>
           <text x="96" y="98" text-anchor="middle" fill="#bae6fd" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="600" transform="rotate(-45 96 94)">NW</text>
 
-          <!-- Marcador de Direção do Swell (Onda) no anel -->
+          <!-- Marcador de Direção do Swell Primário (S1) no anel -->
           <g transform="rotate(${info.swellDeg} 150 150)">
             <circle cx="150" cy="40" r="7.5" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.3" />
             <polygon points="150,51 146,43 154,43" fill="#38bdf8" />
             <text x="150" y="42.5" text-anchor="middle" fill="#020617" font-family="Inter, sans-serif" font-size="6.5" font-weight="800">🌊</text>
           </g>
+
+          ${info.secondarySwellDeg !== null && info.secondarySwellDeg !== undefined ? `
+          <!-- Marcador de Direção do Swell Secundário (S2) no anel -->
+          <g transform="rotate(${info.secondarySwellDeg} 150 150)">
+            <circle cx="150" cy="54" r="6.5" fill="#6366f1" stroke="#e0e7ff" stroke-width="1.2" />
+            <polygon points="150,64 146.5,57 153.5,57" fill="#818cf8" />
+            <text x="150" y="56.2" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-size="6" font-weight="800">S2</text>
+          </g>` : ""}
 
           <!-- Marcador de Direção do Vento (Terral/Maral) no anel -->
           <g transform="rotate(${info.windDeg} 150 150)">
@@ -3041,8 +3121,16 @@
                   <span>Mar Aberto: <strong>${info.beachFaceCardinal} (${info.beachFaceDeg}°)</strong></span>
                 </span>
                 <span class="dsysa-compass-pill">
-                  <span>🌊 Swell: <strong class="text-sky-300">${info.swellLabel}</strong></span>
+                  <span>🌊 Swell 1: <strong class="text-sky-300">${info.swellLabel}</strong></span>
                 </span>
+                ${info.secondarySwellLabel ? `
+                <span class="dsysa-compass-pill">
+                  <span>🌊 Swell 2: <strong class="text-indigo-300">${info.secondarySwellLabel}</strong></span>
+                </span>` : ""}
+                ${info.isCrossSwell ? `
+                <span class="dsysa-compass-pill" style="border-color: rgba(251, 191, 36, 0.35); background: rgba(245, 158, 11, 0.12);">
+                  <span>⚡ <strong class="text-amber-300">Cruzamento de Swells</strong></span>
+                </span>` : ""}
                 <span class="dsysa-compass-pill">
                   <span>💨 Vento: <strong class="text-emerald-300">${info.windLabel} (${info.windRelation})</strong></span>
                 </span>
