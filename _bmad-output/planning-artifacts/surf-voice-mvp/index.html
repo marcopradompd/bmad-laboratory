@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <title>SurfAgent — Sua consulta de praias mais prática e por voz</title>
-  <meta name="description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta name="description"
+    content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <!-- Mobile Home Screen Shortcut / PWA & Favicon -->
@@ -22,7 +24,8 @@
   <meta property="og:url" content="https://marcoprado.com.br/surfagent/">
   <meta property="og:site_name" content="SurfAgent">
   <meta property="og:title" content="SurfAgent — Sua consulta de praias mais prática e por voz">
-  <meta property="og:description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta property="og:description"
+    content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
   <meta property="og:image" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
   <meta property="og:image:secure_url" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -34,12 +37,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://marcoprado.com.br/surfagent/">
   <meta name="twitter:title" content="SurfAgent — Sua consulta de praias mais prática e por voz">
-  <meta name="twitter:description" content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
+  <meta name="twitter:description"
+    content="Previsão de ondas, vento, maré e telemetria em tempo real. Descubra os 4 picos mais próximos e o melhor mar com inteligência artificial por voz.">
   <meta name="twitter:image" content="https://marcoprado.com.br/surfagent/og-surfagent.jpg">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -48,7 +54,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- DsySA Stylesheet -->
   <link rel="stylesheet" href="./DsySA/dsysa.css">
+  <!-- Catálogo Oficial Verificado de Picos (src/data/spots_catalog.json) -->
+  <script src="./DsySA/spots-catalog-service.js"></script>
 </head>
+
 <body class="min-h-screen antialiased text-white bg-black overflow-x-hidden font-inter">
 
   <!-- =====================================================================
@@ -58,8 +67,10 @@
     <div class="flex lg:px-8 w-full max-w-6xl mx-auto py-4 px-4 items-center justify-between gap-3">
       <!-- Brand Logo -->
       <a href="#top" class="inline-flex items-center gap-3 group min-w-0">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400/20 to-blue-600/20 border border-sky-400/30 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.25)] group-hover:border-sky-400/60 transition-colors shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div
+          class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400/20 to-blue-600/20 border border-sky-400/30 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.25)] group-hover:border-sky-400/60 transition-colors shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sky-400" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
             <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
             <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
@@ -78,29 +89,41 @@
         <!-- Desktop Nav -->
         <div class="hidden lg:flex items-center gap-8">
           <nav class="flex items-center gap-7">
-            <a href="#console" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE & ABAS</a>
-            <a href="#dsysaWavePeriodChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS & ENERGIA</a>
-            <a href="#dsysaWindChartRoot" class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO & MARÉ</a>
+            <a href="#console"
+              class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">CONSOLE &
+              ABAS</a>
+            <a href="#dsysaWavePeriodChartRoot"
+              class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">ONDAS &
+              ENERGIA</a>
+            <a href="#dsysaWindChartRoot"
+              class="text-[11px] font-medium text-white/70 tracking-tight hover:text-white transition-colors">VENTO &
+              MARÉ</a>
           </nav>
 
           <div class="h-5 w-px bg-white/15"></div>
 
           <div class="flex items-center gap-3">
-            <button onclick="refreshSavedTabs()" class="text-[11px] font-semibold text-white tracking-tight bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors px-4 py-2 inline-flex items-center gap-1.5">
+            <button onclick="refreshSavedTabs()"
+              class="text-[11px] font-semibold text-white tracking-tight bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors px-4 py-2 inline-flex items-center gap-1.5">
               <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
               ABAS ATUALIZADAS (<span id="navSyncTime">AGORA</span>)
             </button>
-            <button onclick="toggleVoiceMute()" id="navMuteBtn" class="text-[11px] font-semibold text-black tracking-tight bg-white hover:bg-white/90 transition-colors px-4 py-2">
+            <button onclick="toggleVoiceMute()" id="navMuteBtn"
+              class="text-[11px] font-semibold text-black tracking-tight bg-white hover:bg-white/90 transition-colors px-4 py-2">
               🔊 VOZ IA ATIVA
             </button>
           </div>
         </div>
 
         <!-- Settings Gear Trigger (Primeiro item da direita para a esquerda) -->
-        <button type="button" id="openSettingsDrawerBtn" onclick="openSettingsDrawer()" class="dsysa-settings-trigger" aria-label="Abrir Configurações" title="Configurações do SurfAgent">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <button type="button" id="openSettingsDrawerBtn" onclick="openSettingsDrawer()" class="dsysa-settings-trigger"
+          aria-label="Abrir Configurações" title="Configurações do SurfAgent">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
           </svg>
           <span class="dsysa-settings-active-dot" aria-hidden="true"></span>
         </button>
@@ -117,71 +140,90 @@
       <!-- Hero Copy & Voice Trigger -->
       <div class="text-center max-w-3xl mx-auto relative z-10">
         <!-- Headline (Inter + Playfair Display Italic inline com quebra harmônica) -->
-        <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-semibold text-slate-50 tracking-tight leading-[1.15]" style="text-wrap: balance;">
-          Pergunte por voz e descubra <span class="italic font-normal text-sky-200 font-playfair">o melhor pico</span> para surfar agora.
+        <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-semibold text-slate-50 tracking-tight leading-[1.15]"
+          style="text-wrap: balance;">
+          Pergunte e descubra <span class="italic font-normal text-sky-200 font-playfair">o melhor pico</span> para
+          surfar agora.
         </h1>
 
         <!-- Primary Voice Pill CTA + Link "Como usar o SurfAgent" -->
         <div class="flex flex-col mt-7 gap-3 items-center">
           <div class="flex flex-wrap justify-center gap-4 items-center">
             <!-- Signature Voice Pill CTA ("Pergunte ao SurfAgent") -->
-            <button id="heroMicBtn" data-ai-state="idle" onclick="handleVoiceButtonClick()" class="dsysa-btn-voice-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80">
-              <svg class="voice-mic-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="9" y="2" width="6" height="11" rx="3"/>
-                <path d="M5 10a7 7 0 0 0 14 0"/>
-                <line x1="12" y1="17" x2="12" y2="21"/>
-                <line x1="8" y1="21" x2="16" y2="21"/>
+            <button id="heroMicBtn" data-ai-state="idle" onclick="handleVoiceButtonClick()"
+              class="dsysa-btn-voice-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80">
+              <svg class="voice-mic-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <rect x="9" y="2" width="6" height="11" rx="3" />
+                <path d="M5 10a7 7 0 0 0 14 0" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+                <line x1="8" y1="21" x2="16" y2="21" />
               </svg>
               <span class="voice-status-dot" aria-hidden="true"></span>
-              <span id="heroMicLabel" class="voice-label-text">Fale o nome de uma praia ou pergunte qual é o melhor pico agora.</span>
+              <span id="heroMicLabel" class="voice-label-text">Fale o nome de uma praia ou pergunte qual é o melhor pico
+                agora.</span>
             </button>
 
-            <button onclick="triggerBestSpotFlow()" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all w-full sm:w-auto text-center">
-              🗣️ "QUAL O MELHOR PICO HOJE?"
+            <button onclick="triggerBestSpotFlow()"
+              class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-[11px] font-semibold tracking-tight text-slate-950 shadow-[0_14px_40px_rgba(56,189,248,0.45)] hover:from-sky-300 hover:to-blue-400 transition-all w-full sm:w-auto text-center">
+              🗣️ "Clique e descubra qual é o melhor pico hoje."
             </button>
           </div>
 
           <!-- Hero Text / Query Input Pill (Cópia ampliada e responsiva do campo de consulta) -->
-          <div class="w-full max-w-2xl flex items-center rounded-full bg-slate-950/85 border border-white/15 focus-within:border-sky-400/60 focus-within:ring-2 focus-within:ring-sky-400/20 px-4 py-1.5 min-h-[46px] shadow-[0_12px_36px_rgba(2,6,23,0.55)] backdrop-blur-md transition-all min-w-0">
+          <div
+            class="w-full max-w-2xl flex items-center rounded-full bg-slate-950/85 border border-white/15 focus-within:border-sky-400/60 focus-within:ring-2 focus-within:ring-sky-400/20 px-4 py-1.5 min-h-[46px] shadow-[0_12px_36px_rgba(2,6,23,0.55)] backdrop-blur-md transition-all min-w-0">
             <i data-lucide="sparkles" class="mr-2.5 h-4 w-4 text-sky-300 shrink-0"></i>
-            <input id="heroQueryInput"
-                   type="text"
-                   onkeydown="if(event.key==='Enter') handleConsoleInput('heroQueryInput')"
-                   class="flex-1 min-w-0 bg-transparent text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none py-1"
-                   placeholder="Digite uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
-            <button type="button" onclick="handleConsoleInput('heroQueryInput')" aria-label="Enviar consulta" title="Enviar consulta" class="ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 shadow-[0_6px_18px_rgba(56,189,248,0.4)] transition-all shrink-0">
+            <input id="heroQueryInput" type="text"
+              onkeydown="if(event.key==='Enter') handleConsoleInput('heroQueryInput')"
+              class="flex-1 min-w-0 bg-transparent text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none py-1"
+              placeholder="Digite o nome de uma praia (ex: Saquarema)">
+            <button type="button" onclick="handleConsoleInput('heroQueryInput')" aria-label="Enviar consulta"
+              title="Enviar consulta"
+              class="ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 shadow-[0_6px_18px_rgba(56,189,248,0.4)] transition-all shrink-0">
               <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
             </button>
           </div>
 
-          <a href="#como-usar" onclick="openHowToUseModal(event)" class="text-xs font-medium text-white/95 hover:text-sky-200 underline underline-offset-4 decoration-white/50 hover:decoration-sky-300 transition-colors cursor-pointer" style="text-shadow: 0 1px 10px rgba(2, 12, 27, 0.85);">
+          <a href="#como-usar" onclick="openHowToUseModal(event)"
+            class="text-xs font-medium text-white/95 hover:text-sky-200 underline underline-offset-4 decoration-white/50 hover:decoration-sky-300 transition-colors cursor-pointer"
+            style="text-shadow: 0 1px 10px rgba(2, 12, 27, 0.85);">
             Como usar o SurfAgent
           </a>
         </div>
 
         <!-- CONDITIONAL DIALOG ALERT: "Você deseja saber de acordo com o seu nível de surfe?" -->
-        <div id="levelQuestionAlert" class="hidden mt-6 max-w-2xl mx-auto bg-[#0A0A10]/95 backdrop-blur-xl border border-sky-400/40 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] text-left transition-all">
+        <div id="levelQuestionAlert"
+          class="hidden mt-6 max-w-2xl mx-auto bg-[#0A0A10]/95 backdrop-blur-xl border border-sky-400/40 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] text-left transition-all">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-              <span class="text-[10px] font-semibold text-sky-300 uppercase tracking-[0.18em]">SURFAGENT VOICE AI · TRIAGEM DE CONDIÇÕES</span>
+              <span class="text-[10px] font-semibold text-sky-300 uppercase tracking-[0.18em]">SURFAGENT VOICE AI ·
+                TRIAGEM DE CONDIÇÕES</span>
             </div>
             <span id="levelAlertGpsBadge" class="text-[10px] text-slate-400">📍 Top 4 picos mais próximos</span>
           </div>
           <p class="text-sm font-medium text-white mb-3">
-            "Você gostaria de saber a previsão de acordo com o seu nível? Se sim, clique no botão Falar com o surfeAgent e diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, clique no botão e apenas diga: apenas me traga a praia com as melhores condições."
+            "Você gostaria de saber a previsão de acordo com o seu nível? Se sim, clique no botão Falar com o surfeAgent
+            e diga qual dos níveis é o seu: avançado, intermediário ou iniciante. Caso não, clique no botão e apenas
+            diga: apenas me traga a praia com as melhores condições."
           </p>
           <div class="flex flex-wrap gap-2">
-            <button onclick="applyVoiceIntent('INTENT_NO_LEVEL', true)" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+            <button onclick="applyVoiceIntent('INTENT_NO_LEVEL', true)"
+              class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)]">
               🌊 Melhores Condições (Sem Nível)
             </button>
-            <button onclick="applyVoiceIntent('INTENT_BEGINNER', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+            <button onclick="applyVoiceIntent('INTENT_BEGINNER', true)"
+              class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
               🟢 Iniciante
             </button>
-            <button onclick="applyVoiceIntent('INTENT_INTERMEDIATE', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+            <button onclick="applyVoiceIntent('INTENT_INTERMEDIATE', true)"
+              class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
               🟡 Intermediário
             </button>
-            <button onclick="applyVoiceIntent('INTENT_ADVANCED', true)" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
+            <button onclick="applyVoiceIntent('INTENT_ADVANCED', true)"
+              class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-400/30 text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors">
               🔴 Avançado
             </button>
           </div>
@@ -208,12 +250,14 @@
             </div>
 
             <!-- Fallback Discreto de Geolocalização (quando desativada) -->
-            <div id="geoNoticeBanner" class="hidden items-center justify-between px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200">
+            <div id="geoNoticeBanner"
+              class="hidden items-center justify-between px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200">
               <span class="inline-flex items-center gap-1.5">
                 <span>📍</span>
                 <span id="geoNoticeText">Localização desativada · Usando Salvador como padrão</span>
               </span>
-              <button type="button" onclick="requestUserGeolocation(true)" class="px-2.5 py-0.5 rounded bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 font-semibold text-[10px] transition-colors">
+              <button type="button" onclick="requestUserGeolocation(true)"
+                class="px-2.5 py-0.5 rounded bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 font-semibold text-[10px] transition-colors">
                 Ativar Localização
               </button>
             </div>
@@ -226,7 +270,8 @@
           <div class="space-y-4 p-0 bg-transparent border-0 min-w-0">
 
             <!-- ACTIVE SPOT HEADER + AI INSIGHTS + 4 MANDATORY TELEMETRY CARDS -->
-            <div class="space-y-4 rounded-2xl bg-slate-950/85 p-3 sm:p-4 border border-white/5 min-w-0 max-w-full overflow-hidden">
+            <div
+              class="space-y-4 rounded-2xl bg-slate-950/85 p-3 sm:p-4 border border-white/5 min-w-0 max-w-full overflow-hidden">
               <!-- Active Spot Title & Status -->
               <div class="flex items-start justify-between gap-2 flex-wrap">
                 <div>
@@ -234,7 +279,8 @@
                     <h2 id="spotTitle" class="text-base sm:text-lg font-semibold tracking-tight text-slate-50">
                       Itacimirim (A Espera)
                     </h2>
-                    <span id="spotBestBadge" class="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-300">
+                    <span id="spotBestBadge"
+                      class="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-300">
                       ★ Melhor Agora
                     </span>
                   </div>
@@ -243,15 +289,20 @@
                   </p>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                  <button type="button" id="btnEnrichSpot" onclick="triggerSpotEnrichment(false)" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/35 px-3 py-1 text-[10px] font-semibold text-indigo-200 transition-colors">
+                  <button type="button" id="btnEnrichSpot" onclick="triggerSpotEnrichment(false)"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/35 px-3 py-1 text-[10px] font-semibold text-indigo-200 transition-colors">
                     <span>✨</span>
                     <span id="btnEnrichSpotLabel">Detalhes / Insights da IA</span>
                   </button>
-                  <span id="spotScorePill" class="inline-flex items-center gap-1 rounded-full bg-slate-800/80 border border-white/10 px-3 py-1 text-[10px] font-semibold text-sky-300">
+                  <span id="spotScorePill"
+                    class="inline-flex items-center gap-1 rounded-full bg-slate-800/80 border border-white/10 px-3 py-1 text-[10px] font-semibold text-sky-300">
                     Score 97/100
                   </span>
-                  <button type="button" id="btnShareSpot" onclick="shareActiveSpot()" class="inline-flex items-center gap-1.5 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/35 px-3 py-1 text-[10px] font-semibold text-sky-200 transition-colors" title="Compartilhar link direto deste pico" aria-label="Compartilhar pico">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <button type="button" id="btnShareSpot" onclick="shareActiveSpot()"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/35 px-3 py-1 text-[10px] font-semibold text-sky-200 transition-colors"
+                    title="Compartilhar link direto deste pico" aria-label="Compartilhar pico">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="18" cy="5" r="3"></circle>
                       <circle cx="6" cy="12" r="3"></circle>
                       <circle cx="18" cy="19" r="3"></circle>
@@ -264,7 +315,8 @@
               </div>
 
               <!-- Painel de Insights da IA & Aprendizado Contínuo (Web Grounding) -->
-              <div id="spotAiInsightsPanel" class="hidden rounded-2xl bg-indigo-950/35 border border-indigo-400/25 p-4 space-y-2.5 text-xs">
+              <div id="spotAiInsightsPanel"
+                class="hidden rounded-2xl bg-indigo-950/35 border border-indigo-400/25 p-4 space-y-2.5 text-xs">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                   <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-300">
                     🧠 CONHECIMENTO DO PICO · WEB GROUNDING IA
@@ -282,7 +334,8 @@
             </div>
 
             <!-- DYNAMIC CUSTOMIZABLE HOME MODULES CONTAINER (Ordenado e Filtrado via surfeAgent_userSettings) -->
-            <div id="homeModulesContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-4 min-w-0 max-w-full bg-transparent border-0">
+            <div id="homeModulesContainer"
+              class="grid grid-cols-1 lg:grid-cols-12 gap-4 min-w-0 max-w-full bg-transparent border-0">
 
               <!-- MODULE: acc_wave_height_period -->
               <div data-home-module="acc_wave_height_period" class="lg:col-span-12 min-w-0 max-w-full">
@@ -326,7 +379,8 @@
                         Peso atual: Swell, Vento e Maré
                       </p>
                     </div>
-                    <p id="spotWindTag" class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
+                    <p id="spotWindTag"
+                      class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
                       Terral Liso
                     </p>
                   </div>
@@ -357,7 +411,8 @@
 
               <!-- MODULE: card_voice_assistant -->
               <div data-home-module="card_voice_assistant" class="lg:col-span-6 min-w-0 max-w-full">
-                <div class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-full flex flex-col justify-between gap-4 transition-all">
+                <div
+                  class="dsysa-voice-assistant-card bg-gradient-to-br from-slate-950 via-sky-950/70 to-blue-900/60 rounded-2xl p-4 border border-sky-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] h-full flex flex-col justify-between gap-4 transition-all">
                   <div>
                     <div class="flex items-center justify-between">
                       <div>
@@ -369,25 +424,31 @@
                           Comandos rápidos de voz ou consulta aberta de qualquer praia.
                         </p>
                       </div>
-                      <button onclick="startVoiceRecognition()" class="flex h-7 w-7 items-center justify-center rounded-full bg-sky-400/20 border border-sky-400/40 text-sky-300 hover:bg-sky-400/30" title="Falar por voz">
+                      <button onclick="startVoiceRecognition()"
+                        class="flex h-7 w-7 items-center justify-center rounded-full bg-sky-400/20 border border-sky-400/40 text-sky-300 hover:bg-sky-400/30"
+                        title="Falar por voz">
                         <i data-lucide="mic" class="h-3.5 w-3.5"></i>
                       </button>
                     </div>
 
                     <div class="mt-4 grid gap-2.5 text-[11px] sm:grid-cols-2">
-                      <button onclick="triggerBestSpotFlow()" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                      <button onclick="triggerBestSpotFlow()"
+                        class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
                         <span>Melhor pico hoje (4 próximos)</span>
                         <i data-lucide="radar" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
                       </button>
-                      <button onclick="applyLevelRecommendation('iniciante', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-emerald-400/30 transition-all">
+                      <button onclick="applyLevelRecommendation('iniciante', true)"
+                        class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-emerald-400/30 transition-all">
                         <span>Melhor p/ Nível Iniciante</span>
                         <i data-lucide="shield-check" class="ml-2 h-3.5 w-3.5 text-emerald-300 shrink-0"></i>
                       </button>
-                      <button onclick="applyLevelRecommendation('sem_nivel', true)" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                      <button onclick="applyLevelRecommendation('sem_nivel', true)"
+                        class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
                         <span>Onda boa, formada e forte</span>
                         <i data-lucide="flame" class="ml-2 h-3.5 w-3.5 text-amber-300 shrink-0"></i>
                       </button>
-                      <button onclick="triggerSpecificSpot('Pipeline')" class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
+                      <button onclick="triggerSpecificSpot('Pipeline')"
+                        class="flex items-center justify-between rounded-xl bg-slate-950/60 border border-white/5 px-3 py-2 text-left text-slate-100 hover:bg-slate-900/80 hover:border-sky-400/30 transition-all">
                         <span>Consultar pico: Pipeline</span>
                         <i data-lucide="compass" class="ml-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
                       </button>
@@ -395,13 +456,14 @@
                   </div>
 
                   <!-- Voice / Text Input Pill -->
-                  <div class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5 min-w-0">
+                  <div
+                    class="flex items-center rounded-full bg-slate-950/80 border border-white/10 px-3 py-1.5 min-w-0">
                     <i data-lucide="sparkles" class="mr-2 h-3.5 w-3.5 text-sky-300 shrink-0"></i>
-                    <input id="consoleQueryInput"
-                           onkeydown="if(event.key==='Enter') handleConsoleInput()"
-                           class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
-                           placeholder="Digite uma praia (ex: Saquarema) ou 'Qual o melhor pico hoje?'...">
-                    <button onclick="handleConsoleInput()" class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
+                    <input id="consoleQueryInput" onkeydown="if(event.key==='Enter') handleConsoleInput()"
+                      class="flex-1 min-w-0 bg-transparent text-[11px] text-slate-100 placeholder:text-slate-500 focus:outline-none"
+                      placeholder="Digite o nome da praia praia (ex: Saquarema)">
+                    <button onclick="handleConsoleInput()"
+                      class="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 shrink-0">
                       <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
                     </button>
                   </div>
@@ -420,14 +482,18 @@
   <!-- =====================================================================
        MODAL: COMO USAR O SURFAGENT (Guia Rápido + Clima/Turnos no Background)
        ===================================================================== -->
-  <div id="howToUseModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/75 backdrop-blur-md" onclick="if(event.target === this) closeHowToUseModal()">
-    <div class="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-3xl bg-[#071122]/95 border border-sky-400/30 p-6 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.85)] text-left space-y-5">
+  <div id="howToUseModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+    onclick="if(event.target === this) closeHowToUseModal()">
+    <div
+      class="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-3xl bg-[#071122]/95 border border-sky-400/30 p-6 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.85)] text-left space-y-5">
       <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
         <div>
-          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">GUIA RÁPIDO · VOICE-FIRST SURF AI</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">GUIA RÁPIDO · VOICE-FIRST SURF
+            AI</span>
           <h2 class="text-xl font-semibold text-white mt-1">Como usar o SurfAgent</h2>
         </div>
-        <button type="button" onclick="closeHowToUseModal()" aria-label="Fechar" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-sm font-bold shrink-0">
+        <button type="button" onclick="closeHowToUseModal()" aria-label="Fechar"
+          class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-sm font-bold shrink-0">
           ×
         </button>
       </div>
@@ -437,7 +503,10 @@
         <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
           <h3 class="font-semibold text-sky-300 text-sm mb-1.5">🎙️ 1. Fale com o SurfAgent (Push-to-Talk)</h3>
           <p class="text-slate-300">
-            Toque em <strong>Pergunte ao SurfAgent</strong> para ativar o microfone. Na primeira vez, a IA pergunta se você quer filtrar pelo seu nível (<strong>Iniciante</strong>, <strong>Intermediário</strong> ou <strong>Avançado</strong>) ou buscar a praia com as <strong>melhores condições gerais</strong>. Você também pode ir direto ao ponto dizendo <em>"Sou iniciante, onde está bom hoje?"</em>.
+            Toque em <strong>Pergunte ao SurfAgent</strong> para ativar o microfone. Na primeira vez, a IA pergunta se
+            você quer filtrar pelo seu nível (<strong>Iniciante</strong>, <strong>Intermediário</strong> ou
+            <strong>Avançado</strong>) ou buscar a praia com as <strong>melhores condições gerais</strong>. Você também
+            pode ir direto ao ponto dizendo <em>"Sou iniciante, onde está bom hoje?"</em>.
           </p>
         </div>
 
@@ -445,48 +514,68 @@
         <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
           <h3 class="font-semibold text-emerald-300 text-sm mb-1.5">🌊 2. Pesquise uma ou várias praias de uma vez</h3>
           <p class="text-slate-300">
-            Peça por voz ou digite no campo de busca uma praia específica (<em>"Como está Maresias?"</em>) ou várias juntas (<em>"Quais as previsões de Stella, Jaguaribe e Itacimirim?"</em>). O SurfAgent cria uma aba para cada pico, salva automaticamente no seu dispositivo e mantém os dados sempre atualizados ao reabrir o app.
+            Peça por voz ou digite no campo de busca uma praia específica (<em>"Como está Maresias?"</em>) ou várias
+            juntas (<em>"Quais as previsões de Stella, Jaguaribe e Itacimirim?"</em>). O SurfAgent cria uma aba para
+            cada pico, salva automaticamente no seu dispositivo e mantém os dados sempre atualizados ao reabrir o app.
           </p>
         </div>
 
         <!-- 3. Background Dinâmico: Clima e Turnos -->
         <div class="rounded-2xl bg-sky-950/50 border border-sky-400/25 p-4">
-          <h3 class="font-semibold text-amber-300 text-sm mb-1.5">🌦️ 3. Background Vivo: Clima e Turnos em Tempo Real</h3>
+          <h3 class="font-semibold text-amber-300 text-sm mb-1.5">🌦️ 3. Background Vivo: Clima e Turnos em Tempo Real
+          </h3>
           <p class="text-slate-200">
-            O fundo do aplicativo muda automaticamente conforme o <strong>clima atual</strong> e o <strong>turno (dia ou noite)</strong> no fuso horário local do pico selecionado:
+            O fundo do aplicativo muda automaticamente conforme o <strong>clima atual</strong> e o <strong>turno (dia ou
+              noite)</strong> no fuso horário local do pico selecionado:
           </p>
           <ul class="mt-2 space-y-1 text-xs text-slate-300">
             <li>☀️ <strong>Dia Ensolarado:</strong> Céu azul costeiro vibrante com sol radiante.</li>
-            <li>⛅ <strong>Nublado / Chuvoso:</strong> Tons prata-acinzentados com nuvens em movimento e chuva sutil.</li>
+            <li>⛅ <strong>Nublado / Chuvoso:</strong> Tons prata-acinzentados com nuvens em movimento e chuva sutil.
+            </li>
             <li>⛈️ <strong>Tempestade Elétrica:</strong> Céu carregado com flashes orgânicos de relâmpago.</li>
-            <li>🌙 <strong>Turno da Noite:</strong> Céu noturno estrelado em azul-marinho profundo com brilho lunar.</li>
+            <li>🌙 <strong>Turno da Noite:</strong> Céu noturno estrelado em azul-marinho profundo com brilho lunar.
+            </li>
           </ul>
         </div>
 
         <!-- 4. Gráficos Interativos, Bússola ao Vivo e Insights da IA -->
         <div class="rounded-2xl bg-slate-900/75 border border-white/10 p-4">
-          <h3 class="font-semibold text-indigo-300 text-sm mb-1.5">🧭 4. Gráficos, Bússola ao Vivo &amp; Insights da IA</h3>
+          <h3 class="font-semibold text-indigo-300 text-sm mb-1.5">🧭 4. Gráficos, Bússola ao Vivo &amp; Insights da IA
+          </h3>
           <p class="text-slate-300">
-            Toque nas barras de <strong>Ondas</strong>, <strong>Energia</strong> e <strong>Vento</strong> para ver a hora exata e o valor sobre cada barra. Use o botão <strong>✨ Detalhes / Insights da IA</strong> (ou diga <em>"Me fale mais sobre esse pico"</em>) para pesquisar bancada, fundo e melhor maré, e aproveite a <strong>Bússola ao Vivo</strong> alinhada automaticamente com o Norte real no celular.
+            Toque nas barras de <strong>Ondas</strong>, <strong>Energia</strong> e <strong>Vento</strong> para ver a
+            hora exata e o valor sobre cada barra. Use o botão <strong>✨ Detalhes / Insights da IA</strong> (ou diga
+            <em>"Me fale mais sobre esse pico"</em>) para pesquisar bancada, fundo e melhor maré, e aproveite a
+            <strong>Bússola ao Vivo</strong> alinhada automaticamente com o Norte real no celular.
           </p>
         </div>
 
         <!-- 5. Painel de Configurações (Engrenagem no Topo Direito) -->
         <div class="rounded-2xl bg-emerald-950/35 border border-emerald-400/25 p-4">
-          <h3 class="font-semibold text-emerald-300 text-sm mb-1.5">⚙️ 5. Painel de Configurações &amp; Tela Personalizável</h3>
+          <h3 class="font-semibold text-emerald-300 text-sm mb-1.5">⚙️ 5. Painel de Configurações &amp; Tela
+            Personalizável</h3>
           <p class="text-slate-200">
-            Toque no <strong>ícone de engrenagem (⚙️) no canto superior direito</strong> para abrir o painel de configurações e deixar o SurfAgent do seu jeito (tudo salvo automaticamente no seu dispositivo):
+            Toque no <strong>ícone de engrenagem (⚙️) no canto superior direito</strong> para abrir o painel de
+            configurações e deixar o SurfAgent do seu jeito (tudo salvo automaticamente no seu dispositivo):
           </p>
           <ul class="mt-2 space-y-1 text-xs text-slate-300">
-            <li>📍 <strong>Filtro por Estado e Cidade:</strong> Restrinja as recomendações a um Estado (e, opcionalmente, uma Cidade) ou deixe em <em>"Todos"</em> para buscar no Brasil inteiro. Se pedir o nome de uma praia de outro local, ela continua abrindo normalmente.</li>
-            <li>🏄 <strong>Nível de Surfe Predefinido:</strong> Defina <em>Iniciante</em>, <em>Intermediário</em> ou <em>Avançado</em> para que o agente de voz pule a pergunta de nível e já entregue a previsão filtrada para você — ou deixe em <em>"Todos"</em> para melhores condições gerais.</li>
-            <li>↕️ <strong>Personalização da Home (Arrastar e Soltar):</strong> Escolha quais cards e gráficos ficam visíveis (<strong>Exibir / Ocultar</strong>) e arraste pela alça <strong>⋮⋮</strong> (no mouse ou no dedo) para definir a ordem exata em que aparecem na tela principal.</li>
+            <li>📍 <strong>Filtro por Estado e Cidade:</strong> Restrinja as recomendações a um Estado (e,
+              opcionalmente, uma Cidade) ou deixe em <em>"Todos"</em> para buscar no Brasil inteiro. Se pedir o nome de
+              uma praia de outro local, ela continua abrindo normalmente.</li>
+            <li>🏄 <strong>Nível de Surfe Predefinido:</strong> Defina <em>Iniciante</em>, <em>Intermediário</em> ou
+              <em>Avançado</em> para que o agente de voz pule a pergunta de nível e já entregue a previsão filtrada para
+              você — ou deixe em <em>"Todos"</em> para melhores condições gerais.
+            </li>
+            <li>↕️ <strong>Personalização da Home (Arrastar e Soltar):</strong> Escolha quais cards e gráficos ficam
+              visíveis (<strong>Exibir / Ocultar</strong>) e arraste pela alça <strong>⋮⋮</strong> (no mouse ou no dedo)
+              para definir a ordem exata em que aparecem na tela principal.</li>
           </ul>
         </div>
       </div>
 
       <div class="pt-2 flex justify-end">
-        <button type="button" onclick="closeHowToUseModal()" class="rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-6 py-2.5 text-xs font-semibold text-slate-950 hover:from-sky-300 hover:to-blue-400 transition-all">
+        <button type="button" onclick="closeHowToUseModal()"
+          class="rounded-full bg-gradient-to-r from-sky-400 to-blue-500 px-6 py-2.5 text-xs font-semibold text-slate-950 hover:from-sky-300 hover:to-blue-400 transition-all">
           Entendi, vamos checar o mar!
         </button>
       </div>
@@ -496,18 +585,22 @@
   <!-- =====================================================================
        DRAWER DE CONFIGURAÇÕES (Filtro Geográfico + Nível + Drag-and-Drop Home)
        ===================================================================== -->
-  <div id="settingsDrawerBackdrop" class="dsysa-settings-backdrop" onclick="if(event.target === this) closeSettingsDrawer()" role="dialog" aria-modal="true" aria-labelledby="settingsDrawerTitle">
+  <div id="settingsDrawerBackdrop" class="dsysa-settings-backdrop"
+    onclick="if(event.target === this) closeSettingsDrawer()" role="dialog" aria-modal="true"
+    aria-labelledby="settingsDrawerTitle">
     <aside id="settingsDrawer" class="dsysa-settings-drawer">
       <!-- Drawer Header -->
       <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10 shrink-0">
         <div>
-          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">PERSONALIZAÇÃO · SURFEAGENT</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-400">PERSONALIZAÇÃO ·
+            SURFEAGENT</span>
           <h2 id="settingsDrawerTitle" class="text-base font-semibold text-white mt-0.5 flex items-center gap-2">
             <span>⚙️</span>
             <span>Configurações</span>
           </h2>
         </div>
-        <button type="button" onclick="closeSettingsDrawer()" aria-label="Fechar configurações" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-base font-bold shrink-0">
+        <button type="button" onclick="closeSettingsDrawer()" aria-label="Fechar configurações"
+          class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-slate-200 transition-colors text-base font-bold shrink-0">
           ×
         </button>
       </div>
@@ -522,14 +615,16 @@
               <span>1. Filtro Geográfico</span>
             </h3>
             <p class="text-[11px] text-slate-400 mt-1">
-              Restrinja as recomendações por Estado e Cidade. Pedidos explícitos por nome de outra praia continuam funcionando.
+              Restrinja as recomendações por Estado e Cidade. Pedidos explícitos por nome de outra praia continuam
+              funcionando.
             </p>
           </div>
 
           <div class="space-y-2.5">
             <div>
               <label for="settingsStateSelect" class="block text-[11px] font-medium text-slate-200 mb-1">Estado</label>
-              <select id="settingsStateSelect" class="dsysa-settings-select" onchange="handleSettingsStateChange(this.value)">
+              <select id="settingsStateSelect" class="dsysa-settings-select"
+                onchange="handleSettingsStateChange(this.value)">
                 <option value="Todos">Todos</option>
               </select>
             </div>
@@ -537,7 +632,8 @@
             <!-- Select de Cidade: totalmente oculto quando Estado === "Todos" -->
             <div id="settingsCityGroup" class="hidden">
               <label for="settingsCitySelect" class="block text-[11px] font-medium text-slate-200 mb-1">Cidade</label>
-              <select id="settingsCitySelect" class="dsysa-settings-select" onchange="handleSettingsCityChange(this.value)">
+              <select id="settingsCitySelect" class="dsysa-settings-select"
+                onchange="handleSettingsCityChange(this.value)">
                 <option value="Todas">Todas</option>
               </select>
             </div>
@@ -552,25 +648,31 @@
               <span>2. Nível de Surfe Predefinido</span>
             </h3>
             <p class="text-[11px] text-slate-400 mt-1">
-              Sincronizado com a voz: ao definir um nível, o surfeAgent pula a pergunta de triagem e narra direto para o seu perfil.
+              Sincronizado com a voz: ao definir um nível, o surfeAgent pula a pergunta de triagem e narra direto para o
+              seu perfil.
             </p>
           </div>
 
-          <div id="settingsSkillRadioGroup" class="dsysa-skill-radio-grid" role="radiogroup" aria-label="Nível de surfe predefinido">
+          <div id="settingsSkillRadioGroup" class="dsysa-skill-radio-grid" role="radiogroup"
+            aria-label="Nível de surfe predefinido">
             <label class="dsysa-skill-radio-option" data-skill-option="Todos">
-              <input type="radio" name="settingsSkillLevel" value="Todos" onchange="handleSettingsSkillChange(this.value)">
+              <input type="radio" name="settingsSkillLevel" value="Todos"
+                onchange="handleSettingsSkillChange(this.value)">
               <span>🌊 Todos</span>
             </label>
             <label class="dsysa-skill-radio-option" data-skill-option="Iniciante">
-              <input type="radio" name="settingsSkillLevel" value="Iniciante" onchange="handleSettingsSkillChange(this.value)">
+              <input type="radio" name="settingsSkillLevel" value="Iniciante"
+                onchange="handleSettingsSkillChange(this.value)">
               <span>🟢 Iniciante</span>
             </label>
             <label class="dsysa-skill-radio-option" data-skill-option="Intermediário">
-              <input type="radio" name="settingsSkillLevel" value="Intermediário" onchange="handleSettingsSkillChange(this.value)">
+              <input type="radio" name="settingsSkillLevel" value="Intermediário"
+                onchange="handleSettingsSkillChange(this.value)">
               <span>🟡 Intermediário</span>
             </label>
             <label class="dsysa-skill-radio-option" data-skill-option="Avançado">
-              <input type="radio" name="settingsSkillLevel" value="Avançado" onchange="handleSettingsSkillChange(this.value)">
+              <input type="radio" name="settingsSkillLevel" value="Avançado"
+                onchange="handleSettingsSkillChange(this.value)">
               <span>🔴 Avançado</span>
             </label>
           </div>
@@ -584,7 +686,8 @@
               <span>3. Ordem e Visibilidade da Home</span>
             </h3>
             <p class="text-[11px] text-slate-400 mt-1">
-              Arraste pela alça <strong>⋮⋮</strong> para reordenar os cards e gráficos (mouse ou toque) e escolha <strong>Exibir</strong> ou <strong>Ocultar</strong>.
+              Arraste pela alça <strong>⋮⋮</strong> para reordenar os cards e gráficos (mouse ou toque) e escolha
+              <strong>Exibir</strong> ou <strong>Ocultar</strong>.
             </p>
           </div>
 
@@ -592,18 +695,91 @@
             <!-- Populado dinamicamente por renderSettingsSortableList() -->
           </div>
         </section>
+
+        <!-- SEÇÃO 4: DADOS DE NAVEGAÇÃO (RESETAR PICOS PESQUISADOS) -->
+        <section class="space-y-3 rounded-2xl bg-rose-950/20 border border-rose-500/25 p-4">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-[0.14em] text-rose-300 flex items-center gap-1.5">
+              <span>🧹</span>
+              <span>4. Dados de Navegação</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">
+              Zere os picos pesquisados e salvos no navegador para recomeçar do zero.
+            </p>
+          </div>
+
+          <button type="button" id="btnResetNavigationData" onclick="openResetNavDataModal()"
+            class="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/35 text-xs font-semibold text-rose-200 transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            <span>Resetar dados de navegação</span>
+          </button>
+        </section>
       </div>
 
       <!-- Drawer Footer -->
-      <div class="px-5 py-3.5 border-t border-white/10 bg-slate-950/90 flex items-center justify-between gap-2 shrink-0">
-        <button type="button" onclick="resetUserSettingsToDefault()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 transition-colors">
+      <div
+        class="px-5 py-3.5 border-t border-white/10 bg-slate-950/90 flex items-center justify-between gap-2 shrink-0">
+        <button type="button" onclick="resetUserSettingsToDefault()"
+          class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 transition-colors">
           Restaurar padrão
         </button>
-        <button type="button" onclick="saveAndCloseSettingsDrawer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-[11px] font-semibold text-slate-950 shadow-[0_8px_24px_rgba(56,189,248,0.3)] transition-all">
+        <button type="button" onclick="saveAndCloseSettingsDrawer()"
+          class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-[11px] font-semibold text-slate-950 shadow-[0_8px_24px_rgba(56,189,248,0.3)] transition-all">
           Salvar Configurações
         </button>
       </div>
     </aside>
+  </div>
+
+  <!-- =====================================================================
+       MODAL DSYSA: CONFIRMAÇÃO DE RESET DOS DADOS DE NAVEGAÇÃO
+       ===================================================================== -->
+  <div id="resetNavDataModal" class="hidden fixed inset-0 z-[95] items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+    onclick="if(event.target === this) closeResetNavDataModal()" role="alertdialog" aria-modal="true"
+    aria-labelledby="resetNavDataTitle" aria-describedby="resetNavDataDesc">
+    <div class="relative w-full max-w-md rounded-3xl bg-[#071122]/98 border border-rose-400/35 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.08)] space-y-5">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-rose-500/15 border border-rose-400/35 text-rose-300">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-300">LIMPAR DADOS · SURFEAGENT</span>
+          <h3 id="resetNavDataTitle" class="text-base font-semibold text-white mt-0.5">
+            Resetar dados de navegação
+          </h3>
+        </div>
+      </div>
+
+      <div id="resetNavDataDesc" class="space-y-3 text-xs sm:text-sm text-slate-200 leading-relaxed">
+        <p>
+          Ao optar por limpar os dados de navegação todos os picos salvos serão apagados e só serão recuperados diante de uma nova consulta.
+        </p>
+        <p class="font-semibold text-white">
+          Deseja prosseguir?
+        </p>
+      </div>
+
+      <div class="flex items-center justify-end gap-2.5 pt-1">
+        <button type="button" onclick="closeResetNavDataModal()"
+          class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-slate-200 transition-colors">
+          Não
+        </button>
+        <button type="button" onclick="confirmResetNavigationData()"
+          class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-xs font-semibold text-white shadow-[0_10px_28px_rgba(244,63,94,0.35)] transition-all">
+          Sim
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Open-Meteo Surf & Marine Ingestion Service -->
@@ -1005,25 +1181,39 @@
     function persistGlobalSpotsLocal() {
       try {
         localStorage.setItem(SHARED_SPOTS_CACHE_KEY, JSON.stringify(SPOTS_DATABASE));
-      } catch (e) {}
+      } catch (e) { }
     }
 
     async function syncGlobalSpotsFromBackend() {
-      // 1. Mescla cache colaborativo local (se houver picos recém-descobertos)
+      // 0. Fonte Única Verificada: Catálogo Oficial (src/data/spots_catalog.json — 14 picos da Bahia)
+      if (window.SpotsCatalogService && typeof window.SpotsCatalogService.loadOfficialCatalog === 'function') {
+        const officialSpots = await window.SpotsCatalogService.loadOfficialCatalog('./src/data/spots_catalog.json');
+        if (Array.isArray(officialSpots) && officialSpots.length > 0) {
+          const legacyBaIds = new Set(['itacimirim', 'stella_maris', 'guarajuba', 'pedra_do_sal', 'barravento', 'praia_do_forte']);
+          const otherRegions = SPOTS_DATABASE.filter(s => s && !legacyBaIds.has(s.id) && String(s.state || '').toUpperCase() !== 'BA' && !String(s.baseRegion || '').includes(', BA'));
+          SPOTS_DATABASE.length = 0;
+          officialSpots.forEach(s => SPOTS_DATABASE.push(normalizeSpotSchema(s)));
+          otherRegions.forEach(s => SPOTS_DATABASE.push(normalizeSpotSchema(s)));
+        }
+      }
+
+      // 1. Mescla cache colaborativo local apenas para picos fora do catálogo oficial
       try {
         const localRaw = localStorage.getItem(SHARED_SPOTS_CACHE_KEY);
         if (localRaw) {
           const localList = JSON.parse(localRaw);
           if (Array.isArray(localList)) {
             localList.forEach(s => {
+              if (!s) return;
+              // Nunca sobrescreve um pico oficial verificado com cache antigo
+              if (window.SpotsCatalogService && window.SpotsCatalogService.findVerifiedSpot(s.id || s.name)) return;
               const normS = normalizeSpotSchema(s);
               const idx = SPOTS_DATABASE.findIndex(x => x.id === normS.id);
-              if (idx >= 0) SPOTS_DATABASE[idx] = { ...SPOTS_DATABASE[idx], ...normS };
-              else SPOTS_DATABASE.push(normS);
+              if (idx < 0) SPOTS_DATABASE.push(normS);
             });
           }
         }
-      } catch (e) {}
+      } catch (e) { }
 
       // 2. Sincroniza com a API global compartilhada GET /api/spots (quando rodando via servidor)
       if (window.location.protocol.startsWith('http')) {
@@ -1035,13 +1225,19 @@
               payload.spots.forEach(s => {
                 const normS = normalizeSpotSchema(s);
                 const idx = SPOTS_DATABASE.findIndex(x => x.id === normS.id);
-                if (idx >= 0) SPOTS_DATABASE[idx] = { ...SPOTS_DATABASE[idx], ...normS };
-                else SPOTS_DATABASE.push(normS);
+                if (idx >= 0) {
+                  // Preserva metadados verificados do catálogo oficial
+                  if (!SPOTS_DATABASE[idx].verifiedCatalog || normS.verifiedCatalog) {
+                    SPOTS_DATABASE[idx] = { ...SPOTS_DATABASE[idx], ...normS };
+                  }
+                } else {
+                  SPOTS_DATABASE.push(normS);
+                }
               });
               persistGlobalSpotsLocal();
             }
           }
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Garante schema completo em todos os itens
@@ -1065,8 +1261,8 @@
       const dLat = (lat2 - lat1) * Math.PI / 180;
       const dLon = (lon2 - lon1) * Math.PI / 180;
       const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     }
@@ -1135,7 +1331,7 @@
           appState.hasGeo = true;
           hideGeoFallback();
           console.log(`📍 [GPS Ativo] Localização: ${userCoords.lat.toFixed(4)}, ${userCoords.lon.toFixed(4)}`);
-          
+
           const nearest4 = getNearest4Spots(userCoords.lat, userCoords.lon);
           setupInitialSpots(nearest4, true);
         },
@@ -1237,8 +1433,8 @@
         // 2. Vento: Direção e Intensidade (30%)
         let wSpeedPenalty = 1.0;
         const maxKts = intent.includes('BEGINNER') || intent === 'iniciante' ? 10 :
-                       intent.includes('INTERMEDIATE') || intent === 'intermediario' ? 12 :
-                       intent.includes('ADVANCED') || intent === 'avancado' ? 14 : 8;
+          intent.includes('INTERMEDIATE') || intent === 'intermediario' ? 12 :
+            intent.includes('ADVANCED') || intent === 'avancado' ? 14 : 8;
 
         if (rawWk <= 4.0) {
           wSpeedPenalty = 1.0; // Vidro total
@@ -1274,7 +1470,7 @@
         // 4. Tipo de Fundo e Compatibilidade com Maré (15%)
         let tideMatchScore = 70;
         const currentTideState = (spot.tidePhase || '').toLowerCase().includes('enchen') ? 'MID' :
-                                 (spot.tidePhase || '').toLowerCase().includes('vazan') || (spot.tidePhase || '').toLowerCase().includes('seca') ? 'LOW' : 'MID';
+          (spot.tidePhase || '').toLowerCase().includes('vazan') || (spot.tidePhase || '').toLowerCase().includes('seca') ? 'LOW' : 'MID';
 
         if (spot.bestTide === 'ALL' || spot.bestTide === currentTideState) {
           tideMatchScore = 100;
@@ -1549,7 +1745,7 @@
       return { intent: 'INTENT_NO_LEVEL' };
     }
 
-    function applyVoiceIntent(intent, shouldSpeak = true) {
+    async function applyVoiceIntent(intent, shouldSpeak = true) {
       const alertBox = document.getElementById('levelQuestionAlert');
       if (alertBox) alertBox.classList.add('hidden');
       voiceState = 'IDLE';
@@ -1568,7 +1764,8 @@
         }
       }
 
-      setVoiceButtonState('processing', 'Ranqueando picos...');
+      setVoiceButtonState('processing', 'Sincronizando previsão real dos picos...');
+      await Promise.all(candidates.map(s => loadSpotForecast(s)));
       rankSpotsForSurfer(candidates, intent, shouldSpeak);
       if (!shouldSpeak) {
         setVoiceButtonState('success');
@@ -1695,31 +1892,43 @@
       spotObj.isBest = false;
       spotObj.isSpecific = true;
       spotObj.displayScore = spotObj.displayScore || 90;
-      spotObj.activeSpeech = result && result.isNew
-        ? `Descobri e cadastrei ${spotObj.name} na base global do surfeAgent! ${spotObj.localNotes} Condições atuais estimadas: ${spotObj.swellSize} com ${spotObj.swellPeriod} de período e vento ${spotObj.windRelation}.`
-        : `Condições atuais em ${spotObj.name}: ondulação de ${spotObj.swellSize} com ${spotObj.swellPeriod} de período (${spotObj.swellDir}), energia de ${spotObj.energy}, vento ${spotObj.windSpeed} (${spotObj.windRelation}), maré ${(spotObj.tidePhase || 'enchendo').split('(')[0].trim()} e água a ${spotObj.waterTemp}.`;
 
       const filterBadge = document.getElementById('activeFilterBadge');
-      if (filterBadge) filterBadge.textContent = `Consulta Direta de Pico${discoveredTag}`;
+      if (filterBadge) filterBadge.textContent = spotObj.verifiedCatalog ? '✓ Ficha Oficial · Catálogo BA' : `Consulta Direta de Pico${discoveredTag}`;
 
       // Adiciona como nova aba caso não exista (sem duplicar); se já existir, ativa a existente
+      let activeTabSpot;
       const idx = appState.tabs.findIndex(t => t.id === spotObj.id || t.name.toLowerCase() === spotObj.name.toLowerCase());
       if (idx >= 0) {
         appState.tabs[idx] = { ...appState.tabs[idx], ...spotObj };
-        appState.activeTabId = appState.tabs[idx].id;
+        activeTabSpot = appState.tabs[idx];
+        appState.activeTabId = activeTabSpot.id;
       } else {
         appState.tabs.push(spotObj);
+        activeTabSpot = spotObj;
         appState.activeTabId = spotObj.id;
       }
 
       saveAppState();
       updateSyncTime();
       renderTabsBar();
-      renderActiveSpot();
-      if (result && result.isNew) {
-        renderSpotInsightsPanel(spotObj, true);
-      }
-      speakText(spotObj.activeSpeech);
+      renderSpotTelemetryAndCharts(activeTabSpot);
+      renderSpotInsightsPanel(activeTabSpot, Boolean(activeTabSpot.verifiedCatalog || (result && result.isNew)));
+
+      // Fonte única de verdade: carrega a previsão real NOAA WW3 + GFS ANTES de narrar
+      await loadSpotForecast(activeTabSpot);
+
+      const verifiedDesc = activeTabSpot.verifiedCatalog && window.SpotsCatalogService && typeof window.SpotsCatalogService.buildVerifiedSpotDescription === 'function'
+        ? window.SpotsCatalogService.buildVerifiedSpotDescription(activeTabSpot)
+        : '';
+
+      activeTabSpot.activeSpeech = verifiedDesc
+        ? `${verifiedDesc} Condições agora: ${activeTabSpot.swellSize} com ${activeTabSpot.swellPeriod} de período (${activeTabSpot.swellDir}), energia de ${activeTabSpot.energy}, vento ${activeTabSpot.windSpeed} (${activeTabSpot.windRelation}) e maré ${(activeTabSpot.tidePhase || 'em variação').split('(')[0].trim()}.`
+        : result && result.isNew
+          ? `Descobri e cadastrei ${activeTabSpot.name} na base global do surfeAgent! ${activeTabSpot.localNotes} Condições atuais: ${activeTabSpot.swellSize} com ${activeTabSpot.swellPeriod} de período (${activeTabSpot.swellDir}) e vento ${activeTabSpot.windSpeed} (${activeTabSpot.windRelation}).`
+          : `Condições atuais em ${activeTabSpot.name}: ondulação de ${activeTabSpot.swellSize} com ${activeTabSpot.swellPeriod} de período (${activeTabSpot.swellDir}), energia de ${activeTabSpot.energy}, vento ${activeTabSpot.windSpeed} (${activeTabSpot.windRelation}), maré ${(activeTabSpot.tidePhase || 'enchendo').split('(')[0].trim()} e água a ${activeTabSpot.waterTemp}.`;
+
+      speakText(activeTabSpot.activeSpeech);
     }
 
     function renderSpotInsightsPanel(spot, forceOpen = false) {
@@ -1731,23 +1940,37 @@
 
       if (forceOpen) panel.classList.remove('hidden');
 
-      const bottomPt = spot.bottomType === 'reef' ? '🪨 Fundo: Reef / Coral' : spot.bottomType === 'point' ? '🏔️ Fundo: Point Break' : '🏖️ Fundo: Areia (Sand)';
-      const tidePt = `🌊 Melhor Maré: ${spot.bestTide || 'MID'}`;
-      const swellPt = spot.idealSwellDir ? `🧭 Swell Ideal: ${spot.idealSwellDir[0]}°–${spot.idealSwellDir[1]}°` : '';
+      const bottomPt = spot.bottomTypeLabel
+        ? `🪨 Fundo: ${spot.bottomTypeLabel}`
+        : (spot.bottomType === 'reef' ? '🪨 Fundo: Reef / Coral' : spot.bottomType === 'point' ? '🏔️ Fundo: Point Break' : '🏖️ Fundo: Areia (Sand)');
+      const tidePt = `🌊 Maré Ideal: ${spot.idealTide || spot.bestTide || 'Meia-maré'}`;
+      const swellPt = spot.idealSwellDirection
+        ? `🧭 Swell Ideal: ${spot.idealSwellDirection}`
+        : (spot.idealSwellDir ? `🧭 Swell Ideal: ${spot.idealSwellDir[0]}°–${spot.idealSwellDir[1]}°` : '');
       const offDir = spot.offshoreWindDir || spot.offshoreWindDeg;
-      const windPt = offDir ? `💨 Terral: ${offDir[0]}°–${offDir[1]}°` : '';
-      const levelsPt = Array.isArray(spot.skillLevelFit) ? `🏄 Níveis: ${spot.skillLevelFit.join(', ')}` : '';
-      const popPt = `🔥 Popularidade: ${spot.searchCount || 1} buscas`;
+      const windPt = spot.idealWindDirection
+        ? `💨 Vento Ideal: ${spot.idealWindDirection}`
+        : (offDir ? `💨 Terral: ${offDir[0]}°–${offDir[1]}°` : '');
+      const levelsPt = Array.isArray(spot.skillLevels) && spot.skillLevels.length > 0
+        ? `🏄 Níveis: ${spot.skillLevels.join(', ')}`
+        : (Array.isArray(spot.skillLevelFit) ? `🏄 Níveis: ${spot.skillLevelFit.join(', ')}` : '');
+      const hazardPt = spot.hazards ? `⚠️ Atenção: ${spot.hazards}` : '';
 
       if (notesEl) {
-        notesEl.textContent = spot.localNotes || 'Clique em "Detalhes / Insights da IA" para pesquisar dados técnicos atualizados deste pico na web.';
+        notesEl.textContent = spot.waveCharacteristics
+          ? `${spot.waveCharacteristics}. ${spot.hazards ? `Cuidados: ${spot.hazards}.` : ''}`
+          : (spot.localNotes || 'Ficha técnica verificada do pico.');
       }
-      if (metaEl && spot.lastEnrichedAt) {
-        const dt = new Date(spot.lastEnrichedAt);
-        metaEl.textContent = `Web Grounding · ${dt.toLocaleDateString('pt-BR')} às ${dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      if (metaEl) {
+        if (spot.verifiedCatalog) {
+          metaEl.textContent = `✓ Catálogo Oficial Verificado · ${spot.city || ''}/${spot.state || 'BA'} (${Number(spot.lat).toFixed(4)}, ${Number(spot.lon).toFixed(4)})`;
+        } else if (spot.lastEnrichedAt) {
+          const dt = new Date(spot.lastEnrichedAt);
+          metaEl.textContent = `Web Grounding · ${dt.toLocaleDateString('pt-BR')} às ${dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+        }
       }
       if (badgesEl) {
-        badgesEl.innerHTML = [bottomPt, tidePt, swellPt, windPt, levelsPt, popPt]
+        badgesEl.innerHTML = [bottomPt, tidePt, swellPt, windPt, levelsPt, hazardPt]
           .filter(Boolean)
           .map(txt => `<span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-200">${txt}</span>`)
           .join('');
@@ -1757,6 +1980,25 @@
     async function triggerSpotEnrichment(shouldSpeak = false) {
       const spot = appState.tabs.find(t => t.id === appState.activeTabId) || appState.tabs[0];
       if (!spot) return;
+
+      // Se o pico pertence ao Catálogo Oficial Verificado (Salvador / Litoral Norte BA),
+      // usa diretamente a ficha técnica do JSON sem sobrescrever com scraping externo
+      const verified = window.SpotsCatalogService
+        ? window.SpotsCatalogService.findVerifiedSpot(spot.id || spot.name) || window.SpotsCatalogService.findVerifiedSpot(spot.name)
+        : null;
+      if (verified) {
+        const merged = normalizeSpotSchema({ ...spot, ...verified });
+        const tabIdx = appState.tabs.findIndex(t => t.id === spot.id);
+        if (tabIdx >= 0) appState.tabs[tabIdx] = merged;
+        renderSpotInsightsPanel(merged, true);
+        const desc = window.SpotsCatalogService.buildVerifiedSpotDescription(merged);
+        if (shouldSpeak) {
+          speakText(desc);
+        } else {
+          setVoiceButtonState('success', 'Ficha oficial carregada!');
+        }
+        return;
+      }
 
       const btnLabel = document.getElementById('btnEnrichSpotLabel');
       if (btnLabel) btnLabel.textContent = 'Pesquisando na web...';
@@ -1910,6 +2152,29 @@
           const filterBadge = document.getElementById('activeFilterBadge');
           if (filterBadge) filterBadge.textContent = '🛡️ Escopo Exclusivo de Surfe';
           speakText(scopeCheck.refusal, null, false);
+          return;
+        }
+      }
+
+      // 0B. Consulta geral sobre "praias de Salvador" -> responde diretamente com o catálogo oficial JSON
+      const normRaw = String(rawInput || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (
+        window.SpotsCatalogService &&
+        /\b(praias|picos|ondas)\b/.test(normRaw) &&
+        /\bsalvador\b/.test(normRaw) &&
+        !window.SpotsCatalogService.findVerifiedSpot(rawInput)
+      ) {
+        const ssaSpots = window.SpotsCatalogService.getSpotsByCity('Salvador');
+        if (ssaSpots.length > 0) {
+          appState.tabs = ssaSpots.map((s, idx) => normalizeSpotSchema({ ...s, isBest: idx === 0, isSpecific: false }));
+          appState.activeTabId = appState.tabs[0].id;
+          saveAppState();
+          updateSyncTime();
+          renderTabsBar();
+          renderActiveSpot();
+          renderSpotInsightsPanel(appState.tabs[0], true);
+          appState.tabs.forEach(s => loadSpotForecast(s));
+          speakText(window.SpotsCatalogService.buildSalvadorBeachesOverview());
           return;
         }
       }
@@ -2089,10 +2354,14 @@
       }
 
       try {
-        console.log(`🌊 [Open-Meteo] Buscando previsão atualizada para ${spot.name} (${spot.lat}, ${spot.lon})...`);
+        const exactLat = Number(spot.coords?.lat ?? spot.lat);
+        const exactLon = Number(spot.coords?.lon ?? spot.lon);
+        const spotProfile = spot.spotProfile || 'exposed_beach';
+        console.log(`🌊 [Open-Meteo · Perfil ${spotProfile}] Buscando previsão direta para ${spot.name} (${exactLat}, ${exactLon})...`);
         const data = await window.fetchSurfForecast({
-          lat: spot.lat,
-          lon: spot.lon,
+          lat: exactLat,
+          lon: exactLon,
+          spotProfile,
           timezone: 'auto',
           forecastDays: 15
         });
@@ -2110,38 +2379,38 @@
     function updateSpotMetricsFromForecast(spot) {
       if (!spot.forecastData || !spot.forecastData.timeline || spot.forecastData.timeline.length === 0) return;
       const timeline = spot.forecastData.timeline;
-      
+
       const todayIso = new Date().toLocaleDateString('en-CA');
       const currentHourInt = new Date().getHours();
       let nowIdx = timeline.findIndex(p => p.timestamp.startsWith(todayIso) && parseInt(p.timestamp.slice(11, 13), 10) === currentHourInt);
       if (nowIdx < 0) nowIdx = 0;
       const now = timeline[nowIdx] || timeline[0];
+      spot.nowForecastPoint = now;
 
       if (now.swell) {
-        const expFactor = Number(spot.swellExposureFactor) > 0 ? Number(spot.swellExposureFactor) : 1.0;
-        const adjTotalH = Number(((now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
-        const adjH1 = Number(((now.swell.primary.heightM || now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
-        const t1 = now.swell.primary.periodS || 9;
-        const adjH2 = Number(((now.swell.secondary?.heightM || 0) * expFactor).toFixed(1));
-        const t2 = now.swell.secondary?.periodS || 0;
-        const energyJ = typeof window.calculateCombinedWaveEnergyJoules === 'function'
-          ? window.calculateCombinedWaveEnergyJoules(adjH1, t1, adjH2, t2)
-          : Math.round(72 * (adjH1 * adjH1 * t1 + adjH2 * adjH2 * t2));
+        // Perfil Costeiro Determinístico (displayWaveHeight + swell_wave_period/direction + energia da bancada)
+        const displayH = now.swell.displayHeightM ?? now.swell.totalHeightM ?? now.swell.primary?.heightM ?? 0;
+        const totalWaveH = now.swell.totalHeightM ?? displayH;
+        const periodS = now.swell.displayPeriodS ?? now.swell.primary?.periodS ?? now.swell.wavePeriodS ?? 8;
+        const dirDeg = now.swell.displayDirectionDeg ?? now.swell.primary?.directionDeg ?? now.swell.waveDirectionDeg ?? 135;
+        const dirCard = now.swell.displayDirectionCardinal || now.swell.primary?.directionCardinal || now.swell.waveDirectionCardinal || 'SE';
+        const energyJm2 = now.swell.energyJoulesM2 ?? Math.round(1257 * Math.pow(displayH, 2));
 
-        spot.swellSize = `${adjTotalH.toFixed(1)} m`;
-        spot.swellPeriod = `${t1} s`;
-        spot.swellDir = `${now.swell.primary.directionCardinal} ${now.swell.primary.directionDeg}°`;
-        spot.energy = `${energyJ} J`;
+        spot.swellSize = `${Number(displayH).toFixed(1)} m`;
+        spot.totalSeaHeightM = Number(totalWaveH);
+        spot.swellPeriod = `${Math.round(Number(periodS))} s`;
+        spot.swellDir = `${dirCard} ${dirDeg}°`;
+        spot.energy = `${energyJm2} J/m²`;
       }
 
       if (now.wind) {
-        const kmh = Math.round((now.wind.speedKnots || 5) * 1.852);
-        spot.windSpeed = `${kmh} km/h`;
-        spot.windSpeedKnots = now.wind.speedKnots;
-        spot.windDir = `${now.wind.directionCardinal} ${now.wind.directionDeg}°`;
-        spot.windDirDeg = now.wind.directionDeg;
+        const knots = now.wind.speedKnots !== null && now.wind.speedKnots !== undefined ? Math.round(now.wind.speedKnots) : 5;
+        spot.windSpeed = `${knots} nós`;
+        spot.windSpeedKnots = knots;
+        spot.windDir = `${now.wind.directionCardinal || 'E'} ${now.wind.directionDeg ?? 90}°`;
+        spot.windDirDeg = now.wind.directionDeg ?? 90;
 
-        const align = getWindAlignment(now.wind.directionDeg, spot.offshoreWindDeg);
+        const align = getWindAlignment(spot.windDirDeg, spot.offshoreWindDeg);
         spot.windRelation = align.relation;
       }
 
@@ -2377,7 +2646,7 @@
         try {
           await navigator.clipboard.writeText(text);
           return true;
-        } catch (_) {}
+        } catch (_) { }
       }
       try {
         const ta = document.createElement('textarea');
@@ -2549,7 +2818,7 @@
         if (window.history && typeof window.history.replaceState === 'function') {
           window.history.replaceState({}, '', window.location.pathname);
         }
-      } catch (_) {}
+      } catch (_) { }
     }
 
     async function applySharedSpotFromUrl(isFirstAccessIsolated = false) {
@@ -2563,10 +2832,10 @@
       // Caso 1: Verifica se já existe nas abas salvas do usuário (sem duplicar)
       let match = !isFirstAccessIsolated
         ? (appState.tabs || []).find(t =>
-            (sharedId && t.id === sharedId) ||
-            (targetIdNorm && norm(t.id) === targetIdNorm) ||
-            (targetNameNorm && norm(t.name) === targetNameNorm)
-          )
+          (sharedId && t.id === sharedId) ||
+          (targetIdNorm && norm(t.id) === targetIdNorm) ||
+          (targetNameNorm && norm(t.name) === targetNameNorm)
+        )
         : null;
 
       // Procura na base global SPOTS_DATABASE
@@ -2603,7 +2872,7 @@
                 appState.tabs.unshift(match);
               }
             }
-          } catch (_) {}
+          } catch (_) { }
         }
       }
 
@@ -2652,8 +2921,15 @@
           const parsed = JSON.parse(saved);
           if (parsed.tabs && parsed.tabs.length > 0) {
             appState = parsed;
-            // Atualiza cada aba salva com os metadados globais mais recentes (ex: localNotes enriquecidas)
+            // Atualiza cada aba salva com o Catálogo Oficial Verificado (coordenadas reais e ficha técnica sem alucinações)
             appState.tabs = appState.tabs.map(t => {
+              const verified = window.SpotsCatalogService
+                ? window.SpotsCatalogService.findVerifiedSpot(t.id || t.name) || window.SpotsCatalogService.findVerifiedSpot(t.name)
+                : null;
+              if (verified) {
+                if (appState.activeTabId === t.id) appState.activeTabId = verified.id;
+                return normalizeSpotSchema({ ...verified, isBest: t.isBest, isSpecific: t.isSpecific });
+              }
               const latest = SPOTS_DATABASE.find(s => s.id === t.id);
               return normalizeSpotSchema(latest ? { ...latest, ...t, localNotes: latest.localNotes, lastEnrichedAt: latest.lastEnrichedAt, searchCount: latest.searchCount } : t);
             });
@@ -2749,6 +3025,65 @@
       if (backdrop) {
         backdrop.classList.remove('open');
         document.body.style.overflow = '';
+      }
+    }
+
+    function openResetNavDataModal() {
+      const modal = document.getElementById('resetNavDataModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeResetNavDataModal() {
+      const modal = document.getElementById('resetNavDataModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function confirmResetNavigationData() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(SHARED_SPOTS_CACHE_KEY);
+        localStorage.removeItem(ONBOARDING_KEY);
+        for (let k = localStorage.length - 1; k >= 0; k--) {
+          const key = localStorage.key(k);
+          if (key && key.startsWith('dsysa_cache_')) {
+            localStorage.removeItem(key);
+          }
+        }
+      } catch (_) {}
+
+      spotForecastCache.clear();
+      appState = {
+        tabs: [],
+        activeTabId: null,
+        currentMode: 'INTENT_NO_LEVEL',
+        hasGeo: false
+      };
+
+      closeResetNavDataModal();
+      closeSettingsDrawer();
+
+      // Re-hidrata o catálogo oficial limpo e mantém APENAS o melhor pico do dia nas tabs
+      await syncGlobalSpotsFromBackend();
+      const candidates = userCoords
+        ? getNearest4Spots(userCoords.lat, userCoords.lon)
+        : getDefault4Spots();
+      if (candidates.length > 0) {
+        rankSpotsForSurfer(candidates, getConfiguredSkillIntent(), false);
+        const bestSpot = appState.tabs.find(t => t.isBest) || appState.tabs[0];
+        if (bestSpot) {
+          appState.tabs = [{ ...bestSpot, isBest: true }];
+          appState.activeTabId = bestSpot.id;
+          saveAppState();
+          updateSyncTime();
+          renderTabsBar();
+          renderActiveSpot();
+        }
       }
     }
 
@@ -2932,7 +3267,7 @@
           activePointerId = ev.pointerId;
           item.classList.add('is-dragging');
           if (handle.setPointerCapture) {
-            try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+            try { handle.setPointerCapture(ev.pointerId); } catch (e) { }
           }
         });
 
@@ -2960,7 +3295,7 @@
           if (!draggingItem || ev.pointerId !== activePointerId) return;
           draggingItem.classList.remove('is-dragging');
           if (handle.releasePointerCapture) {
-            try { handle.releasePointerCapture(ev.pointerId); } catch (e) {}
+            try { handle.releasePointerCapture(ev.pointerId); } catch (e) { }
           }
           draggingItem = null;
           activePointerId = null;
@@ -3008,5 +3343,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>

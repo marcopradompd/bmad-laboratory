@@ -15,8 +15,9 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-// Importa o serviço de ingestão, o serviço de conhecimento de picos e o guardrail LLM
+// Importa o serviço de ingestão, catálogo oficial verificado, serviço de conhecimento de picos e guardrail LLM
 const { fetchSurfForecast } = require('./DsySA/open-meteo-service.js');
+const SpotsCatalogService = require('./DsySA/spots-catalog-service.js');
 const SpotKnowledgeService = require('./DsySA/spot-knowledge-service.js');
 const SurfeAgentGuardrail = require('./DsySA/surfeagent-llm-guardrail.js');
 
@@ -24,14 +25,24 @@ const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = __dirname;
 const SPOTS_DB_PATH = path.join(__dirname, 'data', 'surf_spots.json');
 
+// Carrega catálogo oficial verificado (src/data/spots_catalog.json) na inicialização
+SpotsCatalogService.loadOfficialCatalog();
+
 function readSharedSpots() {
   try {
-    if (!fs.existsSync(SPOTS_DB_PATH)) return [];
+    const officialSpots = SpotsCatalogService.getNormalizedSpots();
+    const officialIds = new Set(officialSpots.map((s) => s.id));
+    if (!fs.existsSync(SPOTS_DB_PATH)) return officialSpots;
     const raw = fs.readFileSync(SPOTS_DB_PATH, 'utf8');
-    return JSON.parse(raw);
+    const extra = JSON.parse(raw);
+    if (!Array.isArray(extra)) return officialSpots;
+    // Mantém os 14 picos oficiais verificados como prioridade e preserva picos extras de outros estados
+    const legacyBaIds = new Set(['itacimirim', 'stella_maris', 'guarajuba', 'pedra_do_sal', 'barravento']);
+    const nonConflicting = extra.filter((s) => s && !officialIds.has(s.id) && !legacyBaIds.has(s.id));
+    return [...officialSpots, ...nonConflicting];
   } catch (e) {
-    console.warn('⚠️ Falha ao ler data/surf_spots.json:', e.message);
-    return [];
+    console.warn('⚠️ Falha ao ler catálogo de picos:', e.message);
+    return SpotsCatalogService.getNormalizedSpots();
   }
 }
 
@@ -208,19 +219,20 @@ const server = http.createServer(async (req, res) => {
   // ROTA DA API: GET /api/forecast?lat=-12.95&lon=-38.35
   // ==========================================================================
   if (pathname === '/api/forecast') {
-    const lat = parseFloat(parsedUrl.searchParams.get('lat') || '-12.95');
-    const lon = parseFloat(parsedUrl.searchParams.get('lon') || '-38.35');
+    const lat = parseFloat(parsedUrl.searchParams.get('lat') || '-12.9445');
+    const lon = parseFloat(parsedUrl.searchParams.get('lon') || '-38.3345');
+    const spotProfile = parsedUrl.searchParams.get('spot_profile') || 'exposed_beach';
     const timezone = parsedUrl.searchParams.get('timezone') || 'auto';
-    const forecastDays = parseInt(parsedUrl.searchParams.get('forecast_days') || '15', 10);
+    const forecastDays = parseInt(parsedUrl.searchParams.get('forecast_days') || '7', 10);
 
-    const cacheKey = `${lat.toFixed(2)}:${lon.toFixed(2)}:${timezone}:${forecastDays}`;
+    const cacheKey = `sg_profile_v5:${lat.toFixed(4)}:${lon.toFixed(4)}:${spotProfile}:${timezone}:${forecastDays}`;
     const now = Date.now();
 
     // 1. Verifica se existe no Cache e ainda é válido (< 2 horas)
     const cachedEntry = backendCache.get(cacheKey);
     if (cachedEntry && cachedEntry.expiresAt > now) {
       const remainingMinutes = Math.round((cachedEntry.expiresAt - now) / 60000);
-      console.log(`⚡ [Cache HIT] Servindo previsão para (${lat.toFixed(2)}, ${lon.toFixed(2)}) da memória. Válido por mais ${remainingMinutes} min.`);
+      console.log(`⚡ [Cache HIT] Servindo previsão para (${lat.toFixed(4)}, ${lon.toFixed(4)}) da memória. Válido por mais ${remainingMinutes} min.`);
 
       res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8',
@@ -232,12 +244,13 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // 2. Cache MISS: Consulta as fontes Open-Meteo (WW3 + GFS)
-    console.log(`🌐 [Cache MISS] Consultando Open-Meteo para coordenadas (${lat}, ${lon})...`);
+    // 2. Cache MISS: Consulta direta Open-Meteo (Marine WW3 + Forecast NOAA GFS) nas coordenadas exatas do pico
+    console.log(`🌐 [Cache MISS] Consultando Open-Meteo (Padrão Surfguru) para (${lat}, ${lon})...`);
     try {
       const forecast = await fetchSurfForecast({
         lat,
         lon,
+        spotProfile,
         timezone,
         forecastDays
       });

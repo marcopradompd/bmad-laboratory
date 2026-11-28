@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mpdownloader — Captura Offline · MPDs</title>
+  <meta name="description" content="Cole o endereço de um site e baixe uma cópia offline completa em .ZIP. Construído com MPDs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="../mpds/mpds.css" />
+  <style>
+    body.mpds-body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 28px 16px;
+      position: relative;
+    }
+
+    /* Linhas sutis do grid arquitetônico MPDs ao fundo */
+    .mpd-bg-grid {
+      position: fixed;
+      inset: 0;
+      max-width: var(--mpds-container-max);
+      margin: 0 auto;
+      border-left: 1px solid var(--mpds-border-subtle);
+      border-right: 1px solid var(--mpds-border-subtle);
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .mpd-bg-grid > div:nth-child(1) { grid-column: span 3; border-right: 1px solid var(--mpds-border-subtle); }
+    .mpd-bg-grid > div:nth-child(2) { grid-column: span 6; border-right: 1px solid var(--mpds-border-subtle); }
+    .mpd-bg-grid > div:nth-child(3) { grid-column: span 3; }
+
+    /* Janela / Card Principal Enxuto */
+    .mpd-window {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 600px;
+      background-color: var(--mpds-bg-elevated);
+      border: 1px solid var(--mpds-border-default);
+      border-radius: var(--mpds-radius-lg);
+      box-shadow: var(--mpds-shadow-lg);
+      overflow: hidden;
+    }
+
+    .mpd-window-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 20px;
+      background-color: var(--mpds-bg-subtle);
+      border-bottom: 1px solid var(--mpds-border-default);
+    }
+
+    .mpd-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mpd-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--mpds-border-default);
+    }
+    .mpd-dot.is-primary {
+      background-color: var(--mpds-ink-primary);
+    }
+
+    .mpd-window-body {
+      padding: 32px 32px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Cabeçalho da marca */
+    .mpd-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mpd-monogram {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--mpds-radius-md);
+      background-color: var(--mpds-bg-inverse);
+      color: var(--mpds-ink-inverse);
+      font-family: var(--mpds-font-mono);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Input estilo prompt terminal sóbrio */
+    .mpd-prompt-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .mpd-prompt-chevron {
+      position: absolute;
+      left: 15px;
+      font-family: var(--mpds-font-mono);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--mpds-ink-primary);
+      pointer-events: none;
+    }
+    .mpd-prompt-input {
+      width: 100%;
+      height: 50px;
+      padding: 0 16px 0 36px;
+      font-family: var(--mpds-font-sans);
+      font-size: 0.95rem;
+      color: var(--mpds-ink-primary);
+      background-color: var(--mpds-bg-subtle);
+      border: 1px solid var(--mpds-border-default);
+      border-radius: var(--mpds-radius-md);
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mpd-prompt-input::placeholder {
+      color: var(--mpds-ink-subtle);
+    }
+    .mpd-prompt-input:focus {
+      outline: none;
+      background-color: var(--mpds-bg-elevated);
+      border-color: var(--mpds-ink-primary);
+      box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.08);
+    }
+    .mpd-prompt-input.is-error {
+      border-color: var(--mpds-error-dot);
+      background-color: var(--mpds-error-bg);
+    }
+
+    /* Opções Radio & Checkbox enxutas */
+    .mpd-option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+    .mpd-option-row input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--mpds-ink-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mpd-option-text {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--mpds-ink-muted);
+    }
+    .mpd-option-text strong {
+      color: var(--mpds-ink-primary);
+      font-weight: 600;
+    }
+
+    .mpd-divider {
+      height: 1px;
+      background-color: var(--mpds-border-subtle);
+      margin: 2px 0;
+    }
+
+    /* Full-width Beam CTA */
+    .mpd-cta-full {
+      width: 100%;
+    }
+    .mpd-cta-full .mpds-btn-beam-inner {
+      width: 100%;
+      justify-content: center;
+      padding: 15px 24px;
+      font-size: 0.94rem;
+    }
+
+    /* Barra de Progresso & Terminal compacto */
+    .mpd-progress-track {
+      width: 100%;
+      height: 5px;
+      background-color: var(--mpds-bg-muted);
+      border-radius: var(--mpds-radius-pill);
+      overflow: hidden;
+    }
+    .mpd-progress-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--mpds-bg-inverse);
+      transition: width 0.35s var(--mpds-ease-architect);
+    }
+    .mpd-log-mini {
+      background-color: var(--mpds-bg-inverse);
+      color: #D6D3D1;
+      font-family: var(--mpds-font-mono);
+      font-size: 0.72rem;
+      line-height: 1.6;
+      padding: 12px 14px;
+      border-radius: var(--mpds-radius-sm);
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    /* Rodapé discreto fora do card */
+    .mpd-foot-links {
+      position: relative;
+      z-index: 10;
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    @media (max-width: 640px) {
+      .mpd-bg-grid { display: none; }
+      .mpd-window-body { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body class="mpds-body">
+
+  <!-- Guias sutis MPDs -->
+  <div class="mpd-bg-grid" aria-hidden="true">
+    <div></div><div></div><div></div>
+  </div>
+
+  <!-- ======================================================================
+       CARD ÚNICO ENXUTO — MPDOWNLOADER (PADRÃO MPDs)
+       ====================================================================== -->
+  <main class="mpd-window mpds-flashlight mpds-animate-on-scroll">
+    <!-- Topbar da janela -->
+    <div class="mpd-window-bar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="mpd-dots" aria-hidden="true">
+          <span class="mpd-dot is-primary"></span>
+          <span class="mpd-dot"></span>
+          <span class="mpd-dot"></span>
+        </span>
+        <span class="mpds-mono-label" style="font-size:0.68rem;">MPDS://CAPTURE</span>
+      </div>
+
+      <span id="statusIndicator" class="mpds-mono-label" style="display:inline-flex; align-items:center; gap:7px; font-size:0.68rem; color:var(--mpds-ink-primary);">
+        <span id="statusDot" class="mpds-status-dot"></span>
+        <span id="statusText">PRONTO</span>
+      </span>
+    </div>
+
+    <!-- Corpo enxuto -->
+    <div class="mpd-window-body">
+      <!-- Título & Descrição -->
+      <div>
+        <div class="mpd-brand-row" style="margin-bottom:14px;">
+          <span class="mpd-monogram">MP</span>
+          <h1 style="margin:0; font-size:1.35rem; font-weight:600; letter-spacing:-0.03em; color:var(--mpds-ink-primary);">
+            Mpdownloader <span style="font-weight:400; color:var(--mpds-ink-muted);">1.0</span>
+          </h1>
+        </div>
+        <p class="mpds-body-text" style="font-size:0.9rem;">
+          Cole o endereço de um site e baixe uma cópia que abre no seu computador, sem internet, com estilos, fontes, scripts e imagens funcionando como no original.
+        </p>
+      </div>
+
+      <!-- Alerta discreto caso o servidor local não esteja rodando -->
+      <div id="offlineAlert" class="mpds-alert mpds-alert-warning" style="display:none; padding:12px 14px;">
+        <iconify-icon class="mpds-alert-icon" icon="solar:danger-triangle-linear" style="font-size:1.1rem;"></iconify-icon>
+        <div>
+          <p class="mpds-alert-title" style="font-size:0.82rem;">Backend de captura não detectado</p>
+          <p class="mpds-alert-desc" style="font-size:0.78rem;">
+            No <strong>cPanel</strong>, certifique-se de que o arquivo <code class="mpds-mono" style="font-weight:600;">api.php</code> foi enviado na mesma pasta. No PC local, execute <code class="mpds-mono" style="font-weight:600;">node server.js</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Formulário enxuto -->
+      <form id="compactForm" style="display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div class="mpd-prompt-wrap">
+            <span class="mpd-prompt-chevron" aria-hidden="true">&gt;</span>
+            <input
+              id="urlInput"
+              class="mpd-prompt-input"
+              type="text"
+              placeholder="Cole a URL do site (ex.: exemplo.com)"
+              autocomplete="off"
+              aria-label="URL do site para baixar"
+            />
+          </div>
+          <span id="urlErrorText" class="mpds-helper" style="display:none; margin-top:6px; color:var(--mpds-error-ink);"></span>
+        </div>
+
+        <!-- FORMATO -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <span class="mpds-mono-label" style="font-size:0.68rem;">Formato</span>
+
+          <label class="mpd-option-row">
+            <input type="radio" name="captureFormat" value="standard" checked />
+            <span class="mpd-option-text">
+              <strong>Duplo clique (index.html)</strong> — abre direto no navegador, sem terminal (com a pasta <code>assets/</code> ao lado).
+            </span>
+          </label>
+
+          <label class="mpd-option-row">
+            <input type="radio" name="captureFormat" value="complete" />
+            <span class="mpd-option-text">
+              <strong>Servidor local</strong> — a cópia viva mais fiel. Abre com um comando no terminal, explicado no ZIP.
+            </span>
+          </label>
+        </div>
+
+        <div class="mpd-divider"></div>
+
+        <!-- MODO RÁPIDO -->
+        <label class="mpd-option-row">
+          <input id="fastModeCheck" type="checkbox" />
+          <span class="mpd-option-text">
+            <strong>Modo rápido</strong> — captura apenas estrutura principal e imagens visíveis, sem scripts pesados. Cerca de metade do tempo.
+          </span>
+        </label>
+
+        <!-- Botão CTA Full-Width (MPDs / Gemini 1px Shimmer Beam) -->
+        <button id="submitBtn" type="submit" class="mpds-btn-beam mpd-cta-full">
+          <span class="mpds-btn-beam-orbit"></span>
+          <span class="mpds-btn-beam-inner">
+            <span class="mpds-btn-beam-shimmer"></span>
+            <span id="submitBtnLabel">Baixar site</span>
+            <iconify-icon icon="solar:arrow-right-linear" style="font-size:1.1rem;"></iconify-icon>
+          </span>
+        </button>
+      </form>
+
+      <!-- Área expansível de Progresso (só aparece durante a captura) -->
+      <div id="progressArea" style="display:none; padding-top:16px; border-top:1px solid var(--mpds-border-default);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span id="progressStep" class="mpds-mono-label" style="color:var(--mpds-ink-primary);">Conectando...</span>
+          <span id="progressPct" class="mpds-mono" style="font-size:0.78rem; font-weight:600;">0%</span>
+        </div>
+        <div class="mpd-progress-track" style="margin-bottom:12px;">
+          <div id="progressBar" class="mpd-progress-fill"></div>
+        </div>
+        <div id="progressLog" class="mpd-log-mini"></div>
+      </div>
+
+      <!-- Área de Erro -->
+      <div id="errorArea" class="mpds-alert mpds-alert-error" style="display:none; padding:12px 14px;">
+        <iconify-icon class="mpds-alert-icon" icon="solar:danger-circle-linear"></iconify-icon>
+        <div>
+          <p class="mpds-alert-title" style="font-size:0.82rem;">Não foi possível capturar</p>
+          <p id="errorText" class="mpds-alert-desc" style="font-size:0.78rem;"></p>
+        </div>
+      </div>
+
+      <!-- Área de Resultado + Botão de Download do ZIP -->
+      <div id="resultArea" class="mpds-alert mpds-alert-success" style="display:none; flex-direction:column; gap:14px; padding:16px 18px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; width:100%;">
+          <div>
+            <p id="resultTitle" class="mpds-alert-title"></p>
+            <p id="resultMeta" class="mpds-alert-desc" style="font-size:0.78rem;"></p>
+          </div>
+          <a id="downloadLink" href="#" class="mpds-btn mpds-btn-primary" style="padding:10px 16px; font-size:0.8rem; flex-shrink:0;">
+            <iconify-icon icon="solar:file-download-linear" style="font-size:1.05rem;"></iconify-icon>
+            <span>Baixar .ZIP</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Links discretos no rodapé -->
+  <footer class="mpd-foot-links">
+    <a href="./opcao-2.html" class="mpds-nav-link" style="font-size:0.68rem;">Opção 2 (Versão Completa)</a>
+    <span style="color:var(--mpds-border-default);">·</span>
+    <a href="../mpds/index.html" class="mpds-nav-link" style="font-size:0.68rem;">Design System MPDs</a>
+  </footer>
+
+  <script src="../mpds/mpds.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const form = document.getElementById('compactForm');
+      const urlInput = document.getElementById('urlInput');
+      const urlErrorText = document.getElementById('urlErrorText');
+      const fastModeCheck = document.getElementById('fastModeCheck');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnLabel = document.getElementById('submitBtnLabel');
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      const offlineAlert = document.getElementById('offlineAlert');
+      const progressArea = document.getElementById('progressArea');
+      const progressStep = document.getElementById('progressStep');
+      const progressPct = document.getElementById('progressPct');
+      const progressBar = document.getElementById('progressBar');
+      const progressLog = document.getElementById('progressLog');
+      const errorArea = document.getElementById('errorArea');
+      const errorText = document.getElementById('errorText');
+      const resultArea = document.getElementById('resultArea');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultMeta = document.getElementById('resultMeta');
+      const downloadLink = document.getElementById('downloadLink');
+
+      let activeES = null;
+      let activeEngine = null; // 'php' (cPanel) | 'node' (local)
+
+      function formatBytes(bytes) {
+        if (!bytes || bytes < 1024) return `${bytes || 0} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+      }
+
+      function setStatus(state, label) {
+        statusText.textContent = label;
+        if (state === 'ready') {
+          statusDot.style.backgroundColor = 'var(--mpds-success-dot)';
+          statusDot.style.animation = '';
+        } else if (state === 'working') {
+          statusDot.style.backgroundColor = 'var(--mpds-info-dot)';
+          statusDot.style.animation = '';
+        } else {
+          statusDot.style.backgroundColor = 'var(--mpds-warning-dot)';
+          statusDot.style.animation = 'none';
+        }
+      }
+
+      async function checkHealth() {
+        if (!window.location.protocol.startsWith('http')) {
+          activeEngine = null;
+          setStatus('offline', 'OFFLINE');
+          offlineAlert.style.display = 'flex';
+          return null;
+        }
+        // 1. Tenta backend PHP (cPanel)
+        try {
+          const rPhp = await fetch('./api.php?action=health', { cache: 'no-store' });
+          if (rPhp.ok) {
+            const dPhp = await rPhp.json();
+            if (dPhp && dPhp.ok) {
+              activeEngine = 'php';
+              setStatus('ready', 'PRONTO');
+              offlineAlert.style.display = 'none';
+              return 'php';
+            }
+          }
+        } catch (_) {}
+
+        // 2. Fallback: backend Node.js (server.js)
+        try {
+          const rNode = await fetch('/api/health', { cache: 'no-store' });
+          if (rNode.ok) {
+            const dNode = await rNode.json();
+            if (dNode && dNode.ok) {
+              activeEngine = 'node';
+              setStatus('ready', 'PRONTO');
+              offlineAlert.style.display = 'none';
+              return 'node';
+            }
+          }
+        } catch (_) {}
+
+        activeEngine = null;
+        setStatus('offline', 'OFFLINE');
+        offlineAlert.style.display = 'flex';
+        return null;
+      }
+
+      function appendLog(line) {
+        const ts = new Date().toLocaleTimeString('pt-BR', { hour12: false });
+        const row = document.createElement('div');
+        row.textContent = `[${ts}] ${line}`;
+        progressLog.appendChild(row);
+        progressLog.scrollTop = progressLog.scrollHeight;
+      }
+
+      function normalizeUrl(raw) {
+        const val = String(raw || '').trim();
+        if (!val) return null;
+        const normalized = /^https?:\/\//i.test(val) ? val : `https://${val}`;
+        try {
+          const u = new URL(normalized);
+          if (!u.hostname.includes('.')) return null;
+          return u.href;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function showResult(summary, dlUrl) {
+        progressBar.style.width = '100%';
+        progressPct.textContent = '100%';
+        progressStep.textContent = 'Concluído!';
+        resultTitle.textContent = `Cópia pronta: ${summary.hostname}`;
+        resultMeta.textContent = `${summary.totalFiles} arquivos · ${formatBytes(summary.sizeBytes)} · ${summary.elapsedSec}s`;
+        downloadLink.href = dlUrl;
+        downloadLink.setAttribute('download', summary.filename);
+        resultArea.style.display = 'flex';
+        if (window.MPDs) window.MPDs.toast(`Pacote ${summary.hostname} pronto para download!`, 'solar:file-download-linear');
+      }
+
+      urlInput.addEventListener('input', () => {
+        urlInput.classList.remove('is-error');
+        urlErrorText.style.display = 'none';
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const targetUrl = normalizeUrl(urlInput.value);
+        if (!targetUrl) {
+          urlInput.classList.add('is-error');
+          urlErrorText.innerHTML = '<iconify-icon icon="solar:danger-circle-linear"></iconify-icon> Informe uma URL válida (ex.: exemplo.com).';
+          urlErrorText.style.display = 'flex';
+          return;
+        }
+
+        const engine = activeEngine || await checkHealth();
+        if (!engine) {
+          if (window.MPDs) window.MPDs.toast('Verifique se api.php está na pasta no cPanel.', 'solar:danger-triangle-linear');
+          return;
+        }
+
+        if (activeES) {
+          activeES.close();
+          activeES = null;
+        }
+
+        const formatChoice = document.querySelector('input[name="captureFormat"]:checked')?.value || 'standard';
+        const isFast = fastModeCheck.checked;
+        const mode = isFast ? 'fast' : formatChoice;
+
+        submitBtn.disabled = true;
+        submitBtnLabel.textContent = 'Capturando site...';
+        setStatus('working', 'CAPTURANDO');
+        errorArea.style.display = 'none';
+        resultArea.style.display = 'none';
+        progressArea.style.display = 'block';
+        progressBar.style.width = '12%';
+        progressPct.textContent = '12%';
+        progressStep.textContent = 'Conectando e extraindo recursos...';
+        progressLog.innerHTML = '';
+        appendLog(`Alvo: ${targetUrl} (${mode} · ${engine.toUpperCase()})`);
+
+        const payload = {
+          url: targetUrl,
+          mode,
+          options: {
+            includeImages: true,
+            includeFonts: true,
+            includeScripts: !isFast,
+            includeReadme: true
+          }
+        };
+
+        // FLUXO PHP (cPanel)
+        if (engine === 'php') {
+          let fakePct = 15;
+          const ticker = setInterval(() => {
+            if (fakePct < 86) {
+              fakePct += Math.floor(Math.random() * 7) + 3;
+              if (fakePct > 86) fakePct = 86;
+              progressBar.style.width = `${fakePct}%`;
+              progressPct.textContent = `${fakePct}%`;
+              if (fakePct > 45) progressStep.textContent = 'Baixando CSS, fontes e imagens...';
+              if (fakePct > 72) progressStep.textContent = 'Reescrevendo caminhos e gerando .ZIP...';
+            }
+          }, 550);
+
+          try {
+            const res = await fetch('./api.php?action=capture', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            clearInterval(ticker);
+            if (!res.ok || !data.ok) throw new Error(data.error || 'Erro ao capturar o site.');
+
+            if (Array.isArray(data.logs)) {
+              data.logs.forEach((l) => appendLog(l));
+            }
+            submitBtn.disabled = false;
+            submitBtnLabel.textContent = 'Baixar site';
+            setStatus('ready', 'PRONTO');
+            showResult(data, `./${data.downloadUrl}`);
+          } catch (err) {
+            clearInterval(ticker);
+            submitBtn.disabled = false;
+            submitBtnLabel.textContent = 'Baixar site';
+            setStatus('ready', 'PRONTO');
+            errorText.textContent = err.message || 'Erro ao processar captura no servidor.';
+            errorArea.style.display = 'flex';
+            appendLog(`ERRO: ${errorText.textContent}`);
+          }
+          return;
+        }
+
+        // FLUXO NODE.JS (Local / VPS)
+        try {
+          const res = await fetch('/api/capture', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Erro ao iniciar captura.');
+
+          const jobId = data.jobId;
+          const es = new EventSource(`/api/capture/${jobId}/events`);
+          activeES = es;
+
+          es.addEventListener('progress', (ev) => {
+            const p = JSON.parse(ev.data);
+            progressBar.style.width = `${p.pct || 0}%`;
+            progressPct.textContent = `${p.pct || 0}%`;
+            if (p.step) progressStep.textContent = p.step;
+            if (p.log) appendLog(p.log);
+          });
+
+          es.addEventListener('done', (ev) => {
+            const s = JSON.parse(ev.data);
+            es.close();
+            activeES = null;
+            submitBtn.disabled = false;
+            submitBtnLabel.textContent = 'Baixar site';
+            setStatus('ready', 'PRONTO');
+            appendLog(`Pronto em ${s.elapsedSec}s — ${s.totalFiles} arquivos (${formatBytes(s.sizeBytes)})`);
+            showResult(s, `/api/capture/${jobId}/download`);
+          });
+
+          es.addEventListener('failed', (ev) => {
+            const err = JSON.parse(ev.data);
+            es.close();
+            activeES = null;
+            submitBtn.disabled = false;
+            submitBtnLabel.textContent = 'Baixar site';
+            setStatus('ready', 'PRONTO');
+            errorText.textContent = err.error || 'Erro ao capturar o site.';
+            errorArea.style.display = 'flex';
+          });
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtnLabel.textContent = 'Baixar site';
+          setStatus('ready', 'PRONTO');
+          errorText.textContent = err.message || 'Falha na comunicação com o servidor.';
+          errorArea.style.display = 'flex';
+        }
+      });
+
+      checkHealth();
+    })();
+  </script>
+</body>
+</html>

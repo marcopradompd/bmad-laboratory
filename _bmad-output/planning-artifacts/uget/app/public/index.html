@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uGet — O Aplicativo de Alerta de Benefícios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../ugetds/ugetds.css" />
+  <style>
+    .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .app-clubs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .app-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .app-chip {
+      padding: 8px 16px;
+      border-radius: var(--uget-radius-pill);
+      border: 1.5px solid var(--uget-border);
+      background: var(--uget-bg-surface);
+      color: var(--uget-ink-secondary);
+      font-family: var(--uget-font-display);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s var(--uget-ease-revolut);
+    }
+    .app-chip:hover { border-color: var(--uget-purple); color: var(--uget-purple-dark); }
+    .app-chip.is-active {
+      background: var(--uget-navy);
+      border-color: var(--uget-navy);
+      color: #FFFFFF;
+    }
+    .app-subnav {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--uget-border);
+      padding: 12px 0;
+    }
+    .app-tab-bar {
+      display: inline-flex;
+      gap: 6px;
+      background: var(--uget-bg-subtle);
+      padding: 4px;
+      border-radius: var(--uget-radius-pill);
+    }
+    .app-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--uget-ink-secondary);
+      font-family: var(--uget-font-display);
+      font-weight: 600;
+      font-size: 0.84rem;
+      padding: 9px 18px;
+      border-radius: var(--uget-radius-pill);
+      cursor: pointer;
+      transition: all 0.25s var(--uget-ease-revolut);
+    }
+    .app-tab-btn:hover { color: var(--uget-ink-primary); }
+    .app-tab-btn.is-active {
+      background: var(--uget-navy);
+      color: #FFFFFF;
+      box-shadow: var(--uget-shadow-sm);
+    }
+    .app-view { display: none; }
+    .app-view.is-active { display: block; animation: ugetAnimationIn 0.45s var(--uget-ease-gemini) both; }
+    .club-toggle-card {
+      text-align: left;
+      padding: 18px 20px;
+      border-radius: var(--uget-radius-lg);
+      border: 1.5px solid var(--uget-border);
+      background: var(--uget-bg-surface);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.22s var(--uget-ease-revolut);
+    }
+    .club-toggle-card:hover { transform: translateY(-2px); box-shadow: var(--uget-shadow-sm); }
+    .club-toggle-card.is-selected {
+      border-color: var(--uget-purple);
+      background: var(--uget-purple-soft);
+    }
+    .detail-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(3, 34, 58, 0.56);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .detail-backdrop.is-open { display: flex; }
+    .detail-sheet {
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--uget-bg-surface);
+      border-radius: var(--uget-radius-xl);
+      box-shadow: var(--uget-shadow-lg);
+      overflow-x: hidden;
+      animation: ugetAnimationIn 0.35s var(--uget-ease-gemini) both;
+    }
+    .pass-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .qr-frame {
+      background: #FFFFFF;
+      border-radius: 14px;
+      padding: 8px;
+      display: inline-flex;
+      box-shadow: 0 10px 26px rgba(3, 34, 58, 0.32);
+    }
+    .star-row { display: flex; gap: 8px; }
+    .star-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1.5px solid var(--uget-border);
+      background: var(--uget-bg-surface);
+      color: var(--uget-ink-subtle);
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.18s var(--uget-ease-revolut);
+    }
+    .star-btn.is-active {
+      border-color: var(--uget-purple);
+      background: var(--uget-purple-soft);
+      color: var(--uget-purple);
+      transform: scale(1.06);
+    }
+    .lgpd-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--uget-border-subtle);
+    }
+    /* Switch padronizado com tokens ugetds */
+    .uget-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .uget-switch input { opacity: 0; width: 0; height: 0; }
+    .uget-switch-track {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--uget-radius-pill);
+      background: var(--uget-border);
+      cursor: pointer;
+      transition: background-color 0.25s var(--uget-ease-revolut);
+    }
+    .uget-switch-track::after {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(3, 34, 58, 0.2);
+      transition: transform 0.25s var(--uget-ease-revolut);
+    }
+    .uget-switch input:checked + .uget-switch-track {
+      background: var(--uget-gradient-brand);
+    }
+    .uget-switch input:checked + .uget-switch-track::after {
+      transform: translateX(20px);
+    }
+    .uget-range {
+      width: 100%;
+      accent-color: var(--uget-purple);
+      cursor: pointer;
+    }
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 960px) {
+      .app-grid, .app-clubs-grid, .pass-layout, .privacy-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="uget-body">
+
+  <!-- HEADER STICKY (Padrão ugetds) -->
+  <header class="uget-header">
+    <div class="uget-nav-inner">
+      <a href="#top" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none;">
+        <svg width="88" height="33" viewBox="0 0 180 68" fill="none" aria-label="uGet">
+          <ellipse cx="78" cy="60" rx="11" ry="4" fill="#03223A" opacity="0.22"/>
+          <path d="M18 18V36C18 44 23.5 48.5 31 48.5C38.5 48.5 44 44 44 36V18H37.5V35.5C37.5 40 34.8 42.5 31 42.5C27.2 42.5 24.5 40 24.5 35.5V18H18Z" fill="#9B246D"/>
+          <path d="M76 8C60.5 8 49 19 49 33.5C49 45.2 57.5 53.8 68.5 55.6L75.5 64L82.5 55.6C94.2 53.5 102 44.6 102 33.2V28.5H77V34.8H94.8C93.6 43 86.2 49.5 76 49.5C64.2 49.5 56 42.3 56 33.5C56 23 64.5 14.5 76 14.5C83 14.5 88.5 17.4 92 22.2L97.5 18C92.8 11.7 85.2 8 76 8Z" fill="#6B2F8F"/>
+          <path d="M124.5 17.5C114.5 17.5 107.5 24.5 107.5 33.2C107.5 42.3 114.8 49 125.2 49C131.6 49 136.4 46.7 139.2 42.8L134.2 39.2C132.2 41.7 129.1 43.2 125.3 43.2C119.2 43.2 114.8 39.8 114.2 35H140.5C140.7 33.9 140.8 32.8 140.8 31.8C140.8 23.2 134.1 17.5 124.5 17.5ZM114.4 29.8C115.4 25.4 119.1 22.8 124.3 22.8C129.6 22.8 133.4 25.4 134.2 29.8H114.4Z" fill="#9B246D"/>
+          <path d="M153.5 11H147V18.5H141.5V24H147V39.2C147 45.6 150.7 48.8 157.4 48.8C159.8 48.8 162.1 48.3 163.8 47.4V41.8C162.5 42.4 160.8 42.8 159.2 42.8C155.3 42.8 153.5 41.1 153.5 37.5V24H163.5V18.5H153.5V11Z" fill="#9B246D"/>
+        </svg>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <select id="locationPreset" class="uget-select" style="width:auto; padding:8px 14px; font-size:0.82rem; border-radius:var(--uget-radius-pill);">
+          <option value="-13.0082,-38.5318">Barra · Salvador</option>
+          <option value="-13.0038,-38.4585">Pituba · Salvador</option>
+          <option value="-13.0124,-38.4918">Rio Vermelho · Salvador</option>
+          <option value="-12.9985,-38.5230">Graça · Salvador</option>
+        </select>
+
+        <select id="radiusSelect" class="uget-select" style="width:auto; padding:8px 14px; font-size:0.82rem; border-radius:var(--uget-radius-pill);">
+          <option value="1000">Raio 1 km</option>
+          <option value="3000">Raio 3 km</option>
+          <option value="5000" selected>Raio 5 km</option>
+          <option value="15000">Raio 15 km</option>
+        </select>
+
+        <button id="useRealGpsBtn" type="button" class="uget-btn uget-btn-soft uget-btn-sm">
+          <span data-uget-icon="compass" data-size="16"></span>
+          <span>Meu GPS</span>
+        </button>
+
+        <button id="simulatePushBtn" type="button" class="uget-btn uget-btn-brand uget-btn-sm">
+          <span data-uget-icon="bell-smart" data-size="16"></span>
+          <span>Simular Alerta Push</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SUBNAV: T01 EXPLORAR · T04 UGET PASS 3D · T05 RAIO & CENTRAL LGPD -->
+  <div class="app-subnav">
+    <div class="uget-container" style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div class="app-tab-bar" role="tablist">
+        <button type="button" class="app-tab-btn is-active" data-view-tab="viewExplore">
+          <span data-uget-icon="geo-radar" data-size="15"></span>
+          <span>Explorar &amp; Clubes</span>
+        </button>
+        <button type="button" class="app-tab-btn" data-view-tab="viewPass">
+          <span data-uget-icon="member-card" data-size="15"></span>
+          <span>uGet Pass 3D</span>
+        </button>
+        <button type="button" class="app-tab-btn" data-view-tab="viewPrivacy">
+          <span data-uget-icon="verified" data-size="15"></span>
+          <span>Raio &amp; Central LGPD</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span id="offlineStatusPill" class="uget-badge uget-badge-success uget-mono" style="font-size:0.72rem;">
+          <span class="uget-live-dot"></span>
+          <span>Pass Offline Sincronizado</span>
+        </span>
+        <a href="./b2b.html" class="uget-btn uget-btn-outline uget-btn-sm">
+          <span data-uget-icon="institution" data-size="14"></span>
+          <span>Portal B2B</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: T01 EXPLORAR & T02 CLUBES -->
+  <main id="viewExplore" class="app-view is-active">
+    <section id="top" class="uget-chevron-surface" style="background:var(--uget-mist); padding:52px 0 60px; border-bottom:1px solid #C7D6E3;">
+      <!-- Chevron Esquerdo Oficial ugetds -->
+      <svg class="uget-chevron-left" viewBox="0 0 240 360" fill="none" aria-hidden="true" style="opacity:0.85;">
+        <polygon points="0,40 160,180 0,320 0,255 95,180 0,105" fill="#6B2F8F" opacity="0.92"/>
+        <polygon points="0,120 75,180 0,240" fill="#03223A"/>
+        <polygon points="0,275 110,360 35,360 0,330" fill="#03223A"/>
+      </svg>
+      <!-- Chevron Direito + Watermark Pin G Oficial ugetds -->
+      <svg class="uget-chevron-right" viewBox="0 0 280 380" fill="none" aria-hidden="true" style="opacity:0.85;">
+        <path d="M120 20C55 20 8 68 8 130C8 184 48 224 98 232L120 264L142 232C194 224 232 184 232 130C232 68 185 20 120 20Z" stroke="#FFFFFF" stroke-width="26" opacity="0.45"/>
+        <polygon points="280,10 115,155 280,300 280,232 185,155 280,78" fill="#6B2F8F" opacity="0.88"/>
+        <polygon points="280,82 205,155 280,228" fill="#03223A" opacity="0.92"/>
+        <polygon points="225,155 280,105 280,155" fill="#9B246D" opacity="0.45"/>
+      </svg>
+
+      <div class="uget-container" style="position:relative; z-index:5;">
+        <div style="display:grid; grid-template-columns:1.15fr 0.85fr; gap:32px; align-items:center;" class="ug-hero-responsive">
+          <div class="uget-animate-on-scroll is-visible">
+            <span class="uget-badge uget-badge-navy" style="margin-bottom:14px;">
+              <span class="uget-live-dot"></span>
+              <span id="nearbySummaryBadge">Carregando benefícios próximos...</span>
+            </span>
+            <h1 class="uget-h2" style="font-size:clamp(1.9rem,3.6vw,3rem); margin-bottom:14px;">
+              <span class="uget-text-mask is-visible"><span class="uget-text-mask-inner">Benefícios ativos <span class="uget-gradient-text">perto de você.</span></span></span>
+            </h1>
+            <p class="uget-text" style="max-width:520px; margin-bottom:22px; color:#2C3E50;">
+              Selecione seus clubes e associações abaixo para filtrar apenas os convênios a que você tem direito, ordenados pela distância exata em metros.
+            </p>
+
+            <div class="uget-input-wrap" style="max-width:520px;">
+              <span class="uget-input-icon" data-uget-icon="search" data-size="18"></span>
+              <input id="searchInput" class="uget-input" type="text" placeholder="Buscar farmácia, almoço, academia, OAB..." />
+            </div>
+          </div>
+
+          <div class="uget-radar-box" style="height:240px;">
+            <div class="uget-radar-ring"></div>
+            <div class="uget-radar-ring r2"></div>
+            <div class="uget-radar-ring r3"></div>
+            <div style="position:relative; z-index:5; width:54px; height:54px; border-radius:18px; background:var(--uget-gradient-brand); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:var(--uget-shadow-purple);">
+              <span data-uget-icon="pin-uget" data-size="26"></span>
+            </div>
+            <div id="radarPinsLayer" style="position:absolute; inset:0; z-index:6;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding:36px 0 12px;">
+      <div class="uget-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+          <span class="uget-eyebrow"><span data-uget-icon="institution" data-size="15"></span> Meus Clubes &amp; Associações Ativas (RN-01)</span>
+          <span id="activeClubsCount" class="uget-mono" style="font-size:0.75rem; color:var(--uget-ink-muted);"></span>
+        </div>
+        <div id="clubsGrid" class="app-clubs-grid" style="margin-bottom:28px;"></div>
+
+        <div id="categoryChips" class="app-chip-row" style="margin-bottom:24px;">
+          <button type="button" class="app-chip is-active" data-cat="Todos">Todos</button>
+          <button type="button" class="app-chip" data-cat="Saúde">Saúde</button>
+          <button type="button" class="app-chip" data-cat="Gastronomia">Gastronomia</button>
+          <button type="button" class="app-chip" data-cat="Bem-Estar">Bem-Estar</button>
+          <button type="button" class="app-chip" data-cat="Educação">Educação</button>
+          <button type="button" class="app-chip" data-cat="Serviços">Serviços</button>
+          <button type="button" class="app-chip" data-cat="Varejo">Varejo</button>
+        </div>
+
+        <div id="benefitsGrid" class="app-grid" style="padding-bottom:64px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- VIEW 2: CARTEIRINHA UGET PASS 3D OFFLINE (T04 — Padrão uget-member-card + data-uget-tilt) -->
+  <section id="viewPass" class="app-view uget-chevron-surface" style="padding:48px 0 76px;">
+    <svg class="uget-chevron-right" viewBox="0 0 280 380" fill="none" aria-hidden="true" style="opacity:0.18;">
+      <polygon points="280,10 115,155 280,300 280,232 185,155 280,78" fill="#6B2F8F"/>
+      <polygon points="280,82 205,155 280,228" fill="#03223A"/>
+    </svg>
+
+    <div class="uget-container" style="position:relative; z-index:5;">
+      <div class="pass-layout">
+        <div>
+          <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="qr-redeem" data-size="15"></span> Carteirinha Digital Offline-First</span>
+          <h2 class="uget-h2" style="margin-bottom:12px;">Seu <span class="uget-gradient-text">uGet Pass 3D</span></h2>
+          <p class="uget-text" style="margin-bottom:24px;">
+            Apresente no caixa do estabelecimento parceiro mesmo sem sinal de internet. Passe o cursor ou incline o celular para o efeito 3D — QR Code assinado via HMAC-SHA256.
+          </p>
+
+          <!-- Cartão 3D Oficial do ugetds (.uget-tilt-wrap > .uget-member-card[data-uget-tilt]) -->
+          <div class="uget-tilt-wrap">
+            <div class="uget-member-card uget-flashlight is-dark" data-uget-tilt style="max-width:460px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; position:relative; z-index:4;">
+                <div>
+                  <span class="uget-badge" style="background:rgba(255,255,255,0.16); color:#FFFFFF; margin-bottom:10px;">
+                    <span data-uget-icon="verified" data-size="13"></span>
+                    <span>UGET PASS · ATIVO</span>
+                  </span>
+                  <h3 id="passHolderName" class="uget-h3" style="color:#FFFFFF; margin:0 0 4px;">Associado uGet</h3>
+                  <span id="passMemberCode" class="uget-mono" style="font-size:0.78rem; color:#D8B4FE;">UG-OFFLINE-2026</span>
+                </div>
+                <div class="qr-frame" id="passQrContainer" aria-label="QR Code uGet Pass"></div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px; border-top:1px solid rgba(255,255,255,0.16); padding-top:12px; position:relative; z-index:4;">
+                <div id="passClubsPills" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+                <span id="passValidUntil" class="uget-mono" style="font-size:0.7rem; color:#CBD5E1;">Cache offline: 24h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uget-card uget-flashlight" style="padding:30px;">
+          <span class="uget-eyebrow" style="margin-bottom:8px;"><span data-uget-icon="wallet-save" data-size="15"></span> Economia &amp; Qualidade</span>
+          <h3 class="uget-h4" style="margin-bottom:10px;">Histórico de Uso &amp; Avaliações</h3>
+          <p class="uget-text" style="font-size:0.86rem; margin-bottom:20px;">
+            Cada vez que você utiliza o uGet Pass, uma micro-pesquisa rápida ajuda a manter todos os parceiros honrando 100% dos descontos.
+          </p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px;">
+            <div style="background:var(--uget-purple-soft); border-radius:var(--uget-radius-lg); padding:18px;">
+              <span style="font-size:0.72rem; color:var(--uget-purple-dark); font-weight:700; letter-spacing:0.04em;">ECONOMIA ESTIMADA</span>
+              <div id="totalSavedMetric" class="uget-h3 uget-mono" style="margin-top:6px; color:var(--uget-navy);">R$ 0,00</div>
+            </div>
+            <div style="background:var(--uget-bg-subtle); border-radius:var(--uget-radius-lg); padding:18px;">
+              <span style="font-size:0.72rem; color:var(--uget-ink-muted); font-weight:700; letter-spacing:0.04em;">VISITAS AVALIADAS</span>
+              <div id="totalSurveysMetric" class="uget-h3 uget-mono" style="margin-top:6px; color:var(--uget-navy);">0</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="refreshOfflinePassBtn" type="button" class="uget-btn uget-btn-soft uget-btn-sm">
+              <span data-uget-icon="qr-redeem" data-size="15"></span>
+              <span>Atualizar Cache Offline</span>
+            </button>
+            <button id="openDemoSurveyBtn" type="button" class="uget-btn uget-btn-brand uget-btn-sm">
+              <span data-uget-icon="discount-tag" data-size="15"></span>
+              <span>Avaliar Última Visita</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW 3: SLIDER DE RAIO, NÃO PERTURBE & CENTRAL LGPD (T05) -->
+  <section id="viewPrivacy" class="app-view" style="padding:48px 0 76px;">
+    <div class="uget-container privacy-grid">
+      <div class="uget-card uget-flashlight" style="padding:30px;">
+        <span class="uget-eyebrow" style="margin-bottom:8px;"><span data-uget-icon="geo-radar" data-size="15"></span> Preferências de Geofencing</span>
+        <h3 class="uget-h4" style="margin-bottom:18px;">Raio de Alerta &amp; Não Perturbe (DND)</h3>
+
+        <div class="uget-field" style="margin-bottom:22px;">
+          <div class="uget-label">
+            <label for="radiusSlider">Raio do Radar Inteligente</label>
+            <span id="radiusSliderValue" class="uget-badge uget-badge-purple uget-mono">5.0 km</span>
+          </div>
+          <input id="radiusSlider" class="uget-range" type="range" min="100" max="10000" step="100" value="5000" />
+          <div style="display:flex; justify-content:space-between; font-size:0.74rem; color:var(--uget-ink-muted);">
+            <span>100 m (quarteirão)</span>
+            <span>5 km (bairro)</span>
+            <span>10 km (cidade)</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px;">
+          <div class="uget-field">
+            <label for="dndStartInput" class="uget-label">Silenciar a partir de</label>
+            <select id="dndStartInput" class="uget-select">
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+              <option value="22" selected>22:00</option>
+              <option value="23">23:00</option>
+            </select>
+          </div>
+          <div class="uget-field">
+            <label for="dndEndInput" class="uget-label">Retomar alertas às</label>
+            <select id="dndEndInput" class="uget-select">
+              <option value="6">06:00</option>
+              <option value="7" selected>07:00</option>
+              <option value="8">08:00</option>
+              <option value="9">09:00</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="savePrefsBtn" type="button" class="uget-btn uget-btn-navy uget-btn-sm">
+          <span data-uget-icon="verified" data-size="15"></span>
+          <span>Salvar Preferências</span>
+        </button>
+      </div>
+
+      <div class="uget-card uget-flashlight" style="padding:30px;">
+        <span class="uget-eyebrow" style="margin-bottom:8px;"><span data-uget-icon="verified" data-size="15"></span> Privacidade &amp; Conformidade LGPD</span>
+        <h3 class="uget-h4" style="margin-bottom:6px;">Central de Consentimentos</h3>
+        <p class="uget-text" style="font-size:0.84rem; margin-bottom:14px;">
+          Controle exatamente quais dados o uGet pode processar. Você pode revogar, exportar ou anonimizar sua conta a qualquer momento.
+        </p>
+
+        <div class="lgpd-row">
+          <div>
+            <strong style="display:block; font-size:0.88rem;">Geolocalização (GPS)</strong>
+            <span style="font-size:0.76rem; color:var(--uget-ink-muted);">Necessário para alertas de proximidade (sem salvar histórico).</span>
+          </div>
+          <label class="uget-switch">
+            <input id="consentGpsToggle" type="checkbox" checked />
+            <span class="uget-switch-track"></span>
+          </label>
+        </div>
+        <div class="lgpd-row">
+          <div>
+            <strong style="display:block; font-size:0.88rem;">Push Notifications HA</strong>
+            <span style="font-size:0.76rem; color:var(--uget-ink-muted);">Receber avisos de convênios ativos no seu raio.</span>
+          </div>
+          <label class="uget-switch">
+            <input id="consentPushToggle" type="checkbox" checked />
+            <span class="uget-switch-track"></span>
+          </label>
+        </div>
+        <div class="lgpd-row" style="border-bottom:none;">
+          <div>
+            <strong style="display:block; font-size:0.88rem;">Micro-pesquisa Pós-Visita</strong>
+            <span style="font-size:0.76rem; color:var(--uget-ink-muted);">Avaliação rápida de 1 clique para monitorar qualidade dos parceiros.</span>
+          </div>
+          <label class="uget-switch">
+            <input id="consentSurveysToggle" type="checkbox" checked />
+            <span class="uget-switch-track"></span>
+          </label>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;">
+          <button id="exportLgpdBtn" type="button" class="uget-btn uget-btn-soft uget-btn-sm">
+            <span data-uget-icon="arrow-right" data-size="15"></span>
+            <span>Exportar Dados (JSON)</span>
+          </button>
+          <button id="anonymizeLgpdBtn" type="button" class="uget-btn uget-btn-outline uget-btn-sm" style="color:var(--uget-error-ink); border-color:var(--uget-error-border);">
+            <span>Anonimizar Conta</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- T03 — MODAL DETALHE DO BENEFÍCIO & PARCEIRO (DEEP LINK TARGET) -->
+  <div id="detailModal" class="detail-backdrop" role="dialog" aria-modal="true" aria-labelledby="detailPartnerName">
+    <div class="detail-sheet">
+      <div class="uget-chevron-surface" style="background:var(--uget-gradient-navy); color:#fff; padding:26px 28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <span id="detailClubBadge" class="uget-badge" style="background:rgba(255,255,255,0.16); color:#fff;"></span>
+          <button id="closeDetailBtn" type="button" class="uget-btn uget-btn-sm" style="background:rgba(255,255,255,0.14); color:#fff; height:34px; padding:0 14px;">Fechar</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <span id="detailDiscountBadge" class="uget-badge uget-badge-berry uget-mono"></span>
+          <span id="detailDistanceBadge" class="uget-mono" style="font-size:0.78rem; color:#D8B4FE;"></span>
+        </div>
+        <h2 id="detailPartnerName" class="uget-h3" style="color:#fff; margin-bottom:4px;"></h2>
+        <p id="detailBenefitTitle" style="margin:0; font-size:0.92rem; color:#CBD5E1;"></p>
+      </div>
+
+      <div style="padding:24px 28px; display:flex; flex-direction:column; gap:18px;">
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+          <a id="detailRouteLink" href="#" target="_blank" rel="noopener noreferrer" class="uget-btn uget-btn-soft uget-btn-sm" style="width:100%;">
+            <span data-uget-icon="compass" data-size="16"></span> Rota
+          </a>
+          <a id="detailPhoneLink" href="#" class="uget-btn uget-btn-outline uget-btn-sm" style="width:100%;">Ligar</a>
+          <a id="detailSiteLink" href="#" target="_blank" rel="noopener noreferrer" class="uget-btn uget-btn-outline uget-btn-sm" style="width:100%;">Site</a>
+        </div>
+
+        <div>
+          <strong style="display:block; font-size:0.84rem; margin-bottom:4px;">Regras do Convênio</strong>
+          <p id="detailRules" class="uget-text" style="font-size:0.88rem;"></p>
+        </div>
+
+        <div class="uget-alert uget-alert-geo" style="padding:12px 14px;">
+          <span data-uget-icon="pin-uget" data-size="18"></span>
+          <div style="font-size:0.82rem;">
+            <strong id="detailAddress" style="display:block;"></strong>
+            <span id="detailWindow"></span>
+          </div>
+        </div>
+
+        <button id="redeemBenefitBtn" type="button" class="uget-btn-beam" style="width:100%;">
+          <span class="uget-btn-beam-orbit"></span>
+          <span class="uget-btn-beam-inner" style="width:100%; justify-content:center;">
+            <span class="uget-btn-beam-shimmer"></span>
+            <span data-uget-icon="qr-redeem" data-size="18"></span>
+            <span>Usar Benefício (uGet Pass)</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MICRO-PESQUISA PÓS-VISITA (MÓDULO 4 — Padrão ugetds) -->
+  <div id="surveyModal" class="detail-backdrop" role="dialog" aria-modal="true" aria-labelledby="surveyTitle">
+    <div class="detail-sheet" style="max-width:460px;">
+      <div class="uget-chevron-surface" style="background:var(--uget-gradient-brand); color:#fff; padding:22px 26px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span class="uget-mono" style="font-size:0.72rem; opacity:0.88;">MICRO-PESQUISA PÓS-VISITA</span>
+          <h3 id="surveyTitle" class="uget-h4" style="color:#fff; margin-top:4px;">Como foi seu atendimento?</h3>
+        </div>
+        <button id="closeSurveyBtn" type="button" class="uget-btn uget-btn-sm" style="background:rgba(255,255,255,0.18); color:#fff; height:32px; padding:0 12px;">Fechar</button>
+      </div>
+      <form id="surveyForm" style="padding:24px 26px; display:flex; flex-direction:column; gap:16px;">
+        <div class="uget-field">
+          <span class="uget-label">Sua nota (1 a 5)</span>
+          <div id="surveyStarRow" class="star-row">
+            <button type="button" class="star-btn" data-star="1">★</button>
+            <button type="button" class="star-btn" data-star="2">★</button>
+            <button type="button" class="star-btn" data-star="3">★</button>
+            <button type="button" class="star-btn" data-star="4">★</button>
+            <button type="button" class="star-btn is-active" data-star="5">★</button>
+          </div>
+        </div>
+
+        <div class="lgpd-row" style="padding:10px 0; border-bottom:none;">
+          <span style="font-size:0.86rem; font-weight:500;">O desconto foi honrado sem burocracia</span>
+          <label class="uget-switch">
+            <input id="surveyHonoredInput" type="checkbox" checked />
+            <span class="uget-switch-track"></span>
+          </label>
+        </div>
+
+        <div class="uget-field">
+          <label for="surveySavedInput" class="uget-label">Economia estimada (R$)</label>
+          <input id="surveySavedInput" class="uget-input" type="number" min="0" step="1" value="35" />
+        </div>
+
+        <div class="uget-field">
+          <label for="surveyCommentInput" class="uget-label">Comentário rápido (opcional)</label>
+          <input id="surveyCommentInput" class="uget-input" type="text" placeholder="Ex.: Atendimento excelente e desconto aplicado na hora!" />
+        </div>
+
+        <button type="submit" class="uget-btn uget-btn-brand" style="width:100%;">
+          <span data-uget-icon="verified" data-size="16"></span>
+          <span>Enviar Avaliação</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../../ugetds/ugetds.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

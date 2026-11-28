@@ -1,0 +1,16 @@
+{
+  "name": "mpdownloader",
+  "version": "2.0.0",
+  "description": "Mpdownloader — Captura offline completa de sites com Playwright + Chromium (Padrão MPDs)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup": "npm install && npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

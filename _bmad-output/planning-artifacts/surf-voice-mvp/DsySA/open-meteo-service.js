@@ -1,140 +1,101 @@
 /**
- * Open-Meteo Surf & Marine Data Ingestion and Normalization Service
- * 
- * Camada de ingestão e normalização de dados meteorológicos e oceanográficos
- * alimentada pelos modelos NOAA WaveWatch III, GFS, ICON e modelos harmônicos
- * de maré via Open-Meteo REST APIs públicas e gratuitas.
+ * surfeAgent — Serviço de Previsão Oceanográfica & Meteorológica (Padrão Surfguru)
+ *
+ * Pipeline limpo, direto e sem multiplicadores artificiais:
+ * - Ondas & Energia: Open-Meteo Marine API (NOAA WW3 / ECMWF WAM) nas coordenadas exatas do pico
+ * - Vento & Clima:   Open-Meteo Forecast API usando NOAA GFS (`models=gfs_seamless`) em nós (`kn`)
+ * - Energia (J/m²):  E = (1/8) * 1025 * 9.81 * H² ≈ 1256.9 * H² (fórmula física padrão)
+ * - Potência (kW/m): P ≈ 0.49 * H² * T
+ * - Maré:            sea_level_height_msl + 1.25 m (escala positiva 0.0m – 2.5m)
  */
 
-/**
- * 16 Pontos Cardeais Meteorológicos (Resolução de 22.5° por setor)
- */
 const CARDINAL_POINTS_16 = [
   'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
   'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
 ];
 
+const SEAWATER_DENSITY = 1025; // kg/m³
+const GRAVITY = 9.81;          // m/s²
+const TIDE_DATUM_OFFSET_M = 1.25;
+
 /**
- * Converte azimutes (0° a 360°) para a sigla do ponto cardeal correspondente (16 direções).
- * Setores de 22.5° centrados nos pontos cardeais (ex: N entre 348.75° e 11.25°).
- *
- * @param {number|null|undefined} degrees - Direção em graus
- * @returns {string|null} Sigla cardinal (ex: "SE", "NE") ou null se inválido
+ * Calcula a altura de onda exibida (`displayWaveHeight`) conforme o perfil costeiro determinístico:
+ * - exposed_beach:  wave_height (altura total combinada: swell + vagas locais)
+ * - sheltered_cove: (swell_wave_height || wave_height) * 0.90 (filtra marola local de vento)
+ * - reef_point:     se dir (125°–215°, SE–SW) => (swell_wave_height || wave_height) * 1.10;
+ *                   caso contrário (E/NE paralelo) => (swell_wave_height || wave_height) * 0.85
+ */
+function computeProfileWaveHeight(spotProfile, waveHeight, swellWaveHeight, dirDeg) {
+  const wH = waveHeight !== null && waveHeight !== undefined && !isNaN(waveHeight) ? Number(waveHeight) : null;
+  const sH = swellWaveHeight !== null && swellWaveHeight !== undefined && !isNaN(swellWaveHeight) && Number(swellWaveHeight) > 0
+    ? Number(swellWaveHeight)
+    : wH;
+  const baseSwell = sH !== null ? sH : (wH || 0);
+  const profile = spotProfile || 'exposed_beach';
+
+  if (profile === 'sheltered_cove') {
+    return baseSwell * 0.90;
+  }
+  if (profile === 'reef_point') {
+    const dir = dirDeg !== null && dirDeg !== undefined && !isNaN(dirDeg) ? Number(dirDeg) : null;
+    if (dir !== null && dir >= 125 && dir <= 215) {
+      return baseSwell * 1.10;
+    }
+    return baseSwell * 0.85;
+  }
+  return wH !== null ? wH : baseSwell;
+}
+
+/**
+ * Converte azimute (0°–360°) para sigla cardeal (16 direções)
  */
 function degreesToCardinal(degrees) {
   if (degrees === null || degrees === undefined || isNaN(degrees)) {
     return null;
   }
-  const normalized = ((degrees % 360) + 360) % 360;
+  const normalized = ((Number(degrees) % 360) + 360) % 360;
   const index = Math.round(normalized / 22.5) % 16;
   return CARDINAL_POINTS_16[index];
 }
 
 /**
- * Constantes do Ensemble Costeiro de Vento (40% ICON + 40% ECMWF + 20% GFS)
- * e fator físico de potência de onda (E_joules = k * (H1^2 * T1 + H2^2 * T2))
+ * Densidade de energia de ondas oceânicas em Joules/m² sobre a altura resultante da bancada:
+ * E = Math.round(1257 * Math.pow(displayWaveHeight, 2))
  */
-const WIND_ENSEMBLE_MODELS = [
-  { key: 'icon_seamless', weight: 0.4 },
-  { key: 'ecmwf_ifs025', weight: 0.4 },
-  { key: 'gfs_seamless', weight: 0.2 }
-];
-const WAVE_ENERGY_SCALE_K = 72;
-
-/**
- * Média ponderada escalar com renormalização dinâmica quando algum modelo retorna null
- */
-function computeWeightedScalar(samples, decimals = 1) {
-  let weightedSum = 0;
-  let totalWeight = 0;
-  for (const s of samples) {
-    if (s && s.value !== null && s.value !== undefined && !isNaN(s.value) && s.weight > 0) {
-      weightedSum += Number(s.value) * s.weight;
-      totalWeight += s.weight;
-    }
-  }
-  if (totalWeight <= 0) return null;
-  return Number((weightedSum / totalWeight).toFixed(decimals));
+function calculateWaveEnergyJoulesM2(heightM) {
+  const h = Number(heightM);
+  if (!Number.isFinite(h) || h <= 0) return 0;
+  return Math.round(1257 * Math.pow(h, 2));
 }
 
 /**
- * Média vetorial ponderada para direções em graus (0°–360°):
- * U = Σ w_i * sin(θ_i), V = Σ w_i * cos(θ_i), θ = atan2(U, V)
- * Evita distorção no cruzamento 359° ↔ 0°.
+ * Fluxo de potência de onda em kW/m:
+ * P ≈ 0.49 * H² * T
  */
-function computeWeightedVectorDirection(samples) {
-  let sumU = 0;
-  let sumV = 0;
-  let totalWeight = 0;
-  for (const s of samples) {
-    if (s && s.deg !== null && s.deg !== undefined && !isNaN(s.deg) && s.weight > 0) {
-      const rad = (Number(s.deg) * Math.PI) / 180;
-      sumU += s.weight * Math.sin(rad);
-      sumV += s.weight * Math.cos(rad);
-      totalWeight += s.weight;
-    }
-  }
-  if (totalWeight <= 0) return null;
-  const avgDeg = ((Math.atan2(sumU, sumV) * 180) / Math.PI + 360) % 360;
-  return Math.round(avgDeg) % 360;
+function calculateWavePowerKwM(heightM, periodS) {
+  const h = Number(heightM);
+  const t = Number(periodS);
+  if (!Number.isFinite(h) || !Number.isFinite(t) || h <= 0 || t <= 0) return 0;
+  return Number((0.49 * h * h * t).toFixed(1));
 }
 
-/**
- * Calcula o Índice Relativo de Energia do Swell (compatibilidade)
- */
 function calculateSwellEnergyIndex(heightM, periodS) {
-  if (!heightM || !periodS || heightM <= 0 || periodS <= 0) {
-    return 0.0;
-  }
-  const energy = Math.pow(heightM, 2) * periodS;
-  return Number(energy.toFixed(1));
+  return calculateWaveEnergyJoulesM2(heightM);
+}
+
+function roundOrNull(val, decimals = 1) {
+  if (val === null || val === undefined || isNaN(val)) return null;
+  return Number(Number(val).toFixed(decimals));
 }
 
 /**
- * Fórmula Física Calibrada de Potência Combinada em Joules:
- * E_joules = k * (H1^2 * T1 + H2^2 * T2)
- * onde k = 72 alinha 500 J ao limiar de ondas com boa pressão/força.
+ * Detecção parabólica de picos de maré (Preia-mar / HIGH e Baixa-mar / LOW)
+ * com offset fixo de +1.25 m sobre sea_level_height_msl.
  */
-function calculateCombinedWaveEnergyJoules(h1, t1, h2 = 0, t2 = 0, k = WAVE_ENERGY_SCALE_K) {
-  const term1 = h1 > 0 && t1 > 0 ? Math.pow(Number(h1), 2) * Number(t1) : 0;
-  const term2 = h2 > 0 && t2 > 0 ? Math.pow(Number(h2), 2) * Number(t2) : 0;
-  return Math.round(k * (term1 + term2));
-}
-
-/**
- * Calcula o offset positivo do Datum Costeiro (Nível Zero Náutico)
- * garantindo que todas as alturas de maré operem em escala positiva (>= 0.15m)
- */
-function computeCoastalDatumOffset(heights) {
-  let minVal = Infinity;
-  for (let i = 0; i < heights.length; i++) {
-    const v = heights[i];
-    if (v !== null && v !== undefined && !isNaN(v) && v < minVal) {
-      minVal = v;
-    }
-  }
-  if (!isFinite(minVal)) return 1.25;
-  return Number(Math.max(1.25, Math.abs(Math.min(0, minVal)) + 0.15).toFixed(2));
-}
-
-/**
- * Detecta picos de maré (Preia-mar / "HIGH" e Baixa-mar / "LOW") a partir
- * do array horário contínuo de altura do nível do mar (MSL).
- * 
- * Utiliza interpolação parabólica sub-horária para determinar o minuto exato do pico
- * e converte para Cota Náutica / Nível de Redução (NR) positivo.
- *
- * @param {Array<string>} times - Array de timestamps ISO
- * @param {Array<number|null>} heights - Série horária de alturas de maré (m)
- * @param {number} [datumOffset] - Offset positivo de calibração costeira
- * @returns {Array<Object|null>} Array de mesmo comprimento com anotações de maré
- */
-function detectTideExtrema(times, heights, datumOffset = null) {
+function detectTideExtrema(times, heights) {
   const n = heights.length;
   const results = new Array(n).fill(null);
   if (n < 3) return results;
-
-  const offset = datumOffset !== null ? datumOffset : computeCoastalDatumOffset(heights);
 
   for (let i = 1; i < n - 1; i++) {
     const y0 = heights[i];
@@ -157,98 +118,96 @@ function detectTideExtrema(times, heights, datumOffset = null) {
       }
 
       const timeStr = times[i] || '';
-      const parts = timeStr.split('T');
-      const timePart = parts[1] || '00:00';
+      const timePart = (timeStr.split('T')[1]) || '00:00';
       const [hBase] = timePart.split(':').map(Number);
       const totalMinutes = Math.round((hBase + delta) * 60);
       const finalH = Math.min(23, Math.max(0, Math.floor(totalMinutes / 60)));
       const finalM = Math.min(59, Math.max(0, totalMinutes % 60));
       const formattedTime = `${String(finalH).padStart(2, '0')}:${String(finalM).padStart(2, '0')}h`;
-      
-      // Conversão calibrada de MSL para Cota Náutica positiva (Datum Costeiro)
-      const nauticalHeightM = +(exactH + offset).toFixed(2);
+      const nauticalHeightM = Math.max(0, Number((exactH + TIDE_DATUM_OFFSET_M).toFixed(2)));
 
       results[i] = {
         type: isHigh ? 'HIGH' : 'LOW',
         exactTime: formattedTime,
         hourFloat: +(hBase + delta).toFixed(2),
         mslHeightM: +(exactH).toFixed(2),
-        nauticalHeightM: Math.max(0.1, nauticalHeightM)
+        nauticalHeightM
       };
     }
   }
-
   return results;
 }
 
 /**
- * Sanitiza valores numéricos garantindo precisão e tipo seguro
- * @param {number|null|undefined} val 
- * @param {number} decimals 
- * @returns {number|null}
+ * Purga chaves antigas de cache de versões anteriores no localStorage
  */
-function roundOrNull(val, decimals = 1) {
-  if (val === null || val === undefined || isNaN(val)) return null;
-  return Number(Number(val).toFixed(decimals));
+function purgeLegacyForecastCaches() {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    for (let k = localStorage.length - 1; k >= 0; k--) {
+      const key = localStorage.key(k);
+      if (key && (key.startsWith('dsysa_cache_') || key.startsWith('surfguru_std_v1_') || key.startsWith('surfguru_ww3_v2_') || key.startsWith('surfguru_ww3_v3_') || key.startsWith('surfguru_ww3_v4_'))) {
+        localStorage.removeItem(key);
+      }
+    }
+  } catch (_) {}
 }
 
 /**
- * Ingestão e normalização completa de previsão de surf via Open-Meteo
- *
- * Dispara requisições paralelas para as APIs Marinha e Atmosférica,
- * sincroniza as séries pelo timestamp ISO e formata a resposta no contrato JSON padrão.
- *
- * @param {Object} options
- * @param {number} options.lat - Latitude do pico (ex: -12.95)
- * @param {number} options.lon - Longitude do pico (ex: -38.35)
- * @param {string} [options.timezone='America/Sao_Paulo'] - Timezone IANA
- * @param {number} [options.forecastDays=14] - Dias de previsão (1 a 16)
- * @returns {Promise<Object>} Contrato JSON normalizado para consumo pelo front-end
+ * Ingestão direta e limpa (Padrão Surfguru):
+ * - Marine API: coordenadas exatas do pico (WW3 / ECMWF WAM)
+ * - Forecast API: modelo NOAA GFS (`models=gfs_seamless`) em nós (`kn`)
  */
 async function fetchSurfForecast({
   lat,
   lon,
+  spotProfile = 'exposed_beach',
   timezone = 'auto',
-  forecastDays = 15
+  forecastDays = 7
 }) {
   if (lat === undefined || lon === undefined) {
     throw new Error('Parâmetros obrigatórios ausentes: lat e lon');
   }
 
+  const exactLat = Number(lat);
+  const exactLon = Number(lon);
+  const resolvedProfile = ['reef_point', 'sheltered_cove', 'exposed_beach'].includes(spotProfile)
+    ? spotProfile
+    : 'exposed_beach';
+  const marineDays = Math.min(8, Math.max(1, Number(forecastDays) || 7));
+  const weatherDays = Math.min(15, Math.max(7, Number(forecastDays) || 7));
   const encodedTz = encodeURIComponent(timezone);
 
-  // 1. Tenta consumir o endpoint de Backend / Edge Function com cache de 2 horas (/api/forecast)
-  if (typeof window !== 'undefined' && window.location && window.location.origin) {
+  purgeLegacyForecastCaches();
+
+  // 1. Tenta backend local (/api/forecast) se estiver rodando via servidor Node
+  if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
     try {
-      const apiUrl = `/api/forecast?lat=${lat}&lon=${lon}&timezone=${encodedTz}&forecast_days=${forecastDays}`;
+      const apiUrl = `/api/forecast?lat=${exactLat}&lon=${exactLon}&spot_profile=${encodeURIComponent(resolvedProfile)}&timezone=${encodedTz}&forecast_days=${weatherDays}`;
       const apiRes = await fetch(apiUrl);
       if (apiRes.ok) {
-        const cacheHeader = apiRes.headers.get('X-Cache') || 'REMOTE';
-        console.log(`⚡ [Backend / Edge Cache] Previsão carregada via ${apiUrl} (${cacheHeader})`);
         return await apiRes.json();
       }
     } catch (_) {
-      // Se a rota local não estiver rodando (ex: aberto estático), continua para a ingestão direta
+      // Fallback direto para Open-Meteo
     }
   }
 
-  // 2. Cache Local de Navegador (TTL = 2 horas) como fallback resiliente
-  const clientCacheKey = `dsysa_cache_v4_${Number(lat).toFixed(2)}_${Number(lon).toFixed(2)}_${forecastDays}`;
+  // 2. Cache local limpo (TTL = 2 horas) — Perfis Costeiros Determinísticos + NOAA WW3 + NOAA GFS
+  const clientCacheKey = `surfguru_profile_v5_${exactLat.toFixed(4)}_${exactLon.toFixed(4)}_${resolvedProfile}_${weatherDays}`;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
       const rawCache = localStorage.getItem(clientCacheKey);
       if (rawCache) {
         const parsedCache = JSON.parse(rawCache);
         if (parsedCache.expiresAt && parsedCache.expiresAt > Date.now()) {
-          const remainingMin = Math.round((parsedCache.expiresAt - Date.now()) / 60000);
-          console.log(`💾 [Browser Cache HIT] Dados Multi-Modelo reutilizados do localStorage. Expira em ${remainingMin} min.`);
           return parsedCache.data;
         }
       }
     } catch (_) {}
   }
 
-  // 3. Endpoint Marinho (NOAA WW3 + Modelos Harmônicos de Maré + Copernicus SST)
+  // 3. Marine API — Modelo NOAA WaveWatch III (`ncep_gfswave025`, mesmo modelo do Surfguru)
   const marineParams = [
     'wave_height',
     'wave_direction',
@@ -259,260 +218,236 @@ async function fetchSurfForecast({
     'secondary_swell_wave_height',
     'secondary_swell_wave_direction',
     'secondary_swell_wave_period',
+    'wind_wave_height',
+    'wind_wave_direction',
+    'wind_wave_period',
     'sea_level_height_msl',
     'sea_surface_temperature'
   ].join(',');
+  const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${exactLat}&longitude=${exactLon}&models=ncep_gfswave025&hourly=${marineParams}&timezone=${encodedTz}&forecast_days=${marineDays}`;
 
-  const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=${marineParams}&timezone=${encodedTz}&forecast_days=${forecastDays}`;
+  // 4. Forecast API — Modelo NOAA GFS (`gfs_seamless`) em nós (padrão Surfguru)
+  const weatherParams = 'wind_speed_10m,wind_direction_10m,wind_gusts_10m';
+  const currentParams = 'wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,is_day,cloud_cover,temperature_2m';
+  const dailyParams = 'weather_code,temperature_2m_max,temperature_2m_min';
+  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${exactLat}&longitude=${exactLon}&models=gfs_seamless&hourly=${weatherParams}&current=${currentParams}&daily=${dailyParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${weatherDays}`;
 
-  // 4. Endpoint Atmosférico — Ensemble Costeiro Multi-Modelo (40% ICON + 40% ECMWF + 20% GFS)
-  const weatherParams = [
-    'wind_speed_10m',
-    'wind_direction_10m',
-    'wind_gusts_10m'
-  ].join(',');
-
-  const currentParams = [
-    'wind_speed_10m',
-    'wind_direction_10m',
-    'wind_gusts_10m',
-    'weather_code',
-    'is_day',
-    'cloud_cover',
-    'temperature_2m'
-  ].join(',');
-
-  const dailyParams = [
-    'weather_code',
-    'temperature_2m_max',
-    'temperature_2m_min'
-  ].join(',');
-
-  const modelsParam = WIND_ENSEMBLE_MODELS.map((m) => m.key).join(',');
-  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&models=${modelsParam}&hourly=${weatherParams}&current=${currentParams}&daily=${dailyParams}&wind_speed_unit=kn&timezone=${encodedTz}&forecast_days=${forecastDays}`;
-
-  // Execução assíncrona paralela (Promise.all)
   const [marineRes, weatherRes] = await Promise.all([
     fetch(marineUrl).then((r) => {
-      if (!r.ok) throw new Error(`Falha na API Marinha Open-Meteo: HTTP ${r.status}`);
+      if (!r.ok) throw new Error(`Falha na Marine API Open-Meteo: HTTP ${r.status}`);
       return r.json();
     }),
     fetch(weatherUrl).then((r) => {
-      if (!r.ok) throw new Error(`Falha na API Atmosférica Open-Meteo: HTTP ${r.status}`);
+      if (!r.ok) throw new Error(`Falha na Forecast API Open-Meteo (GFS): HTTP ${r.status}`);
       return r.json();
     })
   ]);
 
   const marineHourly = marineRes.hourly || {};
   const weatherHourly = weatherRes.hourly || {};
-
   const marineTimes = marineHourly.time || [];
   const weatherTimes = weatherHourly.time || [];
 
-  // Helper para ler série horária de um modelo (com fallback para chave sem sufixo)
-  const readEnsembleHourly = (baseField, idx) =>
-    WIND_ENSEMBLE_MODELS.map((m) => ({
-      weight: m.weight,
-      value: weatherHourly[`${baseField}_${m.key}`]?.[idx]
-    }));
+  // Leitura direta do GFS (suporta chave direta ou sufixada `_gfs_seamless`)
+  const readGfsArr = (field) => weatherHourly[field] || weatherHourly[`${field}_gfs_seamless`] || [];
+  const gfsSpeedArr = readGfsArr('wind_speed_10m');
+  const gfsGustsArr = readGfsArr('wind_gusts_10m');
+  const gfsDirArr = readGfsArr('wind_direction_10m');
 
-  const readEnsembleCurrent = (rawObj, baseField) =>
-    WIND_ENSEMBLE_MODELS.map((m) => ({
-      weight: m.weight,
-      value: rawObj[`${baseField}_${m.key}`]
-    }));
-
-  const pickFirstValid = (rawObj, baseField, idx = null) => {
-    for (const m of WIND_ENSEMBLE_MODELS) {
-      const container = rawObj[`${baseField}_${m.key}`];
-      const v = idx !== null ? container?.[idx] : container;
-      if (v !== null && v !== undefined && !isNaN(v)) return v;
-    }
-    const fallback = idx !== null ? rawObj[baseField]?.[idx] : rawObj[baseField];
-    return fallback !== null && fallback !== undefined && !isNaN(fallback) ? fallback : null;
-  };
-
-  // Fusão Ponderada Costeira do Vento (40% ICON + 40% ECMWF + 20% GFS + Média Vetorial sin/cos)
   const weatherMap = new Map();
   for (let i = 0; i < weatherTimes.length; i++) {
     const t = weatherTimes[i];
-    const speedEnsemble = computeWeightedScalar(readEnsembleHourly('wind_speed_10m', i), 1);
-    const gustsEnsemble = computeWeightedScalar(readEnsembleHourly('wind_gusts_10m', i), 1);
-    const dirEnsemble = computeWeightedVectorDirection(
-      WIND_ENSEMBLE_MODELS.map((m) => ({
-        weight: m.weight,
-        deg: weatherHourly[`wind_direction_10m_${m.key}`]?.[i]
-      }))
-    );
-
+    const spd = gfsSpeedArr[i];
+    const gst = gfsGustsArr[i];
+    const dir = gfsDirArr[i];
     weatherMap.set(t, {
-      speedKnots: speedEnsemble !== null ? speedEnsemble : roundOrNull(weatherHourly.wind_speed_10m?.[i], 1),
-      gustsKnots: gustsEnsemble !== null ? gustsEnsemble : roundOrNull(weatherHourly.wind_gusts_10m?.[i], 1),
-      directionDeg: dirEnsemble !== null ? dirEnsemble : roundOrNull(weatherHourly.wind_direction_10m?.[i], 0)
+      speedKnots: spd !== null && spd !== undefined && !isNaN(spd) ? Math.round(Number(spd)) : null,
+      gustsKnots: gst !== null && gst !== undefined && !isNaN(gst) ? Math.round(Number(gst)) : null,
+      directionDeg: dir !== null && dir !== undefined && !isNaN(dir) ? Math.round(Number(dir)) % 360 : null
     });
   }
 
-  // Calibração do Nível Zero (Datum Costeiro positivo) e detecção precisa de estofos (HIGH/LOW)
-  const seaLevels = marineHourly.sea_level_height_msl || [];
-  const datumOffset = computeCoastalDatumOffset(seaLevels);
-  const tideExtrema = detectTideExtrema(marineTimes, seaLevels, datumOffset);
+  // Leitura direta do NOAA WW3 (suporta chave direta ou sufixada `_ncep_gfswave025`)
+  const readMarineArr = (field) => marineHourly[field] || marineHourly[`${field}_ncep_gfswave025`] || [];
+  const waveHeightArr = readMarineArr('wave_height');
+  const wavePeriodArr = readMarineArr('wave_period');
+  const waveDirArr = readMarineArr('wave_direction');
+  const swellHeightArr = readMarineArr('swell_wave_height');
+  const swellPeriodArr = readMarineArr('swell_wave_period');
+  const swellDirArr = readMarineArr('swell_wave_direction');
+  const secSwellHeightArr = readMarineArr('secondary_swell_wave_height');
+  const secSwellPeriodArr = readMarineArr('secondary_swell_wave_period');
+  const secSwellDirArr = readMarineArr('secondary_swell_wave_direction');
+  const windWaveHeightArr = readMarineArr('wind_wave_height');
+  const windWavePeriodArr = readMarineArr('wind_wave_period');
+  const windWaveDirArr = readMarineArr('wind_wave_direction');
+  const seaTempArr = readMarineArr('sea_surface_temperature');
 
-  // Construção da linha do tempo normalizada (Timeline)
+  const seaLevels = readMarineArr('sea_level_height_msl');
+  const tideExtrema = detectTideExtrema(marineTimes, seaLevels);
+
   const timeline = [];
-
   for (let i = 0; i < marineTimes.length; i++) {
     const timestamp = marineTimes[i];
-    const windData = weatherMap.get(timestamp) || {
-      speedKnots: null,
-      gustsKnots: null,
-      directionDeg: null
-    };
+    const windData = weatherMap.get(timestamp) || { speedKnots: null, gustsKnots: null, directionDeg: null };
 
-    const totalHeight = roundOrNull(marineHourly.wave_height?.[i], 1);
-    const wavePeriod = roundOrNull(marineHourly.wave_period?.[i], 0);
-    const waveDirDeg = roundOrNull(marineHourly.wave_direction?.[i], 0);
+    // Componentes espectrais puros da Open-Meteo (NOAA WW3) sem deslocamento de coordenadas
+    const rawWaveH = waveHeightArr[i];
+    const rawSwellHVal = swellHeightArr[i];
+    const rawWaveP = wavePeriodArr[i];
+    const rawSwellPVal = swellPeriodArr[i];
+    const rawWaveD = waveDirArr[i];
+    const rawSwellDVal = swellDirArr[i];
 
-    const primaryHeight = roundOrNull(marineHourly.swell_wave_height?.[i], 1);
-    const primaryPeriod = roundOrNull(marineHourly.swell_wave_period?.[i], 0);
-    const primaryDirDeg = roundOrNull(marineHourly.swell_wave_direction?.[i], 0);
+    const totalWaveHeight = roundOrNull(rawWaveH, 1);
+    const totalWavePeriod = roundOrNull(rawWaveP, 1);
+    const totalWaveDir = roundOrNull(rawWaveD, 0);
 
-    const secondaryHeight = roundOrNull(marineHourly.secondary_swell_wave_height?.[i], 1);
-    const secondaryPeriod = roundOrNull(marineHourly.secondary_swell_wave_period?.[i], 0);
-    const secondaryDirDeg = roundOrNull(marineHourly.secondary_swell_wave_direction?.[i], 0);
+    const rawSwellH = roundOrNull(rawSwellHVal, 1);
+    const rawSwellP = roundOrNull(rawSwellPVal, 1);
+    const rawSwellDir = roundOrNull(rawSwellDVal, 0);
 
-    const windDirDeg = windData.directionDeg;
+    // Período e Direção determinísticos sem alterações: swell_wave_* com fallback para wave_*
+    const displayPeriod = roundOrNull(rawSwellPVal || rawWaveP, 1);
+    const displayDir = roundOrNull(rawSwellDVal || rawWaveD, 0);
+
+    // Altura exibida (displayWaveHeight) calculada pelo Perfil Costeiro (spotProfile)
+    const exactDisplayH = computeProfileWaveHeight(resolvedProfile, rawWaveH, rawSwellHVal, displayDir);
+    const displayWaveHeight = roundOrNull(exactDisplayH, 1);
+
+    const swellPrimaryHeight = rawSwellH !== null ? rawSwellH : totalWaveHeight;
+    const swellPrimaryPeriod = displayPeriod;
+    const swellPrimaryDir = displayDir;
+
+    const secondaryHeight = roundOrNull(secSwellHeightArr[i], 1);
+    const secondaryPeriod = roundOrNull(secSwellPeriodArr[i], 1);
+    const secondaryDir = roundOrNull(secSwellDirArr[i], 0);
+
+    const windWaveHeight = roundOrNull(windWaveHeightArr[i], 1);
+    const windWavePeriod = roundOrNull(windWavePeriodArr[i], 1);
+    const windWaveDir = roundOrNull(windWaveDirArr[i], 0);
+
+    // Energia (J/m²) calculada sobre a altura resultante da bancada: Math.round(1257 * displayWaveHeight²)
+    const energyJoulesM2 = calculateWaveEnergyJoulesM2(exactDisplayH);
+    const powerKwM = calculateWavePowerKwM(exactDisplayH, displayPeriod || 0);
+
     const extremaObj = tideExtrema[i];
-    const h1ForEnergy = primaryHeight !== null ? primaryHeight : (totalHeight || 0);
-    const t1ForEnergy = primaryPeriod !== null ? primaryPeriod : (wavePeriod || 0);
-    const energyJoules = calculateCombinedWaveEnergyJoules(
-      h1ForEnergy,
-      t1ForEnergy,
-      secondaryHeight || 0,
-      secondaryPeriod || 0
-    );
+    const msl = seaLevels[i];
+    const nauticalHeightM = msl !== null && msl !== undefined && !isNaN(msl)
+      ? Math.max(0, Number((msl + TIDE_DATUM_OFFSET_M).toFixed(2)))
+      : null;
 
     timeline.push({
       timestamp,
       swell: {
-        totalHeightM: totalHeight,
-        wavePeriodS: wavePeriod,
-        waveDirectionDeg: waveDirDeg,
+        spotProfile: resolvedProfile,
+        displayHeightM: displayWaveHeight,
+        displayPeriodS: displayPeriod,
+        displayDirectionDeg: displayDir,
+        displayDirectionCardinal: degreesToCardinal(displayDir),
+        totalHeightM: totalWaveHeight,
+        wavePeriodS: totalWavePeriod,
+        waveDirectionDeg: totalWaveDir,
+        waveDirectionCardinal: degreesToCardinal(totalWaveDir),
         primary: {
-          heightM: primaryHeight,
-          periodS: primaryPeriod,
-          directionDeg: primaryDirDeg,
-          directionCardinal: degreesToCardinal(primaryDirDeg)
+          heightM: swellPrimaryHeight,
+          periodS: swellPrimaryPeriod,
+          directionDeg: swellPrimaryDir,
+          directionCardinal: degreesToCardinal(swellPrimaryDir)
         },
         secondary: {
           heightM: secondaryHeight,
           periodS: secondaryPeriod,
-          directionDeg: secondaryDirDeg,
-          directionCardinal: degreesToCardinal(secondaryDirDeg)
+          directionDeg: secondaryDir,
+          directionCardinal: degreesToCardinal(secondaryDir)
         },
-        energyIndex: calculateSwellEnergyIndex(primaryHeight, primaryPeriod),
-        energyJoules
+        windWave: {
+          heightM: windWaveHeight,
+          periodS: windWavePeriod,
+          directionDeg: windWaveDir,
+          directionCardinal: degreesToCardinal(windWaveDir)
+        },
+        energyJoulesM2,
+        powerKwM,
+        energyIndex: energyJoulesM2
       },
       wind: {
         speedKnots: windData.speedKnots,
         gustsKnots: windData.gustsKnots,
-        directionDeg: windDirDeg,
-        directionCardinal: degreesToCardinal(windDirDeg),
-        ensemble: 'ICON40/ECMWF40/GFS20'
+        directionDeg: windData.directionDeg,
+        directionCardinal: degreesToCardinal(windData.directionDeg),
+        model: 'gfs_seamless'
       },
       tide: {
-        heightM: roundOrNull(seaLevels[i], 1),
-        nauticalHeightM: roundOrNull((seaLevels[i] !== null && seaLevels[i] !== undefined) ? Math.max(0.1, seaLevels[i] + datumOffset) : null, 2),
-        datumOffsetM: datumOffset,
+        heightM: roundOrNull(msl, 2),
+        nauticalHeightM,
         type: extremaObj ? extremaObj.type : null,
         exactTime: extremaObj ? extremaObj.exactTime : null,
         hourFloat: extremaObj ? extremaObj.hourFloat : null,
         peakNauticalHeightM: extremaObj ? extremaObj.nauticalHeightM : null
       },
-      waterTempC: roundOrNull(marineHourly.sea_surface_temperature?.[i], 1)
+      waterTempC: roundOrNull(seaTempArr[i], 1)
     });
   }
 
   const currentRaw = weatherRes.current || {};
-  const curWeatherCode = pickFirstValid(currentRaw, 'weather_code');
-  const curIsDay = pickFirstValid(currentRaw, 'is_day');
-  const curCloudCover = computeWeightedScalar(readEnsembleCurrent(currentRaw, 'cloud_cover'), 0);
-  const curTempC = computeWeightedScalar(readEnsembleCurrent(currentRaw, 'temperature_2m'), 0);
-  const curWindKnots = computeWeightedScalar(readEnsembleCurrent(currentRaw, 'wind_speed_10m'), 1);
-  const curGustsKnots = computeWeightedScalar(readEnsembleCurrent(currentRaw, 'wind_gusts_10m'), 1);
-  const curWindDirDeg = computeWeightedVectorDirection(
-    WIND_ENSEMBLE_MODELS.map((m) => ({
-      weight: m.weight,
-      deg: currentRaw[`wind_direction_10m_${m.key}`]
-    }))
-  );
-
+  const readGfsCur = (field) => currentRaw[field] ?? currentRaw[`${field}_gfs_seamless`];
   const currentWeather = {
-    weatherCode: curWeatherCode !== null ? Number(curWeatherCode) : 0,
-    isDay: curIsDay !== null ? Number(curIsDay) : 1,
-    cloudCover: curCloudCover !== null ? curCloudCover : (typeof currentRaw.cloud_cover === 'number' ? currentRaw.cloud_cover : 0),
-    temperatureC: curTempC !== null ? curTempC : roundOrNull(currentRaw.temperature_2m, 0),
-    windSpeedKnots: curWindKnots !== null ? curWindKnots : roundOrNull(currentRaw.wind_speed_10m, 1),
-    windGustsKnots: curGustsKnots !== null ? curGustsKnots : roundOrNull(currentRaw.wind_gusts_10m, 1),
-    windDirectionDeg: curWindDirDeg !== null ? curWindDirDeg : roundOrNull(currentRaw.wind_direction_10m, 0),
+    weatherCode: typeof readGfsCur('weather_code') === 'number' ? readGfsCur('weather_code') : 0,
+    isDay: typeof readGfsCur('is_day') === 'number' ? readGfsCur('is_day') : 1,
+    cloudCover: typeof readGfsCur('cloud_cover') === 'number' ? readGfsCur('cloud_cover') : 0,
+    temperatureC: roundOrNull(readGfsCur('temperature_2m'), 0),
+    windSpeedKnots: roundOrNull(readGfsCur('wind_speed_10m'), 0),
+    windGustsKnots: roundOrNull(readGfsCur('wind_gusts_10m'), 0),
+    windDirectionDeg: roundOrNull(readGfsCur('wind_direction_10m'), 0),
     time: currentRaw.time || null,
     timezone: weatherRes.timezone || timezone
   };
 
   const dailyRaw = weatherRes.daily || {};
+  const readGfsDaily = (field) => dailyRaw[field] || dailyRaw[`${field}_gfs_seamless`] || [];
   const dailyTimes = Array.isArray(dailyRaw.time) ? dailyRaw.time : [];
-  const dailyWeather = dailyTimes.slice(0, 15).map((dateStr, idx) => {
-    const code = pickFirstValid(dailyRaw, 'weather_code', idx);
-    const tMin = computeWeightedScalar(
-      WIND_ENSEMBLE_MODELS.map((m) => ({ weight: m.weight, value: dailyRaw[`temperature_2m_min_${m.key}`]?.[idx] })),
-      0
-    );
-    const tMax = computeWeightedScalar(
-      WIND_ENSEMBLE_MODELS.map((m) => ({ weight: m.weight, value: dailyRaw[`temperature_2m_max_${m.key}`]?.[idx] })),
-      0
-    );
-    return {
-      date: dateStr,
-      weatherCode: code !== null ? Number(code) : 1,
-      tempMinC: tMin !== null ? tMin : roundOrNull(dailyRaw.temperature_2m_min?.[idx], 0),
-      tempMaxC: tMax !== null ? tMax : roundOrNull(dailyRaw.temperature_2m_max?.[idx], 0)
-    };
-  });
+  const dailyCodes = readGfsDaily('weather_code');
+  const dailyMin = readGfsDaily('temperature_2m_min');
+  const dailyMax = readGfsDaily('temperature_2m_max');
+
+  const dailyWeather = dailyTimes.slice(0, 15).map((dateStr, idx) => ({
+    date: dateStr,
+    weatherCode: typeof dailyCodes[idx] === 'number' ? dailyCodes[idx] : 1,
+    tempMinC: roundOrNull(dailyMin[idx], 0),
+    tempMaxC: roundOrNull(dailyMax[idx], 0)
+  }));
 
   const result = {
     spot: {
-      lat: Number(lat),
-      lon: Number(lon),
+      lat: exactLat,
+      lon: exactLon,
       timezone: weatherRes.timezone || timezone
     },
     meta: {
-      windEnsemble: 'icon_seamless (40%) + ecmwf_ifs025 (40%) + gfs_seamless (20%)',
-      energyScaleK: WAVE_ENERGY_SCALE_K,
-      tideDatumOffsetM: datumOffset
+      standard: `Surfguru (Perfis Costeiros Determinísticos: ${resolvedProfile})`,
+      marineModel: 'ncep_gfswave025',
+      spotProfile: resolvedProfile,
+      windModel: 'gfs_seamless',
+      energyUnit: 'J/m²',
+      tideDatumOffsetM: TIDE_DATUM_OFFSET_M
     },
     currentWeather,
     dailyWeather,
     timeline
   };
 
-  // Salva no cache do navegador por 2 horas (TTL = 7200s), limpando caches antigos para evitar QuotaExceededError
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
-      for (let k = localStorage.length - 1; k >= 0; k--) {
-        const key = localStorage.key(k);
-        if (key && (key.startsWith('dsysa_cache_v1_') || key.startsWith('dsysa_cache_v2_') || key.startsWith('dsysa_cache_v3_'))) {
-          localStorage.removeItem(key);
-        }
-      }
       localStorage.setItem(clientCacheKey, JSON.stringify({
         data: result,
-        expiresAt: Date.now() + 2 * 60 * 60 * 1000 // 2 horas
+        expiresAt: Date.now() + 2 * 60 * 60 * 1000
       }));
     } catch (_) {
-      // Se ainda estiver sem espaço, remove caches v4 antigos e tenta salvar novamente
       try {
         for (let k = localStorage.length - 1; k >= 0; k--) {
           const key = localStorage.key(k);
-          if (key && key.startsWith('dsysa_cache_v4_')) {
+          if (key && (key.startsWith('surfguru_std_v1_') || key.startsWith('surfguru_ww3_v2_') || key.startsWith('surfguru_ww3_v3_') || key.startsWith('surfguru_ww3_v4_') || key.startsWith('surfguru_profile_v5_'))) {
             localStorage.removeItem(key);
           }
         }
@@ -527,48 +462,21 @@ async function fetchSurfForecast({
   return result;
 }
 
-// Suporte para ambientes Node.js (CommonJS), Bundlers (ESM) e Navegador
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     fetchSurfForecast,
     degreesToCardinal,
+    calculateWaveEnergyJoulesM2,
+    calculateWavePowerKwM,
     calculateSwellEnergyIndex,
-    calculateCombinedWaveEnergyJoules,
-    computeWeightedScalar,
-    computeWeightedVectorDirection,
-    computeCoastalDatumOffset,
     detectTideExtrema
   };
 }
 if (typeof window !== 'undefined') {
   window.fetchSurfForecast = fetchSurfForecast;
   window.degreesToCardinal = degreesToCardinal;
+  window.calculateWaveEnergyJoulesM2 = calculateWaveEnergyJoulesM2;
+  window.calculateWavePowerKwM = calculateWavePowerKwM;
   window.calculateSwellEnergyIndex = calculateSwellEnergyIndex;
-  window.calculateCombinedWaveEnergyJoules = calculateCombinedWaveEnergyJoules;
-  window.computeWeightedScalar = computeWeightedScalar;
-  window.computeWeightedVectorDirection = computeWeightedVectorDirection;
-  window.computeCoastalDatumOffset = computeCoastalDatumOffset;
   window.detectTideExtrema = detectTideExtrema;
-}
-
-// Teste direto via CLI: `node open-meteo-service.js`
-if (typeof require !== 'undefined' && require.main === module) {
-  (async () => {
-    console.log('🌊 [Open-Meteo Surf Service] Consultando previsão para Stella Maris (-12.95, -38.35)...');
-    try {
-      const forecast = await fetchSurfForecast({ lat: -12.95, lon: -38.35, forecastDays: 2 });
-      console.log('✅ Spot:', forecast.spot);
-      console.log('✅ Total de horas normalizadas:', forecast.timeline.length);
-      console.log('\n🔍 Amostra (Primeiro ponto horário):');
-      console.log(JSON.stringify(forecast.timeline[0], null, 2));
-
-      const highs = forecast.timeline.filter((p) => p.tide.type === 'HIGH');
-      const lows = forecast.timeline.filter((p) => p.tide.type === 'LOW');
-      console.log(`\n🌊 Marés detectadas: ${highs.length} Preia-mar (HIGH) e ${lows.length} Baixa-mar (LOW)`);
-      if (highs.length > 0) console.log('   Exemplo HIGH:', highs[0].timestamp, `${highs[0].tide.heightM}m`);
-      if (lows.length > 0) console.log('   Exemplo LOW :', lows[0].timestamp, `${lows[0].tide.heightM}m`);
-    } catch (err) {
-      console.error('❌ Erro no teste do serviço:', err);
-    }
-  })();
 }

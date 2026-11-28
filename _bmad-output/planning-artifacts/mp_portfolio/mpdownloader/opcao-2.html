@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mpdownloader — Captura Offline de Qualquer Site · MPDs</title>
+  <meta name="description" content="Capture e baixe qualquer site completo em pacote .ZIP offline com HTML, CSS, fontes, scripts e imagens. Interface construída com MPDs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="../mpds/mpds.css" />
+  <style>
+    .mpd-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .mpd-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .mpd-grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); }
+    .mpd-pad { padding: 40px 48px; }
+    .mpd-border-r { border-right: 1px solid var(--mpds-border-default); }
+    .mpd-border-b { border-bottom: 1px solid var(--mpds-border-default); }
+
+    /* Seletor de Modo estilo Arquitetônico MPDs */
+    .mpd-mode-card {
+      text-align: left;
+      padding: 20px;
+      border: 1px solid var(--mpds-border-default);
+      background-color: var(--mpds-bg-elevated);
+      border-radius: var(--mpds-radius-sm);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s var(--mpds-ease-architect);
+    }
+    .mpd-mode-card:hover {
+      border-color: var(--mpds-ink-primary);
+      transform: translateY(-2px);
+    }
+    .mpd-mode-card.is-selected {
+      background-color: var(--mpds-bg-inverse);
+      border-color: var(--mpds-bg-inverse);
+      color: var(--mpds-ink-inverse);
+    }
+    .mpd-mode-card.is-selected .mpds-mono-label,
+    .mpd-mode-card.is-selected p {
+      color: var(--mpds-ink-inverse-muted) !important;
+    }
+
+    /* Checkboxes sóbrios */
+    .mpd-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: var(--mpds-ink-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+    .mpd-check input {
+      accent-color: var(--mpds-ink-primary);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    /* Terminal de Progresso */
+    .mpd-terminal {
+      background-color: var(--mpds-bg-inverse);
+      color: #D6D3D1;
+      font-family: var(--mpds-font-mono);
+      font-size: 0.74rem;
+      line-height: 1.65;
+      padding: 16px 20px;
+      border-radius: var(--mpds-radius-sm);
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .mpd-progress-track {
+      width: 100%;
+      height: 6px;
+      background-color: var(--mpds-bg-muted);
+      border-radius: var(--mpds-radius-pill);
+      overflow: hidden;
+    }
+    .mpd-progress-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--mpds-bg-inverse);
+      transition: width 0.35s var(--mpds-ease-architect);
+    }
+
+    @media (max-width: 900px) {
+      .mpd-grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .mpd-grid-2, .mpd-grid-12 { grid-template-columns: 1fr; }
+      .mpd-pad { padding: 28px 20px; }
+      .mpd-hide-sm { display: none !important; }
+      .mpd-border-r { border-right: none !important; }
+    }
+  </style>
+</head>
+<body class="mpds-body">
+
+  <div class="mpds-shell">
+    <!-- Swiss 12-Column Vertical Guides -->
+    <div class="mpds-grid-guides" aria-hidden="true">
+      <div></div><div></div><div></div>
+    </div>
+
+    <!-- ====================================================================
+         HEADER STICKY MPDs
+         ==================================================================== -->
+    <header class="mpds-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 32px; gap:16px;">
+        <nav style="display:flex; align-items:center; gap:22px;" aria-label="Navegação principal">
+          <a class="mpds-nav-link" href="#captura">Capturar</a>
+          <a class="mpds-nav-link mpd-hide-sm" href="#como-funciona">Como Funciona</a>
+          <a class="mpds-nav-link mpd-hide-sm" href="#modos">Modos</a>
+        </nav>
+
+        <a href="#top" style="display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--mpds-ink-primary);">
+          <iconify-icon icon="solar:cloud-download-bold-duotone" style="font-size:1.4rem;"></iconify-icon>
+          <span style="font-weight:700; letter-spacing:-0.04em; font-size:1.12rem;">Mpdownloader</span>
+          <span class="mpds-mono-label mpd-hide-sm" style="font-size:0.65rem; opacity:0.65;">v1.0</span>
+        </a>
+
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span id="serverStatusBadge" class="mpds-badge mpd-hide-sm">
+            <span class="mpds-status-dot"></span>Verificando motor...
+          </span>
+          <a class="mpds-nav-link" href="#historico">Histórico</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         HERO + PAINEL PRINCIPAL DE CAPTURA OFFLINE
+         ==================================================================== -->
+    <section id="top" class="mpds-section">
+      <div class="mpd-grid-12">
+        <!-- Coluna Principal (9 cols) -->
+        <div id="captura" class="mpd-pad mpd-border-r mpds-flashlight" style="grid-column: span 9; background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(234,234,229,0.2) 100%);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:28px;">
+            <span class="mpds-badge">
+              <iconify-icon icon="solar:archive-down-minimlistic-linear" style="font-size:0.95rem;"></iconify-icon>
+              Captura Offline Completa (.ZIP)
+            </span>
+            <span class="mpds-mono-label">HTML · CSS · Fontes · JS · Imagens</span>
+          </div>
+
+          <h1 class="mpds-display" style="font-size: clamp(2.4rem, 5.2vw, 4.4rem); margin-bottom: 18px;">
+            <span class="mpds-text-mask"><span class="mpds-text-mask-inner mpds-delay-100">Mpdownloader</span></span><br />
+            <span class="mpds-text-mask"><span class="mpds-text-mask-inner mpds-delay-200" style="color:var(--mpds-ink-muted); font-weight:400;">Sites Offline em 1 Clique.</span></span>
+          </h1>
+
+          <p class="mpds-body-lg mpds-animate-on-scroll mpds-delay-300" style="max-width: 640px; margin-bottom: 32px;">
+            Cole o link de qualquer página web e gere um arquivo <strong>.zip</strong> autônomo com HTML, estilos, fontes <code>@font-face</code>, scripts e imagens prontos para abrir offline por duplo clique ou servidor local.
+          </p>
+
+          <!-- Alerta caso servidor local não esteja rodando -->
+          <div id="serverOfflineAlert" class="mpds-alert mpds-alert-warning" style="display:none; margin-bottom:24px;">
+            <iconify-icon class="mpds-alert-icon" icon="solar:danger-triangle-linear"></iconify-icon>
+            <div>
+              <p class="mpds-alert-title">Servidor local do Mpdownloader não detectado</p>
+              <p class="mpds-alert-desc">
+                Para capturar sites sem bloqueio CORS do navegador, execute <code style="font-family:var(--mpds-font-mono); font-weight:600;">node server.js</code> dentro da pasta <strong>mpdownloader</strong> e acesse <code style="font-family:var(--mpds-font-mono); font-weight:600;">http://localhost:3333</code>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Formulário Principal -->
+          <form id="captureForm" style="display:flex; flex-direction:column; gap:24px;">
+            <div id="urlField" class="mpds-field">
+              <label class="mpds-label" for="targetUrl">
+                <span>Endereço do Site (URL)</span>
+                <span>Protocolo HTTP / HTTPS</span>
+              </label>
+              <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:stretch;">
+                <div class="mpds-input-wrap" style="flex:1; min-width:260px;">
+                  <iconify-icon class="mpds-input-icon" icon="solar:global-linear"></iconify-icon>
+                  <input
+                    id="targetUrl"
+                    class="mpds-input"
+                    type="text"
+                    placeholder="https://exemplo.com"
+                    autocomplete="off"
+                    style="height:50px; font-size:0.96rem;"
+                  />
+                </div>
+                <button id="captureBtn" type="submit" class="mpds-btn-beam" style="height:50px;">
+                  <span class="mpds-btn-beam-orbit"></span>
+                  <span class="mpds-btn-beam-inner" style="height:100%; padding:0 28px;">
+                    <span class="mpds-btn-beam-shimmer"></span>
+                    <span id="captureBtnLabel">Capturar Site (.ZIP)</span>
+                    <iconify-icon icon="solar:download-minimalistic-linear" style="font-size:1.15rem;"></iconify-icon>
+                  </span>
+                </button>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-top:4px;">
+                <span id="urlHelper" class="mpds-helper">Informe uma URL pública para iniciar a extração de recursos.</span>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button type="button" class="mpds-btn mpds-btn-ghost" data-preset-url="https://example.com" style="padding:4px 10px; font-size:0.74rem; font-family:var(--mpds-font-mono);">example.com</button>
+                  <button type="button" class="mpds-btn mpds-btn-ghost" data-preset-url="https://info.cern.ch" style="padding:4px 10px; font-size:0.74rem; font-family:var(--mpds-font-mono);">info.cern.ch</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modos de Captura (estilo Asimov 3.0) -->
+            <div>
+              <span class="mpds-mono-label" style="display:block; margin-bottom:12px;">Modo de Captura</span>
+              <div class="mpd-grid-3" style="gap:12px;">
+                <button type="button" class="mpd-mode-card is-selected" data-capture-mode="standard" aria-pressed="true">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <iconify-icon icon="solar:cursor-linear" style="font-size:1.3rem;"></iconify-icon>
+                    <span class="mpds-mono-label" style="font-size:0.64rem;">Recomendado</span>
+                  </div>
+                  <strong style="font-size:0.92rem;">Padrão (Duplo Clique)</strong>
+                  <p style="margin:0; font-size:0.78rem; line-height:1.45; color:var(--mpds-ink-muted);">Gera <code>index.html</code> + pasta <code>assets/</code> com links locais prontos para abrir sem terminal.</p>
+                </button>
+
+                <button type="button" class="mpd-mode-card" data-capture-mode="complete" aria-pressed="false">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <iconify-icon icon="solar:server-minimalistic-linear" style="font-size:1.3rem;"></iconify-icon>
+                    <span class="mpds-mono-label" style="font-size:0.64rem;">Fiel</span>
+                  </div>
+                  <strong style="font-size:0.92rem;">Completo (Servidor Local)</strong>
+                  <p style="margin:0; font-size:0.78rem; line-height:1.45; color:var(--mpds-ink-muted);">Inclui scripts, fontes web, sub-recursos CSS e guia para rodar via servidor local.</p>
+                </button>
+
+                <button type="button" class="mpd-mode-card" data-capture-mode="fast" aria-pressed="false">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <iconify-icon icon="solar:bolt-linear" style="font-size:1.3rem;"></iconify-icon>
+                    <span class="mpds-mono-label" style="font-size:0.64rem;">Leve</span>
+                  </div>
+                  <strong style="font-size:0.92rem;">Modo Rápido</strong>
+                  <p style="margin:0; font-size:0.78rem; line-height:1.45; color:var(--mpds-ink-muted);">Foca em HTML, CSS e imagens principais sem scripts pesados para captura ultrarrápida.</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Opções granulares -->
+            <div style="display:flex; flex-wrap:wrap; gap:20px; padding-top:4px;">
+              <label class="mpd-check"><input id="optImages" type="checkbox" checked /> Imagens, SVGs &amp; Lazy-load</label>
+              <label class="mpd-check"><input id="optFonts" type="checkbox" checked /> Fontes Web (@font-face)</label>
+              <label class="mpd-check"><input id="optScripts" type="checkbox" checked /> Scripts JavaScript</label>
+              <label class="mpd-check"><input id="optReadme" type="checkbox" checked /> Incluir README-OFFLINE.txt</label>
+            </div>
+          </form>
+
+          <!-- Painel de Progresso ao Vivo -->
+          <div id="progressPanel" style="display:none; margin-top:28px; padding-top:24px; border-top:1px solid var(--mpds-border-default);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span id="progressStep" class="mpds-mono-label" style="color:var(--mpds-ink-primary);">Preparando...</span>
+              <span id="progressPct" class="mpds-mono" style="font-size:0.8rem; font-weight:600;">0%</span>
+            </div>
+            <div class="mpd-progress-track" style="margin-bottom:14px;">
+              <div id="progressBar" class="mpd-progress-fill"></div>
+            </div>
+            <div id="progressLog" class="mpd-terminal"></div>
+          </div>
+
+          <!-- Painel de Erro -->
+          <div id="errorPanel" class="mpds-alert mpds-alert-error" style="display:none; margin-top:24px;">
+            <iconify-icon class="mpds-alert-icon" icon="solar:danger-circle-linear"></iconify-icon>
+            <div>
+              <p class="mpds-alert-title">Falha na captura</p>
+              <p id="errorMessage" class="mpds-alert-desc"></p>
+            </div>
+          </div>
+
+          <!-- Painel de Resultado & Download ZIP -->
+          <div id="resultPanel" class="mpds-card mpds-card-elevated" style="display:none; margin-top:24px; padding:24px;">
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+              <div>
+                <span class="mpds-mono-label" style="color:var(--mpds-success-ink); display:inline-flex; align-items:center; gap:6px; margin-bottom:6px;">
+                  <iconify-icon icon="solar:check-circle-linear"></iconify-icon> Pacote Offline Gerado
+                </span>
+                <h3 id="resultTitle" class="mpds-h4"></h3>
+                <p id="resultMeta" class="mpds-body-text" style="font-size:0.82rem; margin-top:4px;"></p>
+              </div>
+              <a id="downloadZipBtn" href="#" class="mpds-btn mpds-btn-primary">
+                <iconify-icon icon="solar:file-download-linear" style="font-size:1.15rem;"></iconify-icon>
+                <span>Baixar Arquivo .ZIP</span>
+              </a>
+            </div>
+            <div id="resultStats" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; padding-top:16px; border-top:1px solid var(--mpds-border-default);"></div>
+          </div>
+        </div>
+
+        <!-- Coluna Lateral (3 cols — Métricas do Motor) -->
+        <div style="grid-column: span 3; display:grid; grid-template-rows: 1fr 1fr;">
+          <div class="mpd-pad mpd-border-b mpds-card mpds-flashlight" style="display:flex; flex-direction:column; justify-content:space-between; border-left:none; border-right:none; border-top:none;">
+            <iconify-icon icon="solar:folder-with-files-linear" style="font-size:1.8rem; color:var(--mpds-ink-muted);"></iconify-icon>
+            <div>
+              <div style="font-size:2.4rem; font-weight:500; letter-spacing:-0.04em; line-height:1;">.ZIP</div>
+              <span class="mpds-mono-label" style="display:block; margin-top:8px;">index.html + assets/</span>
+              <p class="mpds-body-text" style="font-size:0.8rem; margin-top:6px;">Estrutura limpa com caminhos reescritos localmente.</p>
+            </div>
+          </div>
+
+          <div class="mpd-pad mpds-card mpds-flashlight" style="display:flex; flex-direction:column; justify-content:space-between; border:none;">
+            <iconify-icon icon="solar:cpu-linear" style="font-size:1.8rem; color:var(--mpds-ink-muted);"></iconify-icon>
+            <div>
+              <div style="font-size:2.4rem; font-weight:500; letter-spacing:-0.04em; line-height:1;">0 Dep</div>
+              <span class="mpds-mono-label" style="display:block; margin-top:8px;">Node.js Nativo</span>
+              <p class="mpds-body-text" style="font-size:0.8rem; margin-top:6px;">Empacotador PKZIP + CRC32 nativo sem instalar pacotes extras.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         COMO FUNCIONA (DECK INTERATIVO MPDs / GEMINI)
+         ==================================================================== -->
+    <section id="como-funciona" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">01 / Pipeline de Captura</span>
+          <h2 class="mpds-h2">Como o Mpdownloader Funciona</h2>
+        </div>
+        <span class="mpds-mono-label">3 Etapas Automatizadas</span>
+      </div>
+
+      <div class="mpd-grid-3">
+        <div class="mpd-pad mpd-border-r mpds-card mpds-flashlight mpds-animate-on-scroll mpds-delay-100" style="border-top:none; border-bottom:none; border-left:none;">
+          <span class="mpds-mono-label">01 · Extração DOM</span>
+          <h3 class="mpds-h4" style="margin:12px 0 10px;">Mapeamento Inteligente</h3>
+          <p class="mpds-body-text" style="font-size:0.875rem;">
+            Analisa o HTML, folhas de estilo, scripts, favicons, atributos <code>srcset</code> e imagens com <em>lazy loading</em> (<code>data-src</code>).
+          </p>
+        </div>
+
+        <div class="mpd-pad mpd-border-r mpds-card mpds-flashlight mpds-animate-on-scroll mpds-delay-200" style="border-top:none; border-bottom:none; border-left:none;">
+          <span class="mpds-mono-label">02 · Sub-recursos CSS</span>
+          <h3 class="mpds-h4" style="margin:12px 0 10px;">Fontes &amp; Backgrounds</h3>
+          <p class="mpds-body-text" style="font-size:0.875rem;">
+            Varre cada arquivo CSS para capturar fontes <code>.woff2/.ttf</code> de <code>@font-face</code> e imagens referenciadas em <code>url(...)</code>.
+          </p>
+        </div>
+
+        <div class="mpd-pad mpds-card mpds-flashlight mpds-animate-on-scroll mpds-delay-300" style="border:none;">
+          <span class="mpds-mono-label">03 · Empacotamento</span>
+          <h3 class="mpds-h4" style="margin:12px 0 10px;">ZIP Pronto p/ Offline</h3>
+          <p class="mpds-body-text" style="font-size:0.875rem;">
+            Reescreve todas as URLs para caminhos relativos em <code>assets/</code> e entrega um <code>.zip</code> pronto para abrir sem internet.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         MODOS DE VISUALIZAÇÃO OFFLINE
+         ==================================================================== -->
+    <section id="modos" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">02 / Uso do Pacote</span>
+          <h2 class="mpds-h2">Como Abrir o Site Baixado</h2>
+        </div>
+        <span class="mpds-mono-label">Duplo Clique ou Servidor Local</span>
+      </div>
+
+      <div class="mpd-grid-2">
+        <div class="mpd-pad mpd-border-r">
+          <span class="mpds-badge" style="margin-bottom:16px;">Opção A · Mais Simples</span>
+          <h3 class="mpds-h3" style="margin-bottom:10px;">Duplo Clique no Navegador</h3>
+          <p class="mpds-body-text" style="margin-bottom:16px;">
+            Extraia o arquivo <code>.zip</code> baixado e dê duplo clique em <strong><code>index.html</code></strong>. Ideal para guardar referências de UI, portfolios e landing pages estáticas.
+          </p>
+          <span class="mpds-mono-label" style="color:var(--mpds-ink-primary);">Sem terminal · 100% offline</span>
+        </div>
+
+        <div class="mpd-pad">
+          <span class="mpds-badge mpds-badge-dark" style="margin-bottom:16px;">Opção B · Sites Dinâmicos</span>
+          <h3 class="mpds-h3" style="margin-bottom:10px;">Servidor Local em 1 Comando</h3>
+          <p class="mpds-body-text" style="margin-bottom:16px;">
+            Para sites com módulos JS modernos, abra o terminal na pasta extraída e execute um dos comandos abaixo:
+          </p>
+          <div class="mpd-terminal" style="padding:12px 16px;">
+            <div>$ npx serve .</div>
+            <div style="opacity:0.65;"># ou com Python:</div>
+            <div>$ python -m http.server 8080</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         HISTÓRICO DE CAPTURAS RECENTES
+         ==================================================================== -->
+    <section id="historico" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">03 / Sessão Local</span>
+          <h2 class="mpds-h2">Capturas Recentes</h2>
+        </div>
+        <button id="clearHistoryBtn" type="button" class="mpds-btn mpds-btn-secondary">
+          <iconify-icon icon="solar:trash-bin-minimalistic-linear" style="font-size:1.05rem;"></iconify-icon>
+          <span>Limpar Histórico</span>
+        </button>
+      </div>
+
+      <div class="mpd-pad">
+        <div id="historyList"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         FOOTER
+         ==================================================================== -->
+    <footer style="position:relative; z-index:10; background:var(--mpds-bg-inverse); color:var(--mpds-ink-inverse); padding:40px 48px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <iconify-icon icon="solar:cloud-download-bold-duotone" style="font-size:1.3rem;"></iconify-icon>
+        <span style="font-weight:600; letter-spacing:-0.03em;">Mpdownloader</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <a href="../mpds/index.html" class="mpds-mono-label" style="color:var(--mpds-ink-inverse-muted); text-decoration:none;">Design System MPDs v1.0</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../mpds/mpds.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

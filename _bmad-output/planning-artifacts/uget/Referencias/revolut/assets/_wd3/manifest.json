@@ -1,0 +1,1843 @@
+{
+ "entryUrl": "https://www.revolut.com/",
+ "capturedAt": "2026-11-27T13:41:01+00:00",
+ "indexHtml": {
+  "kind": "arquivo",
+  "description": "site vivo aberto com duplo clique (file://): um runtime faz o papel do Service Worker; imagens e vídeos que a página só exibe são lidos de assets/, o resto (CSS, JS, fontes, dados, imagens de WebGL) vai embutido no index.html"
+ },
+ "files": [
+  {
+   "url": "https://assets.revolut.com/assets/favicons/apple-touch-icon.png",
+   "file": "assets/assets.revolut.com/assets/favicons/apple-touch-icon.png",
+   "type": "image/png",
+   "resourceType": "other",
+   "size": 1259,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/favicons/favicon-16x16.png",
+   "file": "assets/assets.revolut.com/assets/favicons/favicon-16x16.png",
+   "type": "image/png",
+   "resourceType": "other",
+   "size": 355,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/favicons/favicon-32x32.png",
+   "file": "assets/assets.revolut.com/assets/favicons/favicon-32x32.png",
+   "type": "image/png",
+   "resourceType": "other",
+   "size": 598,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/flags/GB.webp",
+   "file": "assets/assets.revolut.com/assets/flags/GB.webp",
+   "type": "image/webp",
+   "resourceType": "image",
+   "size": 3480,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/flags/US.webp",
+   "file": "assets/assets.revolut.com/assets/flags/US.webp",
+   "type": "image/webp",
+   "resourceType": "image",
+   "size": 4032,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Black-Capitalised.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Black-Capitalised.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 23624,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Black.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Black.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 54692,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Medium.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Medium.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 40328,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Regular.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Regular.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 53688,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-4.2/InterVariable.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-4.2/InterVariable.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 352836,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-Medium.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-Medium.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 111192,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-Regular.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-Regular.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 103152,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-SemiBold.woff2",
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-SemiBold.woff2",
+   "type": "font/woff2",
+   "resourceType": "font",
+   "size": 111740,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/ArrowThinRight.svg",
+   "file": "assets/assets.revolut.com/assets/icons/ArrowThinRight.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 377,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/ChevronDown.svg",
+   "file": "assets/assets.revolut.com/assets/icons/ChevronDown.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 294,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/Cross.svg",
+   "file": "assets/assets.revolut.com/assets/icons/Cross.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 425,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoFacebook.svg",
+   "file": "assets/assets.revolut.com/assets/icons/LogoFacebook.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 381,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoInstagram.svg",
+   "file": "assets/assets.revolut.com/assets/icons/LogoInstagram.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 1163,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoLinkedIn.svg",
+   "file": "assets/assets.revolut.com/assets/icons/LogoLinkedIn.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 865,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoTikTok.svg",
+   "file": "assets/assets.revolut.com/assets/icons/LogoTikTok.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 912,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoTwitter.svg",
+   "file": "assets/assets.revolut.com/assets/icons/LogoTwitter.svg",
+   "type": "image/svg+xml",
+   "resourceType": "image",
+   "size": 296,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/01191ed4-da4e-4f6b-927b-62523ffec28d/b2e3f4d8-5321-4e16-9942-34f83106159b.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/01191ed4-da4e-4f6b-927b-62523ffec28d/b2e3f4d8-5321-4e16-9942-34f83106159b.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 4940622,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/01f199ee-b3f2-4203-9ab7-27d133045284/a1b80bd3-607e-450e-80a0-83317969cf66.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/01f199ee-b3f2-4203-9ab7-27d133045284/a1b80bd3-607e-450e-80a0-83317969cf66.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 256203,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/0b709a3f-3f22-48ba-9af7-70552fb3cb10/cde96607-75d5-4a58-b785-991480da4c2f.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/0b709a3f-3f22-48ba-9af7-70552fb3cb10/cde96607-75d5-4a58-b785-991480da4c2f.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 7400262,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/1b17207f-8c44-4e67-9637-2ed365bfb5a1/8fb2616d-e499-4546-8288-9db34a2e881f.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/1b17207f-8c44-4e67-9637-2ed365bfb5a1/8fb2616d-e499-4546-8288-9db34a2e881f.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 9161,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/2309e107-7172-4cfc-a965-dc0d7acd4b72/dce27cc2-39ac-4f46-b887-46b8e1f5e976.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/2309e107-7172-4cfc-a965-dc0d7acd4b72/dce27cc2-39ac-4f46-b887-46b8e1f5e976.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 59032,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/2ad33298-6664-45ae-b325-8c3782fc0b5c/1bc89c99-4c81-4639-970a-51a8a20a5f5c.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/2ad33298-6664-45ae-b325-8c3782fc0b5c/1bc89c99-4c81-4639-970a-51a8a20a5f5c.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 71959,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/38a40981-07a2-49fe-93c7-7de5f6070228/becea9ab-7462-42d0-913a-6c89c2837708.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/38a40981-07a2-49fe-93c7-7de5f6070228/becea9ab-7462-42d0-913a-6c89c2837708.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 8005375,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4954fed1-0d3f-4a3c-ab32-4ddb30e34976/13038c65-2a71-424a-93cd-544b2c6152d4.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/4954fed1-0d3f-4a3c-ab32-4ddb30e34976/13038c65-2a71-424a-93cd-544b2c6152d4.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 1153540,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4bcf4f81-c0b1-4bde-82f5-0b4cd2ddd2ef/61f4df02-d372-4ced-86ef-cb50176593a7.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/4bcf4f81-c0b1-4bde-82f5-0b4cd2ddd2ef/61f4df02-d372-4ced-86ef-cb50176593a7.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 8476433,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4ddae90c-6272-457d-a3e6-202835b6e225/b703c9e3-0dae-4151-a703-50f5bd61e8cc.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/4ddae90c-6272-457d-a3e6-202835b6e225/b703c9e3-0dae-4151-a703-50f5bd61e8cc.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 123543,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/5b4c4cc6-f5e3-4013-abb9-02ed70191f31/79c359d8-7025-4121-924b-b7880f97bcf4.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/5b4c4cc6-f5e3-4013-abb9-02ed70191f31/79c359d8-7025-4121-924b-b7880f97bcf4.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 3028778,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/6ca566dc-8294-4e99-afbd-c51804cc5af4/2fb9c781-10a1-4bbf-bb42-7526bcc81286.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/6ca566dc-8294-4e99-afbd-c51804cc5af4/2fb9c781-10a1-4bbf-bb42-7526bcc81286.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 2235,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/7bf7c951-27c0-4ceb-9021-881e85ca6b25/332f5fdd-c0b9-44be-8dea-fc17b3d6ccdf.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/7bf7c951-27c0-4ceb-9021-881e85ca6b25/332f5fdd-c0b9-44be-8dea-fc17b3d6ccdf.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 263962,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/808aee1c-ad2e-4005-ae3c-5ce1a5a0837e/7cf0d9a5-2d49-47cc-8b05-da204ccaa15e.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/808aee1c-ad2e-4005-ae3c-5ce1a5a0837e/7cf0d9a5-2d49-47cc-8b05-da204ccaa15e.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 905239,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/94150ea7-4f5d-4931-9947-ab0518bea769/07844b11-869f-4b91-a5e5-ae2605f6c1c8.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/94150ea7-4f5d-4931-9947-ab0518bea769/07844b11-869f-4b91-a5e5-ae2605f6c1c8.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 462642,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/94a4cf97-5819-45b0-8219-b7b16e94ecac/959ae3c2-0d48-4c3e-a30e-2defda91b1f0.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/94a4cf97-5819-45b0-8219-b7b16e94ecac/959ae3c2-0d48-4c3e-a30e-2defda91b1f0.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 2899573,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/a07a910c-0df4-45f5-b0ca-7864377877a3/0da52da5-f59c-4863-a918-d8861c032000.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/a07a910c-0df4-45f5-b0ca-7864377877a3/0da52da5-f59c-4863-a918-d8861c032000.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 22211340,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/a3f03841-ddde-4f99-bf75-c2cacf2558b4/eb48080b-a584-4744-9c09-15943a9c0781.mp4",
+   "file": "assets/assets.revolut.com/published-assets-v3/a3f03841-ddde-4f99-bf75-c2cacf2558b4/eb48080b-a584-4744-9c09-15943a9c0781.mp4",
+   "type": "video/mp4",
+   "resourceType": "media",
+   "size": 775869,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/af2fd3c8-cfef-40f0-a673-4a2c9fa85d69/f36ebe42-c594-470e-8e8f-3fd9af86a9a5.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/af2fd3c8-cfef-40f0-a673-4a2c9fa85d69/f36ebe42-c594-470e-8e8f-3fd9af86a9a5.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 651827,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/baf74063-c481-431d-85a0-9e5743572f28/91d20a70-1a2d-46e1-8f45-ebd7e83196a8.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/baf74063-c481-431d-85a0-9e5743572f28/91d20a70-1a2d-46e1-8f45-ebd7e83196a8.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 1398,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/c1d9d317-7303-4f79-8756-937632237bb5/344c3cc7-0d4d-4749-8f12-b677d289a4a5.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/c1d9d317-7303-4f79-8756-937632237bb5/344c3cc7-0d4d-4749-8f12-b677d289a4a5.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 2560231,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/c5c49070-312c-4567-8359-6ffc1624cafa/931fbf11-937a-45d4-9c9d-7078412a8ba9.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/c5c49070-312c-4567-8359-6ffc1624cafa/931fbf11-937a-45d4-9c9d-7078412a8ba9.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 62349,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/d6d0bfe6-bc41-44db-8dde-dd3665b3c359/65411b9a-e95d-4c34-a38e-d3e4fa53fa8d.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/d6d0bfe6-bc41-44db-8dde-dd3665b3c359/65411b9a-e95d-4c34-a38e-d3e4fa53fa8d.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 953129,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/dbda1cf2-0f02-4e27-b0ce-1ea086d048b2/0dc34d59-82c9-47e0-8641-a532b22f5256.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/dbda1cf2-0f02-4e27-b0ce-1ea086d048b2/0dc34d59-82c9-47e0-8641-a532b22f5256.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 122050,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/dfa154ba-a21c-4dc1-b9a3-4ce83ccdb1ca/3829d1d5-8883-4351-a6a8-a960d419f04e.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/dfa154ba-a21c-4dc1-b9a3-4ce83ccdb1ca/3829d1d5-8883-4351-a6a8-a960d419f04e.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 86147,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/e33846f9-ef6b-4234-8bba-fb264119f37f/3c0bd2f0-f34c-4547-8890-61e855e0e93e.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/e33846f9-ef6b-4234-8bba-fb264119f37f/3c0bd2f0-f34c-4547-8890-61e855e0e93e.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 123880,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/ecad5fbe-66ca-48bb-8694-ffe6f33d3ef9/7a88c57b-f75a-4e3f-8ab1-4476f7b487d3.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/ecad5fbe-66ca-48bb-8694-ffe6f33d3ef9/7a88c57b-f75a-4e3f-8ab1-4476f7b487d3.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 3089444,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/f9f2192a-0076-4545-8e1e-83d852ea5130/264c79dd-e283-4f7d-9e60-a11079c7fc02.png",
+   "file": "assets/assets.revolut.com/published-assets-v3/f9f2192a-0076-4545-8e1e-83d852ea5130/264c79dd-e283-4f7d-9e60-a11079c7fc02.png",
+   "type": "image/png",
+   "resourceType": "image",
+   "size": 87613,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-3Q2GNB8G11",
+   "file": "assets/growth-performance.revolut.com/gtag/js__q2db8b7f6.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 565883,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-NC0XSL7JGN",
+   "file": "assets/growth-performance.revolut.com/gtag/js__q78bedeb2.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 610077,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-NC0XSL7JGN&cx=c&gtm=4e6bh1&sign=b43b78bfd7d20b2b63b79f0fdba81e2444ec75c8ba2eb30615c6ff12915c125d_20261127",
+   "file": "assets/growth-performance.revolut.com/gtag/js__q8e813a55.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 610079,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://polyfills.revolut.com/v3/polyfill.min.js?features=Array.prototype.at%2CPromise.allSettled%2CIntl.getCanonicalLocales%2CIntl.Locale%2CIntl.PluralRules%2CIntl.PluralRules.~locale.en%2CIntl.NumberFormat%2CIntl.NumberFormat.~locale.en%2CIntl.DisplayNames%2CIntl.DisplayNames.~locale.en%2CIntl.DateTimeFormat%2CIntl.DateTimeFormat.~locale.en%2CIntl.DateTimeFormat.prototype.formatToParts&flags=gated",
+   "file": "assets/polyfills.revolut.com/v3/polyfill.min__q90638e2f.js",
+   "type": "text/javascript",
+   "resourceType": "script",
+   "size": 101,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_buildManifest.js",
+   "file": "assets/www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_buildManifest.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10675,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_ssgManifest.js",
+   "file": "assets/www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_ssgManifest.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 1049,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1109.5f24fe4d5fa3e149.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1109.5f24fe4d5fa3e149.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 812,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1143-26d8834eb1e633a7.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1143-26d8834eb1e633a7.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 6716,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/143.971c4a8d69ed7539.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/143.971c4a8d69ed7539.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 7213,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1683-d87a287bb25184ce.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1683-d87a287bb25184ce.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10030,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1768.d05619f5c5f304d5.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1768.d05619f5c5f304d5.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 19811,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1891-cbd27ce5aa786816.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1891-cbd27ce5aa786816.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 25977,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1931.eeca2389100f25f9.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/1931.eeca2389100f25f9.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 9443,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2188.4985470678d6ec02.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/2188.4985470678d6ec02.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 2733,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2525.b98426d748df0e8c.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/2525.b98426d748df0e8c.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 158207,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2687-d5b770683501303a.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/2687-d5b770683501303a.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 7723,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/36-05f46b1f56ac455b.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/36-05f46b1f56ac455b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 27394,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/42-f1ee14f69b7366a5.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/42-f1ee14f69b7366a5.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 18279,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4330.9373b947e73b009e.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/4330.9373b947e73b009e.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 18134,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4540-7b9db3834439e92c.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/4540-7b9db3834439e92c.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10232,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4680.ca7261c6781fffa1.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/4680.ca7261c6781fffa1.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 5764,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4759-d728280cb3c700ce.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/4759-d728280cb3c700ce.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 14402,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/495.f78c4b893e756bd4.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/495.f78c4b893e756bd4.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 43096,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/510-7a0c9d63e566648f.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/510-7a0c9d63e566648f.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 13396,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5400-e0eff4f5b6dbf49c.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/5400-e0eff4f5b6dbf49c.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10485,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5421.7c7b08cf960b1602.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/5421.7c7b08cf960b1602.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 12082,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5474.a0a41162318b67de.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/5474.a0a41162318b67de.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 7391,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/550-bd6a383fdf2caefe.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/550-bd6a383fdf2caefe.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 19664,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/6024.10d1da113fd5eb63.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/6024.10d1da113fd5eb63.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 21899,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/6276.ce1a0404ba371ec5.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/6276.ce1a0404ba371ec5.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 1741,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7171-5fc7db6d3e1ac7c7.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/7171-5fc7db6d3e1ac7c7.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 33322,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7223-4580c651598abe51.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/7223-4580c651598abe51.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10872,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7520.7409ae10c766d1f2.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/7520.7409ae10c766d1f2.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 41114,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7606.b308f29ddbe837d1.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/7606.b308f29ddbe837d1.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 89516,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7625-eabd7061b9ed70d6.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/7625-eabd7061b9ed70d6.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 21148,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8157.23766670578d31ad.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8157.23766670578d31ad.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 4767,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8256.aa9b1994eb0c86c5.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8256.aa9b1994eb0c86c5.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 17165,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8376.f8606e727867769b.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8376.f8606e727867769b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 11381,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8710.eec9c71cebe7f2df.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8710.eec9c71cebe7f2df.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 6121,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/875.34e9c4b61ebf724c.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/875.34e9c4b61ebf724c.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 29594,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8867-5fa42c8f3294c0ec.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8867-5fa42c8f3294c0ec.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 7530,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/890.b6309732b2f8236e.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/890.b6309732b2f8236e.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 21613,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8952.55d275ab61570e9b.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8952.55d275ab61570e9b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 2018,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8963-2168483bece3ff7b.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/8963-2168483bece3ff7b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 10188,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9441.007c866623512ed9.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/9441.007c866623512ed9.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 44845,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9446-d389043f49cd84d5.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/9446-d389043f49cd84d5.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 15599,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9513-e73240b1a87bff69.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/9513-e73240b1a87bff69.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 11270,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9699.cde4978e3c53992b.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/9699.cde4978e3c53992b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 21604,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/framework-f3100f6256206564.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/framework-f3100f6256206564.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 140291,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/main-33d09fb7dfd28369.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/main-33d09fb7dfd28369.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 139740,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/pages/_app-401d62212f0bce74.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/pages/_app-401d62212f0bce74.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 807215,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/pages/index-e36afbee2b3398aa.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/pages/index-e36afbee2b3398aa.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 5131,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/webpack-0f65ee3edaac4e8c.js",
+   "file": "assets/www.revolut.com/_next/static/chunks/webpack-0f65ee3edaac4e8c.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 16233,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0164363330916ad3.css",
+   "file": "assets/www.revolut.com/_next/static/css/0164363330916ad3.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 153,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/086b4b3958a1c44b.css",
+   "file": "assets/www.revolut.com/_next/static/css/086b4b3958a1c44b.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 995,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0bc5db34f8c6bdee.css",
+   "file": "assets/www.revolut.com/_next/static/css/0bc5db34f8c6bdee.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 390,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0d7a368346a90fb0.css",
+   "file": "assets/www.revolut.com/_next/static/css/0d7a368346a90fb0.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 5652,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/115d8a851f68f3bf.css",
+   "file": "assets/www.revolut.com/_next/static/css/115d8a851f68f3bf.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 551,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/119b960c4a0396c8.css",
+   "file": "assets/www.revolut.com/_next/static/css/119b960c4a0396c8.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 748,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/21f7a82ab6ab81bb.css",
+   "file": "assets/www.revolut.com/_next/static/css/21f7a82ab6ab81bb.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 895,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/25deca81905e34f5.css",
+   "file": "assets/www.revolut.com/_next/static/css/25deca81905e34f5.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 111,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/28d73bebbdabd188.css",
+   "file": "assets/www.revolut.com/_next/static/css/28d73bebbdabd188.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 294,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/2b8313a1146c224e.css",
+   "file": "assets/www.revolut.com/_next/static/css/2b8313a1146c224e.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1420,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/31047779e51cc020.css",
+   "file": "assets/www.revolut.com/_next/static/css/31047779e51cc020.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 2232,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/4562810d13544b3c.css",
+   "file": "assets/www.revolut.com/_next/static/css/4562810d13544b3c.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 269,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/456c431c535d051a.css",
+   "file": "assets/www.revolut.com/_next/static/css/456c431c535d051a.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 610,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/47c3c294bc935ca3.css",
+   "file": "assets/www.revolut.com/_next/static/css/47c3c294bc935ca3.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 467,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/47ca1b8b706cc037.css",
+   "file": "assets/www.revolut.com/_next/static/css/47ca1b8b706cc037.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 3552,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/4bf8fb6d3e597db4.css",
+   "file": "assets/www.revolut.com/_next/static/css/4bf8fb6d3e597db4.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1192,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/82e593d76b88b79c.css",
+   "file": "assets/www.revolut.com/_next/static/css/82e593d76b88b79c.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 297,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/846f4a1aafccbe4a.css",
+   "file": "assets/www.revolut.com/_next/static/css/846f4a1aafccbe4a.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 140,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8902f016e2bdf2d8.css",
+   "file": "assets/www.revolut.com/_next/static/css/8902f016e2bdf2d8.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1044,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8dd8d037a1437460.css",
+   "file": "assets/www.revolut.com/_next/static/css/8dd8d037a1437460.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1079,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8fa9955edcf736ef.css",
+   "file": "assets/www.revolut.com/_next/static/css/8fa9955edcf736ef.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 566,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/945caaa305a623c0.css",
+   "file": "assets/www.revolut.com/_next/static/css/945caaa305a623c0.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 91,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/95d304347ecd1c5b.css",
+   "file": "assets/www.revolut.com/_next/static/css/95d304347ecd1c5b.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 821,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/9db46d0383db1a96.css",
+   "file": "assets/www.revolut.com/_next/static/css/9db46d0383db1a96.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 2674,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/9efe9548e03a9d43.css",
+   "file": "assets/www.revolut.com/_next/static/css/9efe9548e03a9d43.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 123,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/a0afab39e15964c7.css",
+   "file": "assets/www.revolut.com/_next/static/css/a0afab39e15964c7.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 8309,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/abb18ba2687c20a0.css",
+   "file": "assets/www.revolut.com/_next/static/css/abb18ba2687c20a0.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1452,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/b168da85aa9121dc.css",
+   "file": "assets/www.revolut.com/_next/static/css/b168da85aa9121dc.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 1608,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/c6ecbe583fe8137f.css",
+   "file": "assets/www.revolut.com/_next/static/css/c6ecbe583fe8137f.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 3611,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/c9d88bc2edc1c0d2.css",
+   "file": "assets/www.revolut.com/_next/static/css/c9d88bc2edc1c0d2.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 4164,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/d399403192974b50.css",
+   "file": "assets/www.revolut.com/_next/static/css/d399403192974b50.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 80012,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/d81cff07fe472432.css",
+   "file": "assets/www.revolut.com/_next/static/css/d81cff07fe472432.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 380,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/dc47bdace3270359.css",
+   "file": "assets/www.revolut.com/_next/static/css/dc47bdace3270359.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 22009,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e0fef94bf8ced77b.css",
+   "file": "assets/www.revolut.com/_next/static/css/e0fef94bf8ced77b.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 372,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e1a305d439d5f4da.css",
+   "file": "assets/www.revolut.com/_next/static/css/e1a305d439d5f4da.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 943,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e4ab0e3638a45cfe.css",
+   "file": "assets/www.revolut.com/_next/static/css/e4ab0e3638a45cfe.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 230,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/fb946ce736caa3b2.css",
+   "file": "assets/www.revolut.com/_next/static/css/fb946ce736caa3b2.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 460,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/fef8e53017e8c936.css",
+   "file": "assets/www.revolut.com/_next/static/css/fef8e53017e8c936.css",
+   "type": "text/css",
+   "resourceType": "stylesheet",
+   "size": 614,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/api/t/errors",
+   "file": "assets/www.revolut.com/api/t/errors__post3e471a05.json",
+   "type": "application/json",
+   "resourceType": "fetch",
+   "size": 2,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/api/user-country/",
+   "file": "assets/www.revolut.com/api/user-country/index.txt",
+   "type": "text/plain",
+   "resourceType": "fetch",
+   "size": 2,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/",
+   "file": "assets/www.revolut.com/index.html",
+   "type": "text/html",
+   "resourceType": "document",
+   "size": 332734,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/scripts/_next-ga-init.js",
+   "file": "assets/www.revolut.com/scripts/_next-ga-init.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 353,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  },
+  {
+   "url": "https://www.revolut.com/scripts/sanitize-tracking-params.js",
+   "file": "assets/www.revolut.com/scripts/sanitize-tracking-params.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 1806,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ],
+   "role": "site"
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "name": "ugetds — uGet Design System",
+  "version": "1.0.0",
+  "productVision": "Plataforma digital que conecta consumidores a benefícios e convênios disponibilizados por associações, sindicatos e instituições — usando geolocalização e notificações inteligentes.",
+  "color": {
+    "brand": {
+      "purple": "#6B2F8F",
+      "purpleDark": "#4E1F6B",
+      "purpleLight": "#8C4BB3",
+      "purpleSoft": "#F3ECF8",
+      "berry": "#9B246D",
+      "berryDark": "#781853",
+      "berryLight": "#C43B8F",
+      "berrySoft": "#F9EBF3",
+      "navy": "#03223A",
+      "navyElevated": "#0A3150",
+      "navySoft": "#133E61",
+      "mist": "#DCE6EE"
+    },
+    "surface": {
+      "canvas": "#F4F7FA",
+      "mist": "#DCE6EE",
+      "elevated": "#FFFFFF",
+      "subtle": "#EAF0F6",
+      "inverse": "#03223A"
+    },
+    "ink": {
+      "primary": "#03223A",
+      "secondary": "#435364",
+      "muted": "#6D7E90",
+      "subtle": "#96A5B5",
+      "inverse": "#F8FAFC",
+      "inverseMuted": "#A8BACB"
+    },
+    "border": {
+      "default": "#D7E1EA",
+      "subtle": "#E6EDF4",
+      "focus": "#6B2F8F",
+      "inverse": "rgba(255, 255, 255, 0.14)"
+    },
+    "semantic": {
+      "success": { "ink": "#065F46", "bg": "#ECFDF5", "border": "#A7F3D0", "dot": "#10B981" },
+      "warning": { "ink": "#92400E", "bg": "#FFFBEB", "border": "#FDE68A", "dot": "#F59E0B" },
+      "error":   { "ink": "#991B1B", "bg": "#FEF2F2", "border": "#FECACA", "dot": "#EF4444" },
+      "geo":     { "ink": "#4E1F6B", "bg": "#F3ECF8", "border": "#DEC7EE", "dot": "#6B2F8F" }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "display": "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      "body": "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      "mono": "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+    },
+    "scale": {
+      "display": { "size": "clamp(2.6rem, 5.5vw, 4.75rem)", "lineHeight": "1.02", "tracking": "-0.04em", "weight": 800 },
+      "h2": { "size": "clamp(1.85rem, 3.2vw, 2.75rem)", "lineHeight": "1.1", "tracking": "-0.03em", "weight": 700 },
+      "h3": { "size": "clamp(1.3rem, 2vw, 1.75rem)", "lineHeight": "1.2", "tracking": "-0.02em", "weight": 700 },
+      "h4": { "size": "1.125rem", "lineHeight": "1.35", "tracking": "-0.015em", "weight": 600 },
+      "bodyLg": { "size": "1.125rem", "lineHeight": "1.65", "weight": 400 },
+      "body": { "size": "0.95rem", "lineHeight": "1.6", "weight": 400 },
+      "caption": { "size": "0.75rem", "lineHeight": "1.4", "tracking": "0.1em", "weight": 600 }
+    }
+  },
+  "spacing": {
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "containerMax": "1280px"
+  },
+  "radius": {
+    "sm": "10px",
+    "md": "14px",
+    "lg": "20px",
+    "xl": "28px",
+    "pill": "9999px"
+  },
+  "motion": {
+    "easing": {
+      "revolut": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "gemini": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    "duration": {
+      "fast": "180ms",
+      "base": "320ms",
+      "slow": "650ms",
+      "reveal": "850ms"
+    }
+  }
+}

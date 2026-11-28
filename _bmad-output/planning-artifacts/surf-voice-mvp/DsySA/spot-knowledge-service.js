@@ -210,6 +210,17 @@
     const cleanQuery = cleanSpotName(query, currentSpots) || String(query || '').trim();
     if (!cleanQuery) return null;
 
+    // 1. Fonte única verificada: Catálogo Oficial (`src/data/spots_catalog.json`)
+    const catalogSvc =
+      (typeof window !== 'undefined' && window.SpotsCatalogService) ||
+      (typeof require === 'function' ? (() => { try { return require('./spots-catalog-service.js'); } catch (_) { return null; } })() : null);
+    if (catalogSvc && typeof catalogSvc.findVerifiedSpot === 'function') {
+      const verified = catalogSvc.findVerifiedSpot(cleanQuery);
+      if (verified) {
+        return { spot: verified, isNew: false, source: 'official_catalog' };
+      }
+    }
+
     // 2a. Tenta primeiro deduplicação local imediata
     const localMatch = findSpotBySemanticMatch(currentSpots, cleanQuery);
     if (localMatch) {
@@ -259,6 +270,12 @@
     const wiki = await fetchWikiSurfContext(titleName, region);
     const tech = extractSurfMetadataFromText(wiki.extract, lat, lon, titleName);
 
+    // Garante azimute oceânico coerente (sem deslocamento trigonométrico cego)
+    let beachAzimuth = Number.isFinite(Number(tech.beachFaceDeg)) ? Number(tech.beachFaceDeg) : 135;
+    if (lat > -18 && lat < -8 && (beachAzimuth < 100 || beachAzimuth > 150)) {
+      beachAzimuth = Math.max(100, Math.min(150, beachAzimuth === 0 ? 130 : beachAzimuth > 150 ? 145 : 115));
+    }
+
     const slug = normalizeText(titleName).replace(/\s+/g, '_');
     const newSpot = {
       id: `spot_${slug}`,
@@ -269,12 +286,13 @@
       state,
       lat,
       lon,
+      beachAzimuth,
       bottomType: tech.bottomType,
       bestTide: tech.bestTide,
       idealSwellDir: tech.idealSwellDir,
       offshoreWindDir: tech.offshoreWindDir,
       offshoreWindDeg: tech.offshoreWindDir,
-      beachFaceDeg: tech.beachFaceDeg,
+      beachFaceDeg: beachAzimuth,
       skillLevelFit: tech.skillLevelFit,
       localNotes: tech.localNotes,
       lastEnrichedAt: new Date().toISOString(),

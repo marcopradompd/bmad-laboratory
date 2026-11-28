@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPDs — Marco Prado Design System · UX & AI Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="./mpds.css" />
+  <style>
+    /* Layout helpers específicos do Showcase MPDs */
+    .showcase-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .showcase-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .showcase-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .showcase-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); }
+    .showcase-grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); }
+    .pad-cell { padding: 40px 48px; }
+    .border-r { border-right: 1px solid var(--mpds-border-default); }
+    .border-b { border-bottom: 1px solid var(--mpds-border-default); }
+    .border-t { border-top: 1px solid var(--mpds-border-default); }
+    .swatch-box {
+      padding: 28px;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s var(--mpds-ease-architect);
+    }
+    .swatch-box:hover { transform: translateY(-2px); }
+    .icon-tile {
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      border-right: 1px solid var(--mpds-border-default);
+      border-bottom: 1px solid var(--mpds-border-default);
+      transition: background-color 0.25s ease;
+    }
+    .icon-tile:hover { background-color: var(--mpds-bg-elevated); }
+    .icon-tile iconify-icon { font-size: 1.75rem; color: var(--mpds-ink-primary); }
+    @media (max-width: 960px) {
+      .showcase-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .showcase-grid-6 { grid-template-columns: repeat(3, 1fr); }
+      .showcase-grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .showcase-grid-2, .showcase-grid-12 { grid-template-columns: 1fr; }
+      .pad-cell { padding: 28px 20px; }
+      .hide-mobile { display: none !important; }
+      .border-r-md { border-right: none !important; }
+    }
+  </style>
+</head>
+<body class="mpds-body">
+
+  <div class="mpds-shell">
+    <!-- Swiss 12-Column Vertical Architectural Guides -->
+    <div class="mpds-grid-guides" aria-hidden="true">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+
+    <!-- ====================================================================
+         STICKY NAVIGATION
+         ==================================================================== -->
+    <header class="mpds-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 32px; gap:16px;">
+        <nav style="display:flex; align-items:center; gap:22px;" aria-label="Fundações">
+          <a class="mpds-nav-link" href="#typography">Tipografia</a>
+          <a class="mpds-nav-link" href="#colors">Cores</a>
+          <a class="mpds-nav-link hide-mobile" href="#spacing">Grid</a>
+          <a class="mpds-nav-link hide-mobile" href="#components">Componentes</a>
+        </nav>
+
+        <a href="#top" style="display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--mpds-ink-primary);">
+          <iconify-icon icon="solar:atom-linear" style="font-size:1.35rem;"></iconify-icon>
+          <span style="font-weight:700; letter-spacing:-0.04em; font-size:1.1rem;">MPDs</span>
+          <span class="mpds-mono-label hide-mobile" style="font-size:0.65rem; opacity:0.65;">v1.0</span>
+        </a>
+
+        <nav style="display:flex; align-items:center; gap:22px;" aria-label="Sistemas">
+          <a class="mpds-nav-link hide-mobile" href="#alerts">Alertas</a>
+          <a class="mpds-nav-link" href="#motion">Motion</a>
+          <a class="mpds-nav-link" href="#icons">Ícones</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         HERO — ARCHITECTURAL GRID (9/3) + GEMINI MOTION
+         ==================================================================== -->
+    <section id="top" class="mpds-section">
+      <div class="showcase-grid-12" style="min-height: 540px;">
+        <!-- Left 9 cols -->
+        <div class="pad-cell border-r border-r-md mpds-flashlight" style="grid-column: span 9; display:flex; flex-direction:column; justify-content:space-between; gap:40px; background: linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(234,234,229,0.2) 100%);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+            <span class="mpds-badge">
+              <span class="mpds-status-dot"></span>
+              Marco Prado · UX &amp; AI Designer
+            </span>
+            <span class="mpds-mono-label">Architect Foundations × Gemini Motion</span>
+          </div>
+
+          <div style="max-width: 760px;">
+            <h1 class="mpds-display" style="margin-bottom: 24px;">
+              <span class="mpds-text-mask"><span class="mpds-text-mask-inner mpds-delay-100">MPDs</span></span><br />
+              <span class="mpds-text-mask"><span class="mpds-text-mask-inner mpds-delay-200" style="color: var(--mpds-ink-muted); font-weight: 400;">Design System</span></span>
+            </h1>
+            <p class="mpds-body-lg mpds-animate-on-scroll mpds-delay-300" style="max-width: 600px;">
+              Linguagem visual sóbria, editorial e de precisão arquitetônica para portfólio de produtos digitais e experiências com Inteligência Artificial.
+            </p>
+          </div>
+
+          <div class="mpds-animate-on-scroll mpds-delay-400" style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+            <!-- Gemini Signature 1px Beam CTA -->
+            <a href="#components" class="mpds-btn-beam">
+              <span class="mpds-btn-beam-orbit"></span>
+              <span class="mpds-btn-beam-inner">
+                <span class="mpds-btn-beam-shimmer"></span>
+                <span>Explorar Componentes</span>
+                <iconify-icon icon="solar:arrow-right-linear" style="font-size:1.1rem;"></iconify-icon>
+              </span>
+            </a>
+            <a href="#motion" class="mpds-btn mpds-btn-outline">
+              <span>Ver Física de Motion</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 3 cols: Architectural Stat Tiles -->
+        <div style="grid-column: span 3; display:grid; grid-template-rows: 1fr 1fr;">
+          <div class="pad-cell border-b mpds-card mpds-flashlight mpds-animate-on-scroll mpds-delay-200" style="display:flex; flex-direction:column; justify-content:space-between; border-left:none; border-right:none; border-top:none;">
+            <iconify-icon icon="solar:layers-minimalistic-linear" style="font-size:1.85rem; color:var(--mpds-ink-muted);"></iconify-icon>
+            <div>
+              <div style="font-size:3rem; font-weight:500; letter-spacing:-0.04em; line-height:1;">18</div>
+              <span class="mpds-mono-label" style="display:block; margin-top:6px;">Componentes UI</span>
+            </div>
+          </div>
+          <div class="pad-cell mpds-card mpds-flashlight mpds-animate-on-scroll mpds-delay-300" style="display:flex; flex-direction:column; justify-content:space-between; border:none;">
+            <iconify-icon icon="solar:stars-minimalistic-bold-duotone" style="font-size:1.85rem; color:var(--mpds-ink-muted);"></iconify-icon>
+            <div>
+              <div style="font-size:3rem; font-weight:500; letter-spacing:-0.04em; line-height:1;">06</div>
+              <span class="mpds-mono-label" style="display:block; margin-top:6px;">Padrões de Motion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         01 / TYPOGRAPHY
+         ==================================================================== -->
+    <section id="typography" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">01 / Fundações</span>
+          <h2 class="mpds-h2">Tipografia</h2>
+        </div>
+        <span class="mpds-mono-label">Inter (Sans) · Geist Mono (Metadados)</span>
+      </div>
+
+      <div>
+        <div class="showcase-grid-12 border-b pad-cell" style="align-items:baseline; gap:16px;">
+          <div class="mpds-mono-label" style="grid-column:span 3;">Display H1</div>
+          <div style="grid-column:span 7;"><p class="mpds-display" style="font-size:clamp(2.4rem,5vw,4.5rem);">UX &amp; AI Architect</p></div>
+          <div class="mpds-mono-label" style="grid-column:span 2; text-align:right;">600 · -0.045em</div>
+        </div>
+
+        <div class="showcase-grid-12 border-b pad-cell" style="align-items:baseline; gap:16px;">
+          <div class="mpds-mono-label" style="grid-column:span 3;">Heading H2</div>
+          <div style="grid-column:span 7;"><p class="mpds-h2">Design, Estratégia &amp; Sistemas IA</p></div>
+          <div class="mpds-mono-label" style="grid-column:span 2; text-align:right;">500 · -0.035em</div>
+        </div>
+
+        <div class="showcase-grid-12 border-b pad-cell" style="align-items:baseline; gap:16px;">
+          <div class="mpds-mono-label" style="grid-column:span 3;">Heading H3</div>
+          <div style="grid-column:span 7;"><p class="mpds-h3">Estudos de Caso Selecionados</p></div>
+          <div class="mpds-mono-label" style="grid-column:span 2; text-align:right;">500 · -0.025em</div>
+        </div>
+
+        <div class="showcase-grid-12 border-b pad-cell" style="align-items:baseline; gap:16px;">
+          <div class="mpds-mono-label" style="grid-column:span 3;">Body Large</div>
+          <div style="grid-column:span 7;">
+            <p class="mpds-body-lg">
+              Projeto interfaces digitais onde clareza editorial, arquitetura de informação e modelos generativos trabalham juntos para gerar resultado real de negócio.
+            </p>
+          </div>
+          <div class="mpds-mono-label" style="grid-column:span 2; text-align:right;">18px / 1.68</div>
+        </div>
+
+        <div class="showcase-grid-12 pad-cell" style="align-items:baseline; gap:16px;">
+          <div class="mpds-mono-label" style="grid-column:span 3;">Mono Label</div>
+          <div style="grid-column:span 7;"><span class="mpds-mono-label" style="color:var(--mpds-ink-primary);">Case 01 · Product Design &amp; AI Agents · 2026</span></div>
+          <div class="mpds-mono-label" style="grid-column:span 2; text-align:right;">11.5px / 0.16em</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         02 / COLORS & SURFACES
+         ==================================================================== -->
+    <section id="colors" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">02 / Fundações</span>
+          <h2 class="mpds-h2">Cores &amp; Superfícies</h2>
+        </div>
+        <span class="mpds-mono-label">Clique em qualquer swatch para copiar o token</span>
+      </div>
+
+      <!-- Neutrals (Architect Warm Stone) -->
+      <div class="showcase-grid-4">
+        <div class="swatch-box border-r border-b" data-mpds-copy="#EAEAE5" style="background:#EAEAE5; color:#1C1C1C;">
+          <strong>Canvas Principal</strong>
+          <div class="mpds-mono" style="font-size:0.75rem; opacity:0.7;">--mpds-bg-canvas<br/>#EAEAE5</div>
+        </div>
+        <div class="swatch-box border-r border-b" data-mpds-copy="#FFFFFF" style="background:#FFFFFF; color:#1C1C1C;">
+          <strong>Superfície Elevada</strong>
+          <div class="mpds-mono" style="font-size:0.75rem; opacity:0.65;">--mpds-bg-elevated<br/>#FFFFFF</div>
+        </div>
+        <div class="swatch-box border-r border-b" data-mpds-copy="#1C1C1C" style="background:#1C1C1C; color:#F5F5F0;">
+          <strong>Ink / Inverse</strong>
+          <div class="mpds-mono" style="font-size:0.75rem; opacity:0.7;">--mpds-ink-primary<br/>#1C1C1C</div>
+        </div>
+        <div class="swatch-box border-b" data-mpds-copy="#D6D3D1" style="background:#D6D3D1; color:#1C1C1C;">
+          <strong>Borda Arquitetônica</strong>
+          <div class="mpds-mono" style="font-size:0.75rem; opacity:0.75;">--mpds-border-default<br/>#D6D3D1</div>
+        </div>
+
+        <!-- Semantic Editorial Tokens -->
+        <div class="swatch-box border-r" data-mpds-copy="#166534" style="background:#ECFDF5; color:#166534;">
+          <strong>Success</strong>
+          <div class="mpds-mono" style="font-size:0.75rem;">Ink #166534 · Bg #ECFDF5</div>
+        </div>
+        <div class="swatch-box border-r" data-mpds-copy="#1E40AF" style="background:#EFF6FF; color:#1E40AF;">
+          <strong>Info / AI Context</strong>
+          <div class="mpds-mono" style="font-size:0.75rem;">Ink #1E40AF · Bg #EFF6FF</div>
+        </div>
+        <div class="swatch-box border-r" data-mpds-copy="#854D0E" style="background:#FEFCE8; color:#854D0E;">
+          <strong>Warning</strong>
+          <div class="mpds-mono" style="font-size:0.75rem;">Ink #854D0E · Bg #FEFCE8</div>
+        </div>
+        <div class="swatch-box" data-mpds-copy="#991B1B" style="background:#FEF2F2; color:#991B1B;">
+          <strong>Error / Validation</strong>
+          <div class="mpds-mono" style="font-size:0.75rem;">Ink #991B1B · Bg #FEF2F2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         03 / SPACING & 12-COLUMN GRID
+         ==================================================================== -->
+    <section id="spacing" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">03 / Estrutura</span>
+          <h2 class="mpds-h2">Espaçamento &amp; Grid</h2>
+        </div>
+        <span class="mpds-mono-label">Base 4px / 8px · Container 1400px · 12 Colunas</span>
+      </div>
+
+      <div class="showcase-grid-2">
+        <div class="pad-cell border-r border-r-md">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:24px;">Escala de Espaçamento</span>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-2</span><div style="height:10px; width:8px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">8px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-4</span><div style="height:10px; width:16px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">16px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-6</span><div style="height:10px; width:24px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">24px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-8</span><div style="height:10px; width:32px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">32px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-12</span><div style="height:10px; width:48px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">48px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-16</span><div style="height:10px; width:64px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">64px</span></div>
+            <div style="display:flex; align-items:center; gap:16px;"><span class="mpds-mono" style="width:76px; font-size:0.75rem; color:var(--mpds-ink-muted);">space-20</span><div style="height:10px; width:80px; background:var(--mpds-ink-primary);"></div><span class="mpds-mono" style="font-size:0.72rem;">80px</span></div>
+          </div>
+        </div>
+
+        <div class="pad-cell">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:24px;">Swiss 12-Column Grid</span>
+          <div style="display:grid; grid-template-columns:repeat(12, 1fr); gap:8px; height:150px;">
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+            <div style="background:rgba(28,28,28,0.1); border-radius:3px;"></div>
+          </div>
+          <p class="mpds-body-text" style="margin-top:16px; font-size:0.84rem;">
+            Proporção estrutural 3 / 6 / 3 com linhas verticais contínuas (<code>border-stone-300</code>) garantindo alinhamento editorial rigoroso em todas as seções.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         04 / COMPONENTS: BUTTONS & INPUTS
+         ==================================================================== -->
+    <section id="components" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">04 / Componentes UI</span>
+          <h2 class="mpds-h2">Botões &amp; Inputs</h2>
+        </div>
+        <span class="mpds-mono-label">Ações Principais, Formulários &amp; Estados</span>
+      </div>
+
+      <div class="showcase-grid-2">
+        <!-- Buttons -->
+        <div class="pad-cell border-r border-r-md">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:28px; color:var(--mpds-ink-primary);">Botões &amp; CTAs</span>
+          <div style="display:flex; flex-direction:column; gap:22px; align-items:flex-start;">
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <button type="button" class="mpds-btn-beam" onclick="MPDs.toast('CTA Beam acionado — pronto para conversão!', 'solar:stars-minimalistic-bold-duotone')">
+                <span class="mpds-btn-beam-orbit"></span>
+                <span class="mpds-btn-beam-inner">
+                  <span class="mpds-btn-beam-shimmer"></span>
+                  <span>Iniciar Projeto</span>
+                  <iconify-icon icon="solar:arrow-right-linear" style="font-size:1.1rem;"></iconify-icon>
+                </span>
+              </button>
+              <span class="mpds-mono-label">Beam CTA (Gemini)</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <button type="button" class="mpds-btn mpds-btn-primary">
+                <span>Baixar Currículo</span>
+                <iconify-icon icon="solar:file-download-linear" style="font-size:1.15rem;"></iconify-icon>
+              </button>
+              <span class="mpds-mono-label">Primary Solid</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <a href="#cards" class="mpds-btn mpds-btn-outline">
+                <span>Ver Estudos de Caso</span>
+                <iconify-icon icon="solar:arrow-right-linear" style="font-size:1.05rem;"></iconify-icon>
+              </a>
+              <span class="mpds-mono-label">Outline Pill (Architect)</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="mpds-btn mpds-btn-secondary">Secondary</button>
+              <button type="button" class="mpds-btn mpds-btn-ghost">Ghost Action</button>
+              <button type="button" class="mpds-btn mpds-btn-icon" aria-label="Próximo"><iconify-icon icon="solar:arrow-right-up-linear" style="font-size:1.15rem;"></iconify-icon></button>
+              <button type="button" class="mpds-btn mpds-btn-primary" disabled>Disabled</button>
+            </div>
+
+            <div>
+              <a href="#top" class="mpds-link-inline">
+                <span>Link Editorial Inline</span>
+                <iconify-icon icon="solar:arrow-right-up-linear" style="font-size:1rem;"></iconify-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inputs -->
+        <div class="pad-cell">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:28px; color:var(--mpds-ink-primary);">Inputs &amp; Formulário de Contato</span>
+          <form onsubmit="event.preventDefault(); MPDs.toast('Mensagem validada e enviada com sucesso!', 'solar:check-circle-linear');" style="display:flex; flex-direction:column; gap:18px;">
+            <div class="mpds-field">
+              <label class="mpds-label" for="demo-name"><span>Nome Completo</span><span>Obrigatório</span></label>
+              <div class="mpds-input-wrap">
+                <iconify-icon class="mpds-input-icon" icon="solar:user-linear"></iconify-icon>
+                <input id="demo-name" class="mpds-input" type="text" placeholder="Ex.: Ana Ribeiro" required />
+              </div>
+            </div>
+
+            <div class="mpds-field is-success">
+              <label class="mpds-label" for="demo-email"><span>E-mail Profissional</span></label>
+              <div class="mpds-input-wrap">
+                <iconify-icon class="mpds-input-icon" icon="solar:letter-linear"></iconify-icon>
+                <input id="demo-email" class="mpds-input" type="email" value="ana.ribeiro@empresa.com" />
+              </div>
+              <span class="mpds-helper"><iconify-icon icon="solar:check-circle-linear"></iconify-icon> E-mail verificado</span>
+            </div>
+
+            <div class="mpds-field is-error">
+              <label class="mpds-label" for="demo-err"><span>Link do Projeto (Estado de Erro)</span></label>
+              <input id="demo-err" class="mpds-input" type="text" value="url-invalida" />
+              <span class="mpds-helper"><iconify-icon icon="solar:danger-circle-linear"></iconify-icon> Informe uma URL válida começando com https://</span>
+            </div>
+
+            <div class="mpds-field">
+              <label class="mpds-label" for="demo-scope"><span>Tipo de Demanda</span></label>
+              <select id="demo-scope" class="mpds-select">
+                <option>Consultoria UX &amp; AI Product Design</option>
+                <option>Design System &amp; Arquitetura UI</option>
+                <option>Oportunidade Full-Time / Liderança</option>
+              </select>
+            </div>
+
+            <div class="mpds-field">
+              <label class="mpds-label" for="demo-msg"><span>Contexto do Projeto</span></label>
+              <textarea id="demo-msg" class="mpds-textarea" rows="3" placeholder="Conte brevemente o desafio, prazo e objetivo..."></textarea>
+            </div>
+
+            <div>
+              <button type="submit" class="mpds-btn mpds-btn-primary">
+                <span>Enviar Mensagem</span>
+                <iconify-icon icon="solar:plain-linear" style="font-size:1.1rem;"></iconify-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         05 / ALERTS & FEEDBACK
+         ==================================================================== -->
+    <section id="alerts" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">05 / Feedback</span>
+          <h2 class="mpds-h2">Alertas &amp; Notificações</h2>
+        </div>
+        <button type="button" class="mpds-btn mpds-btn-secondary" onclick="MPDs.toast('Notificação MPDs em tempo real.', 'solar:bell-linear')">
+          <iconify-icon icon="solar:bell-linear" style="font-size:1.1rem;"></iconify-icon>
+          <span>Disparar Toast</span>
+        </button>
+      </div>
+
+      <div class="pad-cell showcase-grid-2" style="gap:20px;">
+        <div class="mpds-alert mpds-alert-info">
+          <iconify-icon class="mpds-alert-icon" icon="solar:info-circle-linear"></iconify-icon>
+          <div>
+            <p class="mpds-alert-title">Contexto de Inteligência Artificial</p>
+            <p class="mpds-alert-desc">Este estudo de caso inclui protótipo interativo com agentes generativos e métricas reais de usabilidade.</p>
+          </div>
+          <button type="button" class="mpds-alert-close" aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+        </div>
+
+        <div class="mpds-alert mpds-alert-success">
+          <iconify-icon class="mpds-alert-icon" icon="solar:check-circle-linear"></iconify-icon>
+          <div>
+            <p class="mpds-alert-title">Agenda Aberta — Q1 / Q2</p>
+            <p class="mpds-alert-desc">Disponível para novos projetos de UX/AI Design, Design Systems e liderança de produto.</p>
+          </div>
+          <button type="button" class="mpds-alert-close" aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+        </div>
+
+        <div class="mpds-alert mpds-alert-warning">
+          <iconify-icon class="mpds-alert-icon" icon="solar:danger-triangle-linear"></iconify-icon>
+          <div>
+            <p class="mpds-alert-title">Case sob NDA Parcial</p>
+            <p class="mpds-alert-desc">Dados financeiros sensíveis foram anonimizados; detalhes completos disponíveis em entrevista.</p>
+          </div>
+          <button type="button" class="mpds-alert-close" aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+        </div>
+
+        <div class="mpds-alert mpds-alert-error">
+          <iconify-icon class="mpds-alert-icon" icon="solar:danger-circle-linear"></iconify-icon>
+          <div>
+            <p class="mpds-alert-title">Não foi possível enviar o formulário</p>
+            <p class="mpds-alert-desc">Verifique os campos destacados ou entre em contato diretamente via LinkedIn ou WhatsApp.</p>
+          </div>
+          <button type="button" class="mpds-alert-close" aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         06 / CARDS, BADGES & EDITORIAL LISTS
+         ==================================================================== -->
+    <section id="cards" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">06 / Padrões de Portfólio</span>
+          <h2 class="mpds-h2">Cards, Badges &amp; Listas</h2>
+        </div>
+        <span class="mpds-mono-label">Estudos de Caso · Stack · Artigos</span>
+      </div>
+
+      <div class="pad-cell border-b">
+        <span class="mpds-mono-label" style="display:block; margin-bottom:20px;">Project Case Study Card (Architect Split + Flashlight)</span>
+        <article class="mpds-case-card mpds-flashlight" style="max-width: 920px; cursor:pointer;">
+          <div style="padding:36px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; border-right:1px solid var(--mpds-border-default);">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span class="mpds-mono-label">01</span>
+              <span style="height:1px; width:28px; background:var(--mpds-border-default);"></span>
+              <span class="mpds-mono-label" style="color:var(--mpds-ink-primary);">AI Product Design</span>
+            </div>
+            <div>
+              <h3 class="mpds-h3 mpds-case-title" style="margin-bottom:12px;">SurfAgent — Assistente de Voz IA</h3>
+              <p class="mpds-body-text">
+                Arquitetura de experiência conversacional por voz com telemetria oceanográfica em tempo real e design system proprietário.
+              </p>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <span class="mpds-badge">UX Research</span>
+              <span class="mpds-badge">Voice AI</span>
+              <span class="mpds-badge">Design System</span>
+            </div>
+          </div>
+          <div style="background:#DCDCD4; min-height:260px; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+            <div class="mpds-case-visual" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background: linear-gradient(135deg, #2B2B28 0%, #1C1C1C 100%); color:#EAEAE5; padding:32px; text-align:center;">
+              <iconify-icon icon="solar:widget-5-bold-duotone" style="font-size:2.8rem; opacity:0.85;"></iconify-icon>
+              <span class="mpds-mono-label" style="color:#A8A29E;">Preview do Case · Hover p/ Zoom + Cor</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="showcase-grid-2">
+        <div class="pad-cell border-r border-r-md">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:20px;">Badges &amp; Status</span>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:24px;">
+            <span class="mpds-badge"><span class="mpds-status-dot"></span>Disponível</span>
+            <span class="mpds-badge">UX Strategy</span>
+            <span class="mpds-badge mpds-badge-dark">AI Systems</span>
+          </div>
+          <div style="background:var(--mpds-bg-inverse); padding:16px 20px; border-radius:6px; display:inline-flex; gap:10px;">
+            <span class="mpds-badge mpds-badge-glass">Glass Badge</span>
+            <span class="mpds-badge mpds-badge-glass">2026</span>
+          </div>
+        </div>
+
+        <div class="pad-cell">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:12px;">Editorial List / Artigos</span>
+          <a class="mpds-list-row" href="#top">
+            <div>
+              <span class="mpds-mono-label" style="font-size:0.65rem;">NOV 2026 · ARTIGO</span>
+              <h4 class="mpds-h4" style="margin-top:4px;">Arquitetura de Design Systems para Produtos com IA</h4>
+            </div>
+            <iconify-icon icon="solar:arrow-right-up-linear" style="font-size:1.35rem;"></iconify-icon>
+          </a>
+          <a class="mpds-list-row" href="#top">
+            <div>
+              <span class="mpds-mono-label" style="font-size:0.65rem;">OUT 2026 · CASE</span>
+              <h4 class="mpds-h4" style="margin-top:4px;">Reduzindo fricção cognitiva em fluxos de voz</h4>
+            </div>
+            <iconify-icon icon="solar:arrow-right-up-linear" style="font-size:1.35rem;"></iconify-icon>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         07 / MOTION & ANIMATIONS (ABSORBED FROM GEMINI)
+         ==================================================================== -->
+    <section id="motion" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">07 / Física de Movimento (Gemini)</span>
+          <h2 class="mpds-h2">Transições &amp; Animações</h2>
+        </div>
+        <button type="button" class="mpds-btn mpds-btn-secondary" onclick="MPDs.replayMotion('#motion-demo-stage')">
+          <iconify-icon icon="solar:restart-linear" style="font-size:1.1rem;"></iconify-icon>
+          <span>Reproduzir Animações</span>
+        </button>
+      </div>
+
+      <!-- 7A. Blur-Up Reveal + Clip-Path Text -->
+      <div id="motion-demo-stage" class="pad-cell border-b">
+        <span class="mpds-mono-label" style="display:block; margin-bottom:20px;">Blur-Up Scroll Reveal (Gemini) &amp; Masked Text Clip</span>
+        <div style="margin-bottom:28px;">
+          <p class="mpds-h2">
+            <span class="mpds-text-mask"><span class="mpds-text-mask-inner">Precisão</span></span>
+            <span class="mpds-text-mask"><span class="mpds-text-mask-inner mpds-delay-200" style="color:var(--mpds-ink-muted);">em Movimento.</span></span>
+          </p>
+        </div>
+        <div class="showcase-grid-3" style="gap:20px;">
+          <div class="mpds-card mpds-card-elevated mpds-animate-on-scroll mpds-delay-100" style="padding:24px;">
+            <span class="mpds-mono-label">0.1s · Blur-Up</span>
+            <h4 class="mpds-h4" style="margin-top:8px;">Descoberta</h4>
+            <p class="mpds-body-text" style="margin-top:6px; font-size:0.84rem;">translateY(26px) + blur(8px) → nítido em 850ms.</p>
+          </div>
+          <div class="mpds-card mpds-card-elevated mpds-animate-on-scroll mpds-delay-200" style="padding:24px;">
+            <span class="mpds-mono-label">0.2s · Stagger</span>
+            <h4 class="mpds-h4" style="margin-top:8px;">Arquitetura</h4>
+            <p class="mpds-body-text" style="margin-top:6px; font-size:0.84rem;">Curva exponencial cubic-bezier(0.16, 1, 0.3, 1).</p>
+          </div>
+          <div class="mpds-card mpds-card-elevated mpds-animate-on-scroll mpds-delay-300" style="padding:24px;">
+            <span class="mpds-mono-label">0.3s · Entrega</span>
+            <h4 class="mpds-h4" style="margin-top:8px;">Validação IA</h4>
+            <p class="mpds-body-text" style="margin-top:6px; font-size:0.84rem;">Respeita automaticamente prefers-reduced-motion.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7B. Flashlight Reveal & Interactive 3-Card Deck -->
+      <div class="showcase-grid-2 border-b">
+        <!-- Flashlight Spotlight -->
+        <div class="pad-cell border-r border-r-md">
+          <span class="mpds-mono-label" style="display:block; margin-bottom:20px;">Flashlight Spotlight (Passe o mouse)</span>
+          <div class="showcase-grid-2" style="gap:16px;">
+            <div class="mpds-card mpds-card-elevated mpds-flashlight" style="padding:24px; min-height:180px; display:flex; flex-direction:column; justify-content:space-between;">
+              <iconify-icon icon="solar:layers-minimalistic-bold-duotone" style="font-size:2rem; color:var(--mpds-ink-primary);"></iconify-icon>
+              <div>
+                <h4 class="mpds-h4">Light Surface</h4>
+                <span class="mpds-mono-label" style="font-size:0.65rem;">Radial Ink 5.5%</span>
+              </div>
+            </div>
+            <div class="mpds-flashlight is-dark" style="padding:24px; min-height:180px; display:flex; flex-direction:column; justify-content:space-between; background:var(--mpds-bg-inverse); color:var(--mpds-ink-inverse); border:1px solid rgba(255,255,255,0.12);">
+              <iconify-icon icon="solar:cpu-bold-duotone" style="font-size:2rem; color:#FFFFFF;"></iconify-icon>
+              <div>
+                <h4 class="mpds-h4" style="color:#FFFFFF;">Dark Surface</h4>
+                <span class="mpds-mono-label" style="font-size:0.65rem; color:#A8A29E;">Radial Glow 9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Card Interactive Deck Switcher -->
+        <div class="pad-cell" data-mpds-deck>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <span class="mpds-mono-label">Interactive 3-Card Deck (Gemini)</span>
+            <span class="mpds-mono-label" data-mpds-deck-counter>01 / 03</span>
+          </div>
+
+          <div class="mpds-deck-stage">
+            <div class="mpds-deck-card" data-pos="0">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <iconify-icon icon="solar:magnifer-bold-duotone" style="font-size:1.75rem;"></iconify-icon>
+                <span class="mpds-mono-label">Etapa 01</span>
+              </div>
+              <div>
+                <h4 class="mpds-h4">Pesquisa &amp; Problema</h4>
+                <p class="mpds-body-text" style="margin-top:8px; font-size:0.86rem;">Mapeamento de usuários, hipóteses e oportunidades reais onde a IA agrega valor mensurável.</p>
+              </div>
+            </div>
+
+            <div class="mpds-deck-card" data-pos="1">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <iconify-icon icon="solar:ruler-angular-bold-duotone" style="font-size:1.75rem;"></iconify-icon>
+                <span class="mpds-mono-label">Etapa 02</span>
+              </div>
+              <div>
+                <h4 class="mpds-h4">Sistemas &amp; Prototipagem</h4>
+                <p class="mpds-body-text" style="margin-top:8px; font-size:0.86rem;">Tokens, componentes escaláveis e protótipos funcionais testados com usuários reais.</p>
+              </div>
+            </div>
+
+            <div class="mpds-deck-card" data-pos="2">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <iconify-icon icon="solar:rocket-2-bold-duotone" style="font-size:1.75rem;"></iconify-icon>
+                <span class="mpds-mono-label">Etapa 03</span>
+              </div>
+              <div>
+                <h4 class="mpds-h4">Entrega &amp; Impacto</h4>
+                <p class="mpds-body-text" style="margin-top:8px; font-size:0.86rem;">Handoff limpo em código, acompanhamento de métricas de conversão e evolução contínua.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
+            <button type="button" class="mpds-btn mpds-btn-icon" data-mpds-deck-prev aria-label="Anterior">
+              <iconify-icon icon="solar:arrow-left-linear" style="font-size:1.15rem;"></iconify-icon>
+            </button>
+            <button type="button" class="mpds-btn mpds-btn-icon" data-mpds-deck-next aria-label="Próximo">
+              <iconify-icon icon="solar:arrow-right-linear" style="font-size:1.15rem;"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7C. Infinite Alpha-Mask Marquee -->
+      <div style="padding:36px 0; background:rgba(244,244,240,0.6);">
+        <div class="mpds-marquee-wrap">
+          <div class="mpds-marquee-track">
+            <span class="mpds-mono-label">UX Architecture</span><span>·</span>
+            <span class="mpds-mono-label">AI Product Design</span><span>·</span>
+            <span class="mpds-mono-label">Design Systems</span><span>·</span>
+            <span class="mpds-mono-label">Prototyping in Code</span><span>·</span>
+            <span class="mpds-mono-label">Voice &amp; Agent UX</span><span>·</span>
+            <span class="mpds-mono-label">Motion Physics</span><span>·</span>
+            <span class="mpds-mono-label">UX Architecture</span><span>·</span>
+            <span class="mpds-mono-label">AI Product Design</span><span>·</span>
+            <span class="mpds-mono-label">Design Systems</span><span>·</span>
+            <span class="mpds-mono-label">Prototyping in Code</span><span>·</span>
+            <span class="mpds-mono-label">Voice &amp; Agent UX</span><span>·</span>
+            <span class="mpds-mono-label">Motion Physics</span><span>·</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         08 / ICONOGRAPHY (SOLAR ICONS — ARCHITECT + GEMINI)
+         ==================================================================== -->
+    <section id="icons" class="mpds-section">
+      <div class="mpds-section-head">
+        <div>
+          <span class="mpds-mono-label" style="display:block; margin-bottom:8px;">08 / Assets</span>
+          <h2 class="mpds-h2">Iconografia Solar</h2>
+        </div>
+        <span class="mpds-mono-label">Clique no ícone para copiar o identificador</span>
+      </div>
+
+      <div class="showcase-grid-6">
+        <div class="icon-tile" data-mpds-copy="solar:atom-linear"><iconify-icon icon="solar:atom-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">atom</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:stars-minimalistic-bold-duotone"><iconify-icon icon="solar:stars-minimalistic-bold-duotone"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">ai-stars</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:cpu-linear"><iconify-icon icon="solar:cpu-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">cpu</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:layers-minimalistic-linear"><iconify-icon icon="solar:layers-minimalistic-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">layers</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:ruler-angular-linear"><iconify-icon icon="solar:ruler-angular-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">ruler</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:palette-linear"><iconify-icon icon="solar:palette-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">palette</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:code-square-linear"><iconify-icon icon="solar:code-square-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">code</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:microphone-3-linear"><iconify-icon icon="solar:microphone-3-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">voice</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:arrow-right-up-linear"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">arrow-up</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:file-download-linear"><iconify-icon icon="solar:file-download-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">download</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:letter-linear"><iconify-icon icon="solar:letter-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">email</span></div>
+        <div class="icon-tile" data-mpds-copy="solar:check-circle-linear"><iconify-icon icon="solar:check-circle-linear"></iconify-icon><span class="mpds-mono" style="font-size:0.68rem;">check</span></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         FOOTER
+         ==================================================================== -->
+    <footer style="position:relative; z-index:10; background:var(--mpds-bg-inverse); color:var(--mpds-ink-inverse); padding:44px 48px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <iconify-icon icon="solar:atom-linear" style="font-size:1.3rem;"></iconify-icon>
+        <span style="font-weight:600; letter-spacing:-0.03em;">MPDs — Marco Prado Design System</span>
+      </div>
+      <span class="mpds-mono-label" style="color:var(--mpds-ink-inverse-muted);">v1.0 · UX &amp; AI Portfolio Architecture</span>
+    </footer>
+  </div>
+
+  <script src="./mpds.js"></script>
+</body>
+</html>

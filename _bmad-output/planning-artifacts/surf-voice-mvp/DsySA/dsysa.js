@@ -44,17 +44,40 @@
   const ALL_FORECAST_DAYS = generateDynamicForecastDays(15);
   const LAST_FORECAST_DATE_LABEL = ALL_FORECAST_DAYS[ALL_FORECAST_DAYS.length - 1].fullDate;
 
-  /* 4A. Sincronização Horizontal Global entre todos os Gráficos e Previsão do Tempo */
+  /* 4A. Sincronização Horizontal Global (60fps, sem refluxo em loop e sem ping-pong) */
   const dsysaSyncRegistry = new Set();
-  let dsysaSyncingSource = null;
-  let dsysaSyncRafId = null;
+  let dsysaActiveLeader = null;
+  let dsysaLeaderReleaseTimer = null;
+  let dsysaPendingSyncRaf = null;
   let dsysaLastSyncedDayOffset = 0;
 
-  function getDsySASyncDayWidth(el) {
-    if (!el) return 0;
-    const cell = el.querySelector(".dsysa-wave-day-cell, .dsysa-weather-fc-col");
-    if (cell && cell.offsetWidth > 0) return cell.offsetWidth;
-    return 0;
+  window.addEventListener(
+    "resize",
+    () => {
+      dsysaSyncRegistry.forEach((entry) => {
+        entry.cachedDayW = 0;
+        entry.cachedMaxScroll = -1;
+      });
+    },
+    { passive: true }
+  );
+
+  function measureSyncEntry(entry) {
+    if (!entry || !entry.el || !entry.el.isConnected) return { dayW: 0, maxScroll: 0 };
+    if (!entry.cachedDayW || entry.cachedDayW <= 0) {
+      const cell = entry.el.querySelector(".dsysa-wave-day-cell, .dsysa-weather-fc-col");
+      entry.cachedDayW = cell && cell.offsetWidth > 0 ? cell.offsetWidth : 0;
+    }
+    entry.cachedMaxScroll = Math.max(0, entry.el.scrollWidth - entry.el.clientWidth);
+    return { dayW: entry.cachedDayW, maxScroll: entry.cachedMaxScroll };
+  }
+
+  function promoteSyncLeader(el) {
+    dsysaActiveLeader = el;
+    if (dsysaLeaderReleaseTimer) clearTimeout(dsysaLeaderReleaseTimer);
+    dsysaLeaderReleaseTimer = setTimeout(() => {
+      if (dsysaActiveLeader === el) dsysaActiveLeader = null;
+    }, 180);
   }
 
   function registerDsySASyncScroll(el, stateObj) {
@@ -68,19 +91,23 @@
       }
     });
 
-    const entry = { el, stateObj };
+    const entry = { el, stateObj, cachedDayW: 0, cachedMaxScroll: -1 };
     dsysaSyncRegistry.add(entry);
+
+    // Interação direta do usuário promove imediatamente este viewport como líder
+    const markAsUserLeader = () => promoteSyncLeader(el);
+    el.addEventListener("pointerdown", markAsUserLeader, { passive: true });
+    el.addEventListener("touchstart", markAsUserLeader, { passive: true });
+    el.addEventListener("wheel", markAsUserLeader, { passive: true });
 
     // Alinha o novo viewport à posição do dia atualmente visualizado nos demais módulos
     if (dsysaLastSyncedDayOffset > 0) {
-      const dw = getDsySASyncDayWidth(el);
-      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-      if (dw > 0 && maxScroll > 0) {
-        const targetLeft = Math.max(0, Math.min(maxScroll, dsysaLastSyncedDayOffset * dw));
-        const prevB = el.style.scrollBehavior;
-        el.style.scrollBehavior = "auto";
+      const { dayW, maxScroll } = measureSyncEntry(entry);
+      if (dayW > 0 && maxScroll > 0) {
+        const targetLeft = Math.max(0, Math.min(maxScroll, dsysaLastSyncedDayOffset * dayW));
+        el.__dsysaIgnoreUntil = performance.now() + 200;
+        el.__dsysaExpectedLeft = targetLeft;
         el.scrollLeft = targetLeft;
-        el.style.scrollBehavior = prevB || "";
         if (stateObj) stateObj.savedScrollLeft = targetLeft;
       }
     }
@@ -88,53 +115,81 @@
     el.addEventListener(
       "scroll",
       () => {
-        if (dsysaSyncingSource && dsysaSyncingSource !== el) return;
+        const now = performance.now();
 
-        const srcDayW = getDsySASyncDayWidth(el);
-        const srcMax = Math.max(1, el.scrollWidth - el.clientWidth);
-        const dayOffset = srcDayW > 0 ? el.scrollLeft / srcDayW : null;
-        const ratio = el.scrollLeft / srcMax;
-        if (dayOffset !== null) dsysaLastSyncedDayOffset = dayOffset;
+        // Ignora eventos de scroll gerados programaticamente pela sincronização (elimina ping-pong!)
+        if (dsysaActiveLeader && dsysaActiveLeader !== el) return;
+        if (
+          el.__dsysaIgnoreUntil &&
+          now < el.__dsysaIgnoreUntil &&
+          typeof el.__dsysaExpectedLeft === "number" &&
+          Math.abs(el.scrollLeft - el.__dsysaExpectedLeft) < 3
+        ) {
+          return;
+        }
+
+        promoteSyncLeader(el);
         if (stateObj) stateObj.savedScrollLeft = el.scrollLeft;
 
-        dsysaSyncingSource = el;
-        if (dsysaSyncRafId) cancelAnimationFrame(dsysaSyncRafId);
+        // Agrupa a sincronização em 1 único requestAnimationFrame (fase de leitura -> fase de escrita)
+        if (dsysaPendingSyncRaf) return;
+        dsysaPendingSyncRaf = requestAnimationFrame(() => {
+          dsysaPendingSyncRaf = null;
+          const leaderEl = dsysaActiveLeader || el;
+          if (!leaderEl || !leaderEl.isConnected) return;
 
-        dsysaSyncRegistry.forEach((other) => {
-          if (!other.el || other.el === el || !other.el.isConnected) return;
-          const dstMax = other.el.scrollWidth - other.el.clientWidth;
-          if (dstMax <= 0) return;
+          // FASE 1 (READ): mede apenas valores necessários sem intercalar escritas
+          let leaderEntry = null;
+          const activeEntries = [];
+          dsysaSyncRegistry.forEach((item) => {
+            if (!item.el || !item.el.isConnected) {
+              dsysaSyncRegistry.delete(item);
+              return;
+            }
+            const dims = measureSyncEntry(item);
+            if (item.el === leaderEl) {
+              leaderEntry = { item, ...dims, scrollLeft: item.el.scrollLeft };
+            } else {
+              activeEntries.push({ item, ...dims });
+            }
+          });
 
-          const dstDayW = getDsySASyncDayWidth(other.el);
-          let targetLeft = dayOffset !== null && dstDayW > 0 ? dayOffset * dstDayW : ratio * dstMax;
-          targetLeft = Math.max(0, Math.min(dstMax, targetLeft));
+          if (!leaderEntry) return;
+          const dayOffset = leaderEntry.dayW > 0 ? leaderEntry.scrollLeft / leaderEntry.dayW : null;
+          const ratio = leaderEntry.maxScroll > 0 ? leaderEntry.scrollLeft / leaderEntry.maxScroll : 0;
+          if (dayOffset !== null) dsysaLastSyncedDayOffset = dayOffset;
 
-          if (Math.abs(other.el.scrollLeft - targetLeft) > 0.5) {
-            const prevBehavior = other.el.style.scrollBehavior;
-            other.el.style.scrollBehavior = "auto";
-            other.el.scrollLeft = targetLeft;
-            other.el.style.scrollBehavior = prevBehavior || "";
+          // FASE 2 (WRITE): aplica scrollLeft nos demais módulos sem causar forced reflow
+          const ignoreUntil = performance.now() + 200;
+          for (let i = 0; i < activeEntries.length; i++) {
+            const target = activeEntries[i];
+            if (target.maxScroll <= 0) continue;
+            let targetLeft = dayOffset !== null && target.dayW > 0 ? dayOffset * target.dayW : ratio * target.maxScroll;
+            targetLeft = Math.max(0, Math.min(target.maxScroll, targetLeft));
+
+            if (Math.abs(target.item.el.scrollLeft - targetLeft) > 0.8) {
+              target.item.el.__dsysaIgnoreUntil = ignoreUntil;
+              target.item.el.__dsysaExpectedLeft = targetLeft;
+              target.item.el.scrollLeft = targetLeft;
+            }
+            if (target.item.stateObj) {
+              target.item.stateObj.savedScrollLeft = targetLeft;
+            }
           }
-          if (other.stateObj) other.stateObj.savedScrollLeft = other.el.scrollLeft;
-        });
-
-        dsysaSyncRafId = requestAnimationFrame(() => {
-          dsysaSyncingSource = null;
         });
       },
       { passive: true }
     );
   }
 
-  /* 4. Helper Universal de Scroll Horizontal Infinito com Suporte a Toque (Celular) + Mouse Drag + Wheel */
+  /* 4. Helper Universal de Scroll Horizontal Infinito com Suporte a Toque Nativo (Celular) + Mouse Drag + Wheel */
   window.attachDsySAInfiniteTouchScroll = function (viewport, state, totalAvailableDays, onRenderMore, statusBarEl, endBannerEl) {
     if (!viewport) return;
 
     if (state.savedScrollLeft > 0) {
-      const prevBehavior = viewport.style.scrollBehavior;
-      viewport.style.scrollBehavior = "auto";
+      viewport.__dsysaIgnoreUntil = performance.now() + 200;
+      viewport.__dsysaExpectedLeft = state.savedScrollLeft;
       viewport.scrollLeft = state.savedScrollLeft;
-      viewport.style.scrollBehavior = prevBehavior || "";
     }
 
     registerDsySASyncScroll(viewport, state);
@@ -183,13 +238,16 @@
       { passive: false }
     );
 
-    // Mouse Drag (Desktop)
+    // Mouse Drag (Desktop — toque mobile usa rolagem nativa com inércia do navegador)
     let isMouseDown = false;
+    let hasDragged = false;
     let mouseStartX = 0;
     let mouseScrollStart = 0;
 
     viewport.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
       isMouseDown = true;
+      hasDragged = false;
       viewport.classList.add("dragging");
       mouseStartX = e.pageX - viewport.offsetLeft;
       mouseScrollStart = viewport.scrollLeft;
@@ -204,43 +262,13 @@
     });
     viewport.addEventListener("mousemove", (e) => {
       if (!isMouseDown) return;
-      e.preventDefault();
       const x = e.pageX - viewport.offsetLeft;
-      const walk = (x - mouseStartX) * 1.35;
+      if (!hasDragged && Math.abs(x - mouseStartX) < 4) return;
+      hasDragged = true;
+      e.preventDefault();
+      const walk = (x - mouseStartX) * 1.25;
       viewport.scrollLeft = mouseScrollStart - walk;
     });
-
-    // Toque / Arrastar com o dedo (Mobile / Tablets)
-    let touchStartX = 0;
-    let touchScrollStart = 0;
-    viewport.addEventListener(
-      "touchstart",
-      (e) => {
-        if (!e.touches || e.touches.length === 0) return;
-        touchStartX = e.touches[0].pageX;
-        touchScrollStart = viewport.scrollLeft;
-        viewport.classList.add("dragging");
-      },
-      { passive: true }
-    );
-    viewport.addEventListener(
-      "touchmove",
-      (e) => {
-        if (!e.touches || e.touches.length === 0) return;
-        const currentX = e.touches[0].pageX;
-        const deltaX = touchStartX - currentX;
-        viewport.scrollLeft = touchScrollStart + deltaX;
-      },
-      { passive: true }
-    );
-    viewport.addEventListener(
-      "touchend",
-      () => {
-        viewport.classList.remove("dragging");
-        checkScrollBounds();
-      },
-      { passive: true }
-    );
   };
 
   /* Habilita arrastar por toque/mouse em qualquer barra horizontal simples (.dsysa-touch-scroll) */
@@ -326,8 +354,9 @@
     NNO: 157
   };
 
-  /* Helper Universal: Extração Dinâmica de Dias e Slots da Previsão (Open-Meteo) a partir de HOJE */
-  function getDsySAFiniteDays(spotConfig) {
+  /* Helper Universal: Extração Dinâmica de Dias Reais da Previsão (Open-Meteo NOAA WW3 / GFS) a partir de HOJE */
+  function getDsySAFiniteDays(spotConfig, options = {}) {
+    const allowFallbackDays = Boolean(options.allowFallbackDays);
     const todayStr = getTodayIsoDate();
     if (spotConfig?.forecastData?.timeline && spotConfig.forecastData.timeline.length > 0) {
       const timeline = spotConfig.forecastData.timeline;
@@ -359,20 +388,48 @@
       });
 
       if (daysMap.size > 0) {
-        const resultDays = Array.from(daysMap.values()).slice(0, 15);
-        // Garante sempre 15 dias completos na linha do tempo (complementando dias extras além do limite da API Marinha)
-        if (resultDays.length < 15) {
-          const full15 = generateDynamicForecastDays(15);
-          full15.forEach((d) => {
-            if (resultDays.length < 15 && !daysMap.has(d.dateStr)) {
-              resultDays.push(d);
-            }
-          });
-        }
-        return resultDays;
+        // Retorna SOMENTE os dias com dados reais da API (sem inventar dias 9–15 sintéticos)
+        return Array.from(daysMap.values()).filter((d) => d.points && d.points.length > 0);
       }
     }
-    return generateDynamicForecastDays(15);
+    return allowFallbackDays ? generateDynamicForecastDays(15) : [];
+  }
+
+  /* Helper: Converte direção meteorológica/oceanográfica (origem) para rotação visual da seta (destino) */
+  function toArrowRotationDeg(fromDeg) {
+    if (fromDeg === null || fromDeg === undefined || isNaN(fromDeg)) return 0;
+    return (Math.round(Number(fromDeg)) + 180) % 360;
+  }
+
+  /* Helper: Seleciona exatamente o mesmo ponto horário usado pela telemetria e pela narração do agente */
+  function getExactSlotPoint(day, hr, hIdx, isNowSlot, spotConfig) {
+    if (isNowSlot && spotConfig?.nowForecastPoint) {
+      return spotConfig.nowForecastPoint;
+    }
+    if (!day?.points || day.points.length === 0) return null;
+    const targetHourInt = parseInt(hr, 10);
+    return (
+      day.points.find((p) => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
+      day.points[Math.min(day.points.length - 1, hIdx * 6)]
+    );
+  }
+
+  function renderChartLoadingPlaceholder(title, accentColor, subtitle) {
+    return `
+      <div class="dsysa-wave-panel mt-4" style="--border-gradient: linear-gradient(135deg, ${accentColor}40, rgba(56, 189, 248, 0.05)); --border-radius-before: 16px;">
+        <div class="dsysa-wave-topbar">
+          <div class="dsysa-wave-topbar-title">
+            <span class="h-2.5 w-2.5 rounded-full animate-pulse" style="background-color: ${accentColor};"></span>
+            <span>${title}</span>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400">Sincronizando dados reais...</span>
+        </div>
+        <div class="px-5 py-8 flex flex-col items-center justify-center text-center gap-2 text-slate-400">
+          <span class="text-xs font-medium text-slate-200">${subtitle}</span>
+          <span class="text-[11px] text-slate-400">Os gráficos são alimentados diretamente pela mesma previsão real narrada pelo surfeAgent.</span>
+        </div>
+      </div>
+    `;
   }
 
   /* ==========================================================================
@@ -399,6 +456,14 @@
     containerEl.__waveChartState = state;
 
     const allDays = getDsySAFiniteDays(spotConfig);
+    if (allDays.length === 0) {
+      containerEl.innerHTML = renderChartLoadingPlaceholder(
+        "ALTURA E PERÍODO DAS ONDAS",
+        "#38bdf8",
+        `Carregando ondulação real (NOAA WaveWatch III) para ${spotConfig?.name || "o pico"}...`
+      );
+      return;
+    }
     const visibleDays = allDays.slice(0, state.loadedDaysCount);
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
@@ -411,101 +476,96 @@
     };
     const activeMod = modeMultipliers[state.subTab] || modeMultipliers.total;
 
-    const exposureFactor = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
-    const ENERGY_K = 72;
+    // Mapeamento direto padrão Surfguru (sem multiplicadores artificiais)
     const slots = [];
     const hours = ["00h", "06h", "12h", "18h"];
     const bandTypes = ["night", "twilight", "daylight", "twilight"];
 
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
-        const globalIdx = dIdx * 4 + hIdx;
-        let rawH, rawP, dirCode, angle, energyKj;
-        let s1H = 0, s1P = 0, s1Dir = baseDir || "SE", s1Deg = 135;
-        let s2H = 0, s2P = 0, s2Dir = "", s2Deg = null;
+        const now = new Date();
+        const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
+        const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
 
-        if (day.points && day.points.length > 0) {
-          const targetHourInt = parseInt(hr, 10);
-          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
-            day.points[Math.min(day.points.length - 1, hIdx * 6)];
+        const pt = getExactSlotPoint(day, hr, hIdx, isNowSlot, spotConfig);
+        if (!pt || !pt.swell) return;
 
-          s1H = Number(((pt.swell.primary.heightM || 0.8) * exposureFactor).toFixed(1));
-          s1P = pt.swell.primary.periodS || 9;
-          s1Dir = pt.swell.primary.directionCardinal || "SE";
-          s1Deg = pt.swell.primary.directionDeg !== null && pt.swell.primary.directionDeg !== undefined ? pt.swell.primary.directionDeg : 135;
+        const totalSeaH = Number((pt.swell.totalHeightM ?? pt.swell.displayHeightM ?? pt.swell.primary?.heightM ?? 0).toFixed(1));
+        const profileH = Number((pt.swell.displayHeightM ?? totalSeaH).toFixed(1));
+        const displayP = Math.round(pt.swell.displayPeriodS ?? pt.swell.primary?.periodS ?? pt.swell.wavePeriodS ?? 8);
+        const displayDeg = pt.swell.displayDirectionDeg ?? pt.swell.primary?.directionDeg ?? pt.swell.waveDirectionDeg ?? 135;
+        const displayDir = pt.swell.displayDirectionCardinal || (window.degreesToCardinal ? window.degreesToCardinal(displayDeg) : "SE") || "SE";
 
-          s2H = pt.swell.secondary.heightM ? Number((pt.swell.secondary.heightM * exposureFactor).toFixed(1)) : 0;
-          s2P = pt.swell.secondary.periodS || 0;
-          s2Dir = pt.swell.secondary.directionCardinal || "";
-          s2Deg = pt.swell.secondary.directionDeg !== null && pt.swell.secondary.directionDeg !== undefined ? pt.swell.secondary.directionDeg : null;
+        const s1H = Number((pt.swell.primary?.heightM ?? totalSeaH).toFixed(1));
+        const s1P = Math.round(pt.swell.primary?.periodS ?? displayP);
+        const s1Deg = pt.swell.primary?.directionDeg ?? displayDeg;
+        const s1Dir = pt.swell.primary?.directionCardinal || displayDir;
 
-          if (state.subTab === "swellA") {
-            rawH = s1H;
-            rawP = s1P;
-            dirCode = s1Dir;
-            angle = s1Deg;
-          } else if (state.subTab === "swellB") {
-            rawH = s2H || Number((0.4 * exposureFactor).toFixed(1));
-            rawP = s2P || 8;
-            dirCode = s2Dir || "E";
-            angle = s2Deg !== null ? s2Deg : 90;
-          } else if (state.subTab === "vagas") {
-            const totalAdj = (pt.swell.totalHeightM || 1.0) * exposureFactor;
-            rawH = Math.max(0.2, Number((totalAdj - s1H * 0.75).toFixed(1)));
-            rawP = Math.max(4, Math.round(s1P * 0.55));
-            dirCode = pt.wind.directionCardinal || "E";
-            angle = pt.wind.directionDeg !== null ? pt.wind.directionDeg : 90;
-          } else {
-            rawH = Number(((pt.swell.totalHeightM || 1.1) * exposureFactor).toFixed(1));
-            rawP = s1P;
-            dirCode = s1Dir;
-            angle = s1Deg;
-          }
-          energyKj = Math.round(ENERGY_K * (s1H * s1H * s1P + s2H * s2H * s2P));
+        const s2H = pt.swell.secondary?.heightM ? Number(pt.swell.secondary.heightM.toFixed(1)) : 0;
+        const s2P = pt.swell.secondary?.periodS ? Math.round(pt.swell.secondary.periodS) : 0;
+        const s2Dir = pt.swell.secondary?.directionCardinal || "";
+        const s2Deg = pt.swell.secondary?.directionDeg ?? null;
+
+        const wwH = pt.swell.windWave?.heightM !== null && pt.swell.windWave?.heightM !== undefined
+          ? Number(pt.swell.windWave.heightM.toFixed(1))
+          : 0;
+        const wwP = pt.swell.windWave?.periodS
+          ? Math.round(pt.swell.windWave.periodS)
+          : 0;
+        const wwDeg = pt.swell.windWave?.directionDeg ?? pt.wind?.directionDeg ?? 90;
+        const wwDir = pt.swell.windWave?.directionCardinal || pt.wind?.directionCardinal || "E";
+
+        let rawH, rawP, dirCode, rawFromDeg;
+        if (state.subTab === "swellA") {
+          rawH = s1H;
+          rawP = s1P;
+          dirCode = s1Dir;
+          rawFromDeg = s1Deg;
+        } else if (state.subTab === "swellB") {
+          rawH = s2H;
+          rawP = s2P || 8;
+          dirCode = s2Dir || "E";
+          rawFromDeg = s2Deg !== null ? s2Deg : 90;
+        } else if (state.subTab === "vagas") {
+          rawH = wwH;
+          rawP = wwP || 5;
+          dirCode = wwDir;
+          rawFromDeg = wwDeg;
         } else {
-          const waveEnvelope = Math.sin((globalIdx / 22) * Math.PI) * 0.42 + 0.78;
-          rawH = Math.max(
-            0.3,
-            Math.min(3.4, +((baseHeight * activeMod.hMult * waveEnvelope + (hIdx % 2 === 0 ? 0.08 : -0.05)) * exposureFactor).toFixed(1))
-          );
-          rawP = Math.max(
-            4,
-            Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.45) * 1.8))
-          );
-          dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
-          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300;
-          s1H = rawH;
-          s1P = rawP;
-          s1Dir = dirCode;
-          s1Deg = angle;
-          energyKj = Math.round(ENERGY_K * rawH * rawH * rawP);
+          // Aba padrão "Altura total" (Perfil Costeiro Determinístico: displayWaveHeight + swell_wave_period/direction)
+          rawH = profileH;
+          rawP = displayP;
+          dirCode = displayDir;
+          rawFromDeg = displayDeg;
         }
+
+        const energyJm2 = pt.swell.energyJoulesM2 ?? Math.round(1257 * Math.pow(profileH, 2));
+        const powerKwM = pt.swell.powerKwM ?? Number((0.49 * profileH * profileH * displayP).toFixed(1));
+        const angle = toArrowRotationDeg(rawFromDeg);
 
         const degDiff = s2Deg !== null ? Math.abs(((s1Deg - s2Deg + 540) % 360) - 180) : 0;
         const isCrossSwell = s2H >= 0.3 && degDiff >= 35;
         const swell1Summary = `${s1H.toFixed(1)}m ${s1P}s ${s1Dir}`;
         const swell2Summary = s2H >= 0.2 && s2P > 0 ? `${s2H.toFixed(1)}m ${s2P}s ${s2Dir || "E"}` : "";
 
-        const now = new Date();
-        const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
-        const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
-
         slots.push({
           dayLabel: day.label,
           fullDate: day.fullDate,
           hour: hr,
           displayTime: isNowSlot ? exactNowTime : slotTime,
-          displayVal: (typeof rawH === "number" ? rawH : parseFloat(rawH || 1.5)).toFixed(1),
+          displayVal: (typeof rawH === "number" ? rawH : parseFloat(rawH || 0)).toFixed(1),
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
           isNow: isNowSlot,
           height: rawH,
+          totalSeaH,
           period: rawP,
           color: window.getDsySAPeriodColor(rawP),
           dir: dirCode,
           angle: angle,
-          energy: energyKj,
+          energy: energyJm2,
+          powerKwM,
           swell1Summary,
           swell2Summary,
           isCrossSwell
@@ -590,7 +650,9 @@
 
                   ${slots
                     .map((s, idx) => {
-                      const heightPct = Math.min(96, Math.max(8, (s.height / maxScaleMeters) * 100));
+                      const heightPct = s.height > 0 ? Math.min(96, Math.max(2, (s.height / maxScaleMeters) * 100)) : 0;
+                      const totalSeaPct = (s.totalSeaH || s.height) > 0 ? Math.min(97, Math.max(2, ((s.totalSeaH || s.height) / maxScaleMeters) * 100)) : 0;
+                      const showTotalSeaMarker = state.subTab === "total" && s.totalSeaH && s.totalSeaH > s.height + 0.12;
                       const isSelected = state.selectedSlotIdx === idx || (state.selectedSlotIdx === undefined && s.isNow);
                       const calloutPosStyle = heightPct > 82 ? "top: 2px;" : `bottom: calc(${heightPct.toFixed(1)}% + 3px);`;
                       return `
@@ -600,12 +662,14 @@
                              data-hour="${s.hour}"
                              data-time="${s.displayTime}"
                              data-height="${s.height}m"
+                             data-total-sea="${s.totalSeaH ? s.totalSeaH.toFixed(1) + "m" : ""}"
                              data-period="${s.period}s"
                              data-dir="${s.dir}"
-                             data-energy="${s.energy} J"
+                             data-energy="${s.energy} J/m² (${s.powerKwM} kW/m)"
                              data-swell1="${s.swell1Summary}"
                              data-swell2="${s.swell2Summary}"
                              data-cross="${s.isCrossSwell ? "1" : "0"}">
+                          ${showTotalSeaMarker ? `<div class="pointer-events-none absolute left-1 right-1 border-t border-dashed border-sky-200/70" style="bottom: ${totalSeaPct.toFixed(1)}%; z-index: 3;" title="Mar Total (c/ vagas locais): ${s.totalSeaH.toFixed(1)}m"></div>` : ""}
                           <div class="dsysa-bar-callout callout-wave" style="${calloutPosStyle}">
                             <span class="dsysa-bar-callout-time">${s.displayTime}</span>
                             <span class="dsysa-bar-callout-val wave-val">${s.displayVal}</span>
@@ -740,13 +804,14 @@
         const e = col.getAttribute("data-energy");
         const s1 = col.getAttribute("data-swell1");
         const s2 = col.getAttribute("data-swell2");
+        const totalSea = col.getAttribute("data-total-sea");
         const isCross = col.getAttribute("data-cross") === "1";
         if (readout) {
           readout.classList.remove("hidden");
-          const swellDetail = s2
-            ? `Swell 1: ${s1} · Swell 2: ${s2}${isCross ? " (Cruzado)" : ""}`
-            : `Swell 1: ${s1 || `${m} ${p} ${dir}`}`;
-          readout.textContent = `${d} (${t}) → ${m} | ${swellDetail} | Potência: ${e}`;
+          const swell1Txt = `Swell Primário: ${s1 || `${m} ${p} ${dir}`}`;
+          const swell2Txt = s2 ? ` · Swell Secundário: ${s2}${isCross ? " (Cruzado)" : ""}` : " · Swell Secundário: 0.0m";
+          const totalTxt = totalSea ? ` · Mar Total: ${totalSea}` : "";
+          readout.textContent = `${d} (${t}) → Bancada: ${m} (${p} ${dir}) | ${swell1Txt}${swell2Txt}${totalTxt} | Energia: ${e}`;
         }
         const pNum = parseInt(p, 10);
         containerEl.querySelectorAll("[data-period-cell]").forEach((cell) => {
@@ -778,7 +843,7 @@
 
     const state = containerEl.__windChartState || {
       zone: "costeiro", // 'costeiro' | 'maritimo'
-      unit: "kmh",      // 'kt' | 'kmh' | 'ms' | 'mph'
+      unit: "kt",       // 'kt' (padrão Surfguru em nós) | 'kmh' | 'ms' | 'mph'
       showHelp: false,
       loadedDaysCount: 15,
       collapsed: false,
@@ -788,6 +853,14 @@
     containerEl.__windChartState = state;
 
     const allDays = getDsySAFiniteDays(spotConfig);
+    if (allDays.length === 0) {
+      containerEl.innerHTML = renderChartLoadingPlaceholder(
+        "VENTO DE SUPERFÍCIE MÉDIO",
+        "#facc15",
+        `Carregando vento real (NOAA GFS) para ${spotConfig?.name || "o pico"}...`
+      );
+      return;
+    }
     const visibleDays = allDays.slice(0, state.loadedDaysCount);
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
@@ -799,28 +872,8 @@
       ms:  { label: "m/s",  factor: 0.277778, decimals: 1 },
       mph: { label: "mph",  factor: 0.621371, decimals: 0 }
     };
-    const activeUnit = UNIT_CONFIG[state.unit] || UNIT_CONFIG.kmh;
+    const activeUnit = UNIT_CONFIG[state.unit] || UNIT_CONFIG.kt;
     const zoneMultiplier = state.zone === "maritimo" ? 1.28 : 1.0;
-
-    // Sequência de fallback caso a API ainda não tenha retornado
-    const windSequence = [
-      { dir: "N",   type: "terral",  vMult: 1.1, gMult: 1.65 },
-      { dir: "ONO", type: "terral",  vMult: 1.2, gMult: 1.55 },
-      { dir: "E",   type: "maral",   vMult: 0.6, gMult: 1.15 },
-      { dir: "N",   type: "terral",  vMult: 1.4, gMult: 1.75 },
-      { dir: "NNO", type: "terral",  vMult: 1.3, gMult: 1.80 },
-      { dir: "NNO", type: "terral",  vMult: 1.0, gMult: 1.45 },
-      { dir: "ESE", type: "maral",   vMult: 0.9, gMult: 1.20 },
-      { dir: "NE",  type: "cruzado", vMult: 1.4, gMult: 1.85 },
-      { dir: "NNE", type: "terral",  vMult: 1.1, gMult: 1.65 },
-      { dir: "NO",  type: "terral",  vMult: 0.8, gMult: 1.55 },
-      { dir: "E",   type: "cruzado", vMult: 1.2, gMult: 1.50 },
-      { dir: "NE",  type: "cruzado", vMult: 1.1, gMult: 1.60 },
-      { dir: "NNE", type: "cruzado", vMult: 0.9, gMult: 1.45 },
-      { dir: "NNE", type: "terral",  vMult: 0.5, gMult: 0.95 },
-      { dir: "E",   type: "cruzado", vMult: 1.6, gMult: 2.15 },
-      { dir: "ENE", type: "cruzado", vMult: 1.4, gMult: 1.90 }
-    ];
 
     const slots = [];
     const hours = ["00h", "06h", "12h", "18h"];
@@ -828,46 +881,35 @@
 
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
-        const globalIdx = dIdx * 4 + hIdx;
-        let rawSustainedKmh, rawGustKmh, dirCode, arrowType, angle;
-
-        if (day.points && day.points.length > 0) {
-          const targetHourInt = parseInt(hr, 10);
-          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
-            day.points[Math.min(day.points.length - 1, hIdx * 6)];
-
-          const knots = pt.wind?.speedKnots || 5;
-          const gusts = pt.wind?.gustsKnots || (knots * 1.35);
-          rawSustainedKmh = Math.round(knots * 1.852 * zoneMultiplier);
-          rawGustKmh = Math.round(gusts * 1.852 * zoneMultiplier);
-          dirCode = pt.wind?.directionCardinal || "E";
-          angle = pt.wind?.directionDeg !== null && pt.wind?.directionDeg !== undefined ? pt.wind.directionDeg : 90;
-
-          if (rawSustainedKmh <= 7) {
-            arrowType = "fraco";
-          } else if (['O', 'W', 'ONO', 'WNW', 'NO', 'NW', 'NNO', 'NNW', 'N'].includes(dirCode)) {
-            arrowType = "terral";
-          } else if (['ESE', 'SE', 'SSE', 'S'].includes(dirCode)) {
-            arrowType = "maral";
-          } else {
-            arrowType = "cruzado";
-          }
-        } else {
-          const pattern = windSequence[globalIdx % windSequence.length];
-          rawSustainedKmh = Math.max(4, Math.min(40, Math.round((baseWindKmh + 8) * pattern.vMult * zoneMultiplier)));
-          rawGustKmh = Math.max(rawSustainedKmh + 3, Math.min(50, Math.round((baseWindKmh + 10) * pattern.gMult * zoneMultiplier)));
-          arrowType = rawSustainedKmh <= 7 ? "fraco" : pattern.type;
-          dirCode = globalIdx === 6 ? baseWindDir : pattern.dir;
-          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 180;
-        }
-
-        const convSustained = +(rawSustainedKmh * activeUnit.factor).toFixed(activeUnit.decimals);
-        const convGust = +(rawGustKmh * activeUnit.factor).toFixed(activeUnit.decimals);
-
         const now = new Date();
         const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
         const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
+
+        const pt = getExactSlotPoint(day, hr, hIdx, isNowSlot, spotConfig);
+        if (!pt || !pt.wind) return;
+
+        const knots = pt.wind.speedKnots !== null && pt.wind.speedKnots !== undefined ? Number(pt.wind.speedKnots) : 0;
+        const gusts = pt.wind.gustsKnots !== null && pt.wind.gustsKnots !== undefined ? Number(pt.wind.gustsKnots) : knots;
+        const rawSustainedKmh = Math.round(knots * 1.852 * zoneMultiplier);
+        const rawGustKmh = Math.max(rawSustainedKmh, Math.round(gusts * 1.852 * zoneMultiplier));
+        const dirCode = pt.wind.directionCardinal || "E";
+        const rawFromDeg = pt.wind.directionDeg !== null && pt.wind.directionDeg !== undefined ? pt.wind.directionDeg : 90;
+        const angle = toArrowRotationDeg(rawFromDeg);
+
+        let arrowType;
+        if (rawSustainedKmh <= 7) {
+          arrowType = "fraco";
+        } else if (['O', 'W', 'ONO', 'WNW', 'NO', 'NW', 'NNO', 'NNW', 'N'].includes(dirCode)) {
+          arrowType = "terral";
+        } else if (['ESE', 'SE', 'SSE', 'S'].includes(dirCode)) {
+          arrowType = "maral";
+        } else {
+          arrowType = "cruzado";
+        }
+
+        const convSustained = +(rawSustainedKmh * activeUnit.factor).toFixed(activeUnit.decimals);
+        const convGust = +(rawGustKmh * activeUnit.factor).toFixed(activeUnit.decimals);
 
         slots.push({
           dayLabel: day.label,
@@ -1194,23 +1236,33 @@
   };
 
   /* ==========================================================================
-     8. COMPONENTE 3: GRÁFICO DSYSA DE PREVISÃO DE ENERGIA DAS ONDAS ("ENERGIA DAS ONDAS")
-     (Energia total | Vagas | Swell A | Swell B + Escala kJ/Joules + Scroll Infinito)
+     8. COMPONENTE 3: GRÁFICO DSYSA DE ENERGIA E POTÊNCIA DAS ONDAS (PADRÃO SURFGURU)
+     (Altura das barras = Energia em J/m² [E = 1/16·ρ·g·Hs²] | Cores = Potência em kW/m)
      ========================================================================== */
   const ENERGY_TIERS = [
-    { key: "e100",  max: 150,  bg: "#0284C7", label: "100",   desc: "Fraca",    lightText: true },
-    { key: "e200",  max: 260,  bg: "#06B6D4", label: "200",   desc: "Suave",    lightText: false },
-    { key: "e350",  max: 420,  bg: "#10B981", label: "350",   desc: "Moderada", lightText: false },
-    { key: "e500",  max: 600,  bg: "#84CC16", label: "500",   desc: "Boa",      lightText: false },
-    { key: "e750",  max: 850,  bg: "#EAB308", label: "750",   desc: "Forte",    lightText: false },
-    { key: "e1000", max: 1200, bg: "#F97316", label: "1000",  desc: "Pesada",   lightText: false },
-    { key: "e1500", max: 1700, bg: "#EF4444", label: "1500",  desc: "Grande",   lightText: true },
-    { key: "e2000", max: 9999, bg: "#D946EF", label: "2000+", desc: "Extrema",  lightText: true }
+    { key: "p1",   max: 1.5,  bg: "#3B69C8", label: "1-",   desc: "Fraca",    lightText: true },
+    { key: "p2",   max: 2.5,  bg: "#1D9BF0", label: "2",    desc: "Fraca",    lightText: true },
+    { key: "p3",   max: 3.5,  bg: "#00B8E6", label: "3",    desc: "Suave",    lightText: false },
+    { key: "p4",   max: 4.5,  bg: "#00E5FF", label: "4",    desc: "Suave",    lightText: false },
+    { key: "p5",   max: 6.0,  bg: "#00F5A0", label: "5",    desc: "Moderada", lightText: false },
+    { key: "p7",   max: 8.5,  bg: "#00E676", label: "7",    desc: "Moderada", lightText: false },
+    { key: "p10",  max: 12.0, bg: "#00D600", label: "10",   desc: "Boa",      lightText: false },
+    { key: "p14",  max: 17.0, bg: "#76E000", label: "14",   desc: "Boa",      lightText: false },
+    { key: "p20",  max: 25.0, bg: "#C8F000", label: "20",   desc: "Forte",    lightText: false },
+    { key: "p30",  max: 37.0, bg: "#FFF000", label: "30",   desc: "Forte",    lightText: false },
+    { key: "p45",  max: 57.0, bg: "#FFC000", label: "45",   desc: "Pesada",   lightText: false },
+    { key: "p70",  max: 85.0, bg: "#FF8800", label: "70",   desc: "Pesada",   lightText: false },
+    { key: "p100", max: 125,  bg: "#FF4D00", label: "100",  desc: "Grande",   lightText: true },
+    { key: "p150", max: 175,  bg: "#E60000", label: "150",  desc: "Grande",   lightText: true },
+    { key: "p200", max: 250,  bg: "#A61C4C", label: "200",  desc: "Clássica", lightText: true },
+    { key: "p300", max: 400,  bg: "#A21CAF", label: "300",  desc: "Extrema",  lightText: true },
+    { key: "p500", max: 99999,bg: "#E600E6", label: "500+", desc: "Extrema",  lightText: true }
   ];
 
-  window.getDsySAEnergyTier = function (kj) {
+  window.getDsySAEnergyTier = function (powerKwM) {
+    const p = Number(powerKwM) || 0;
     for (let i = 0; i < ENERGY_TIERS.length; i++) {
-      if (kj <= ENERGY_TIERS[i].max) return ENERGY_TIERS[i];
+      if (p <= ENERGY_TIERS[i].max) return ENERGY_TIERS[i];
     }
     return ENERGY_TIERS[ENERGY_TIERS.length - 1];
   };
@@ -1218,8 +1270,8 @@
   window.renderDsySAWaveEnergyChart = function (containerEl, spotConfig) {
     if (!containerEl) return;
 
-    const baseEnergyKj = parseInt(spotConfig?.energy, 10) || 520;
-    const basePeriod = parseInt(spotConfig?.swellPeriod, 10) || 12;
+    const baseEnergyJm2 = parseInt(spotConfig?.energy, 10) || 1500;
+    const basePeriod = parseInt(spotConfig?.swellPeriod, 10) || 10;
     const baseDir = (spotConfig?.swellDir || "SE")
       .split(" ")[0]
       .replace("L-SE", "ESE")
@@ -1228,7 +1280,7 @@
 
     const state = containerEl.__energyChartState || {
       subTab: "total", // 'total' | 'vagas' | 'swellA' | 'swellB'
-      unit: "kj",      // 'kj' | 'joules'
+      unit: "joules",  // 'joules' (J/m² padrão Surfguru) | 'kj'
       showHelp: false,
       loadedDaysCount: 15,
       collapsed: false,
@@ -1238,82 +1290,89 @@
     containerEl.__energyChartState = state;
 
     const allDays = getDsySAFiniteDays(spotConfig);
+    if (allDays.length === 0) {
+      containerEl.innerHTML = renderChartLoadingPlaceholder(
+        "ENERGIA DAS ONDAS (POTÊNCIA)",
+        "#34d399",
+        `Carregando energia real (NOAA WaveWatch III) para ${spotConfig?.name || "o pico"}...`
+      );
+      return;
+    }
     const visibleDays = allDays.slice(0, state.loadedDaysCount);
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
 
     const modeMultipliers = {
-      total:  { eMult: 1.0,  pDelta: 0,  dirOverride: null,    label: "Energia total (Potência Combinada)" },
+      total:  { eMult: 1.0,  pDelta: 0,  dirOverride: null,    label: "Energia total (E = 1/16 · ρ · g · Hs²)" },
       vagas:  { eMult: 0.28, pDelta: -5, dirOverride: "L",     label: "Vagas (Energia de Vento Local)" },
       swellA: { eMult: 0.85, pDelta: +1, dirOverride: baseDir, label: "Swell A (Energia Primária)" },
       swellB: { eMult: 0.35, pDelta: +3, dirOverride: "SSE",   label: "Swell B (Energia Secundária)" }
     };
     const activeMod = modeMultipliers[state.subTab] || modeMultipliers.total;
-    const unitFactor = state.unit === "joules" ? 10 : 1; // Exibição em kJ ou J/m² (x10)
-    const unitLabel = state.unit === "joules" ? "J/m²" : "kJ";
+    const unitFactor = state.unit === "kj" ? 0.001 : 1; // J/m² (padrão Surfguru) ou kJ/m²
+    const unitLabel = state.unit === "kj" ? "kJ/m²" : "J/m²";
 
-    const exposureFactor = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
-    const ENERGY_K = 72;
+    // Densidade de energia sobre a altura resultante da bancada: E = Math.round(1257 * displayWaveHeight²)
+    const ENERGY_DENSITY_CONST = 1257;
     const slots = [];
     const hours = ["00h", "06h", "12h", "18h"];
     const bandTypes = ["night", "twilight", "daylight", "twilight"];
 
     visibleDays.forEach((day, dIdx) => {
       hours.forEach((hr, hIdx) => {
-        const globalIdx = dIdx * 4 + hIdx;
-        let rawKj, period, dirCode, angle;
-
-        if (day.points && day.points.length > 0) {
-          const targetHourInt = parseInt(hr, 10);
-          const pt = day.points.find(p => parseInt(p.timestamp.slice(11, 13), 10) === targetHourInt) ||
-            day.points[Math.min(day.points.length - 1, hIdx * 6)];
-
-          const h1 = (pt.swell.primary.heightM || pt.swell.totalHeightM || 1.0) * exposureFactor;
-          const t1 = pt.swell.primary.periodS || 9;
-          const h2 = (pt.swell.secondary.heightM || 0) * exposureFactor;
-          const t2 = pt.swell.secondary.periodS || 0;
-
-          dirCode = pt.swell.primary.directionCardinal || "SE";
-          angle = pt.swell.primary.directionDeg !== null && pt.swell.primary.directionDeg !== undefined ? pt.swell.primary.directionDeg : 135;
-
-          if (state.subTab === "swellA") {
-            rawKj = Math.round(ENERGY_K * h1 * h1 * t1);
-            period = t1;
-          } else if (state.subTab === "swellB") {
-            const hSec = h2 > 0 ? h2 : 0.4 * exposureFactor;
-            const tSec = t2 > 0 ? t2 : 8;
-            rawKj = Math.round(ENERGY_K * hSec * hSec * tSec);
-            period = tSec;
-            dirCode = pt.swell.secondary.directionCardinal || "E";
-            angle = pt.swell.secondary.directionDeg !== null && pt.swell.secondary.directionDeg !== undefined ? pt.swell.secondary.directionDeg : 90;
-          } else if (state.subTab === "vagas") {
-            const hWind = Math.max(0.2, (pt.swell.totalHeightM || 1.0) * exposureFactor - h1 * 0.75);
-            const tWind = Math.max(4, Math.round(t1 * 0.55));
-            rawKj = Math.round(ENERGY_K * hWind * hWind * tWind);
-            period = tWind;
-            dirCode = pt.wind.directionCardinal || "E";
-            angle = pt.wind.directionDeg !== null && pt.wind.directionDeg !== undefined ? pt.wind.directionDeg : 90;
-          } else {
-            // Fórmula física combinada: E_joules = k * (H1^2 * T1 + H2^2 * T2)
-            rawKj = Math.round(ENERGY_K * (h1 * h1 * t1 + h2 * h2 * t2));
-            period = t1;
-          }
-        } else {
-          const envelope = Math.sin((globalIdx / 20) * Math.PI) * 0.55 + 0.72;
-          rawKj = Math.max(
-            65,
-            Math.min(1350, Math.round(baseEnergyKj * activeMod.eMult * envelope + (hIdx % 2 === 0 ? 25 : -20)))
-          );
-          period = Math.max(5, Math.min(20, Math.round(basePeriod + activeMod.pDelta + Math.sin(globalIdx * 0.4) * 1.5)));
-          dirCode = activeMod.dirOverride || (globalIdx % 5 === 0 ? "SE" : baseDir || "ESE");
-          angle = DIR_ANGLES[dirCode] !== undefined ? DIR_ANGLES[dirCode] : 300;
-        }
-
-        const tier = window.getDsySAEnergyTier(rawKj);
         const now = new Date();
         const exactNowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         const slotTime = hr.includes(':') ? hr : `${hr.replace('h', '').padStart(2, '0')}:00`;
         const isNowSlot = Boolean(day.isToday && (now.getHours() >= parseInt(hr, 10) && now.getHours() < parseInt(hr, 10) + 6));
+
+        const pt = getExactSlotPoint(day, hr, hIdx, isNowSlot, spotConfig);
+        if (!pt || !pt.swell) return;
+
+        const totalH = pt.swell.totalHeightM ?? pt.swell.primary?.heightM ?? 0;
+        const displayH = pt.swell.displayHeightM ?? totalH;
+        const displayP = Math.round(pt.swell.displayPeriodS ?? pt.swell.primary?.periodS ?? pt.swell.wavePeriodS ?? 8);
+        const displayDeg = pt.swell.displayDirectionDeg ?? pt.swell.primary?.directionDeg ?? pt.swell.waveDirectionDeg ?? 135;
+        const displayDir = pt.swell.displayDirectionCardinal || (window.degreesToCardinal ? window.degreesToCardinal(displayDeg) : "SE") || "SE";
+
+        const h1 = pt.swell.primary?.heightM ?? totalH;
+        const t1 = Math.round(pt.swell.primary?.periodS ?? displayP);
+        const h2 = pt.swell.secondary?.heightM || 0;
+        const t2 = Math.round(pt.swell.secondary?.periodS || 0);
+        const hWind = pt.swell.windWave?.heightM ?? 0;
+        const tWind = Math.round(pt.swell.windWave?.periodS || 0);
+
+        let rawJm2, powerKwM, period, dirCode, rawFromDeg;
+
+        if (state.subTab === "swellA") {
+          rawJm2 = Math.round(ENERGY_DENSITY_CONST * h1 * h1);
+          powerKwM = Number((0.49 * h1 * h1 * t1).toFixed(1));
+          period = t1;
+          dirCode = pt.swell.primary?.directionCardinal || displayDir;
+          rawFromDeg = pt.swell.primary?.directionDeg ?? displayDeg;
+        } else if (state.subTab === "swellB") {
+          rawJm2 = Math.round(ENERGY_DENSITY_CONST * h2 * h2);
+          powerKwM = Number((0.49 * h2 * h2 * (t2 || 8)).toFixed(1));
+          period = t2 || 8;
+          dirCode = pt.swell.secondary?.directionCardinal || "E";
+          rawFromDeg = pt.swell.secondary?.directionDeg ?? 90;
+        } else if (state.subTab === "vagas") {
+          rawJm2 = Math.round(ENERGY_DENSITY_CONST * hWind * hWind);
+          powerKwM = Number((0.49 * hWind * hWind * (tWind || 5)).toFixed(1));
+          period = tWind || 5;
+          dirCode = pt.swell.windWave?.directionCardinal || pt.wind?.directionCardinal || "E";
+          rawFromDeg = pt.swell.windWave?.directionDeg ?? pt.wind?.directionDeg ?? 90;
+        } else {
+          // Energia da bancada: Math.round(1257 * displayWaveHeight²) + fluxo kW/m
+          rawJm2 = pt.swell.energyJoulesM2 ?? Math.round(ENERGY_DENSITY_CONST * displayH * displayH);
+          powerKwM = pt.swell.powerKwM ?? Number((0.49 * displayH * displayH * displayP).toFixed(1));
+          period = displayP;
+          dirCode = displayDir;
+          rawFromDeg = displayDeg;
+        }
+
+        const angle = toArrowRotationDeg(rawFromDeg);
+        // Padrão Surfguru: altura da barra = Energia (J/m²), cor da barra = Potência (kW/m)
+        const tier = window.getDsySAEnergyTier(powerKwM);
 
         slots.push({
           dayLabel: day.label,
@@ -1323,8 +1382,9 @@
           band: bandTypes[hIdx],
           isDayEnd: hIdx === 3,
           isNow: isNowSlot,
-          kj: rawKj,
-          displayVal: Math.round(rawKj * unitFactor),
+          kj: rawJm2,
+          powerKwM,
+          displayVal: state.unit === "kj" ? Number((rawJm2 * unitFactor).toFixed(2)) : Math.round(rawJm2),
           tierKey: tier.key,
           tierDesc: tier.desc,
           color: tier.bg,
@@ -1335,16 +1395,16 @@
       });
     });
 
-    const maxScaleKj = 1400; // Escala vertical até 1400 kJ (com linhas tracejadas em 200, 400, 600, 800, 1000, 1200 kJ)
+    const maxScaleKj = 3500; // Escala vertical em J/m² idêntica ao Surfguru (0 a 3500 J/m²)
     const slotWidthPx = 34;
     const endCapWidthPx = allDaysLoaded ? 190 : 0;
     const totalGridWidthPx = slots.length * slotWidthPx + endCapWidthPx;
-    const yStepsKj = [1200, 1000, 800, 600, 400, 200];
+    const yStepsKj = [3000, 2500, 2000, 1500, 1000, 500];
 
     const renderEnergyYAxisTicks = () =>
       yStepsKj
         .map((v, idx) => {
-          const val = Math.round(v * unitFactor);
+          const val = state.unit === "kj" ? Number((v * unitFactor).toFixed(1)) : Math.round(v);
           const showUnit = idx % 2 === 0;
           return `<div>--- ${val} ---${showUnit ? `<span class="unit-label">${unitLabel}</span>` : ""}</div>`;
         })
@@ -1437,14 +1497,14 @@
                   ${yStepsKj
                     .map((valKj) => {
                       const bottomPct = (valKj / maxScaleKj) * 100;
-                      const isMajor = valKj === 400 || valKj === 800 || valKj === 1200;
+                      const isMajor = valKj === 1000 || valKj === 3000 || valKj === 5000;
                       return `<div class="dsysa-wave-gridline ${isMajor ? "major" : ""}" style="bottom: ${bottomPct.toFixed(1)}%;"></div>`;
                     })
                     .join("")}
 
                   ${slots
                     .map((s, idx) => {
-                      const heightPct = Math.min(92, Math.max(8, (s.kj / maxScaleKj) * 100));
+                      const heightPct = s.kj > 0 ? Math.min(92, Math.max(2, (s.kj / maxScaleKj) * 100)) : 0;
                       const isSelected = state.selectedSlotIdx === idx || (state.selectedSlotIdx === undefined && s.isNow);
                       const calloutPosStyle = heightPct > 82 ? "top: 2px;" : `bottom: calc(${heightPct.toFixed(1)}% + 3px);`;
 
@@ -1454,7 +1514,7 @@
                              data-day="${s.dayLabel} (${s.fullDate})"
                              data-hour="${s.hour}"
                              data-time="${s.displayTime}"
-                             data-energy="${s.displayVal} ${unitLabel}"
+                             data-energy="${s.displayVal} ${unitLabel} (${s.powerKwM} kW/m)"
                              data-tier="${s.tierKey}"
                              data-desc="${s.tierDesc}"
                              data-period="${s.period}s"
@@ -1523,18 +1583,17 @@
 
           <!-- ENERGY SCALE LEGEND BAR: 100 to 2000+ kJ -->
           <div class="dsysa-period-legend-wrap">
-            <div class="dsysa-energy-scale-bar">
+            <div class="dsysa-period-scale-bar">
               ${ENERGY_TIERS.map(
                 (t) => `
-                <div class="dsysa-energy-cell ${t.lightText ? "light-text" : ""}" data-energy-cell="${t.key}" style="background-color: ${t.bg};">
+                <div class="dsysa-period-cell ${t.lightText ? "light-text" : ""}" data-energy-cell="${t.key}" style="background-color: ${t.bg};" title="${t.label} kW/m (${t.desc})">
                   ${t.label}
-                  <span>${t.desc}</span>
                 </div>
               `
               ).join("")}
             </div>
             <div class="dsysa-period-caption">
-              cores do gráfico: energia primária das ondas em quilojoules (kJ) · força hidrodinâmica
+              alturas das barras: Energia das ondas em Joules/m² (E = 1/16 · ρ · g · Hs²) · cores do gráfico: potência das ondas em Kilowatts por metro (kW/m)
             </div>
           </div>
 
@@ -1930,7 +1989,7 @@
     };
     containerEl.__tideChartState = state;
 
-    const allDays = getDsySAFiniteDays(spotConfig);
+    const allDays = getDsySAFiniteDays(spotConfig, { allowFallbackDays: true });
     const visibleDays = allDays.slice(0, state.loadedDaysCount);
     const allDaysLoaded = state.loadedDaysCount >= allDays.length;
     const lastDateLabel = allDays[allDays.length - 1]?.fullDate || LAST_FORECAST_DATE_LABEL;
@@ -2787,14 +2846,13 @@
         timeline.find((p) => p.timestamp?.startsWith(todayIso) && parseInt(p.timestamp.slice(11, 13), 10) === curHr) ||
         timeline[0];
       const sec = nowPt?.swell?.secondary;
-      const exp = Number(spotConfig?.swellExposureFactor) > 0 ? Number(spotConfig.swellExposureFactor) : 1.0;
       if (sec && sec.heightM >= 0.2 && sec.directionDeg !== null && sec.directionDeg !== undefined) {
         secondarySwellDeg = sec.directionDeg;
-        const secH = (sec.heightM * exp).toFixed(1);
-        const secP = sec.periodS ? `${sec.periodS}s` : "";
+        const secH = Number(sec.heightM).toFixed(1);
+        const secP = sec.periodS ? `${Math.round(sec.periodS)}s` : "";
         secondarySwellLabel = `${sec.directionCardinal || ""} ${sec.directionDeg}° (${secH}m${secP ? " · " + secP : ""})`.trim();
         const degDiff = Math.abs(((swellDeg - secondarySwellDeg + 540) % 360) - 180);
-        isCrossSwell = sec.heightM * exp >= 0.3 && degDiff >= 35;
+        isCrossSwell = sec.heightM >= 0.3 && degDiff >= 35;
       }
     }
 

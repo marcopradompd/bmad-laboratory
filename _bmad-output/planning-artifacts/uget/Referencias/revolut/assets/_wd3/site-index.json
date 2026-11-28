@@ -1,0 +1,3397 @@
+{
+ "version": 1,
+ "tool": "wd3 0.1.0",
+ "captureId": "revolut.com-b879bbc9",
+ "capturedAt": "2026-11-27T13:41:01+00:00",
+ "entry": {
+  "url": "https://www.revolut.com/",
+  "path": "/",
+  "search": "",
+  "file": "assets/www.revolut.com/index.html",
+  "contentType": "text/html; charset=utf-8"
+ },
+ "blocked": [
+  "^https?://([^/?#]+\\.)?(google\\-analytics\\.com|analytics\\.google\\.com|googletagmanager\\.com|googleadservices\\.com|doubleclick\\.net|googlesyndication\\.com|googleoptimize\\.com|connect\\.facebook\\.net|bat\\.bing\\.com|snap\\.licdn\\.com|px\\.ads\\.linkedin\\.com|analytics\\.tiktok\\.com|ct\\.pinterest\\.com|static\\.ads\\-twitter\\.com|analytics\\.twitter\\.com|tr\\.snapchat\\.com|sc\\-static\\.net|mc\\.yandex\\.ru|hotjar\\.com|hotjar\\.io|clarity\\.ms|cdn\\.segment\\.com|api\\.segment\\.io|cdn\\.mxpnl\\.com|api\\-js\\.mixpanel\\.com|api\\.mixpanel\\.com|api\\.amplitude\\.com|api2\\.amplitude\\.com|api\\-secure\\.amplitude\\.com|api\\-sr\\.amplitude\\.com|sr\\-client\\-cfg\\.amplitude\\.com|plausible\\.io|cloud\\.umami\\.is|analytics\\.umami\\.is|static\\.cloudflareinsights\\.com|cloudflareinsights\\.com|vitals\\.vercel\\-insights\\.com|browser\\-intake\\-datadoghq\\.com|browser\\-intake\\-datadoghq\\.eu|js\\-agent\\.newrelic\\.com|bam\\.nr\\-data\\.net|bam\\-cell\\.nr\\-data\\.net|fullstory\\.com|script\\.crazyegg\\.com|mouseflow\\.com|smartlook\\.com|heapanalytics\\.com|i\\.posthog\\.com|stats\\.wp\\.com|pixel\\.wp\\.com|promotekit\\.com|ingest\\.sentry\\.io|ingest\\.us\\.sentry\\.io|ingest\\.de\\.sentry\\.io|widget\\.intercom\\.io|js\\.intercomcdn\\.com|api\\-iam\\.intercom\\.io|js\\.hs\\-scripts\\.com|js\\.hs\\-analytics\\.net|js\\.hs\\-banner\\.com|js\\.hscollectedforms\\.net|js\\.usemessages\\.com|track\\.hubspot\\.com|client\\.crisp\\.chat|embed\\.tawk\\.to|js\\.driftt\\.com|static\\.zdassets\\.com|ekr\\.zdassets\\.com|cdn\\.cookielaw\\.org|geolocation\\.onetrust\\.com|consent\\.cookiebot\\.com|consentcdn\\.cookiebot\\.com|app\\.usercentrics\\.eu|api\\.usercentrics\\.eu|cdn\\.iubenda\\.com|cmp\\.osano\\.com|cdn\\.termly\\.io)(:\\d+)?([/?#]|$)",
+  "/rpc/increment_shared_code_views",
+  "^https?://(umami|analytics|stats|plausible)\\.[^/]+/(api/send|api/collect|api/event|script\\.js)",
+  "/g/c(ollect)?\\?v=2&",
+  "sentry\\.io/api/\\d+/(envelope|store)",
+  "/api/meta-capi",
+  "^https?://(leadtracker|tracking|track|events?|collect)\\.[^/]+/",
+  "^https?://a\\.vturb\\.com/",
+  "facebook\\.com/tr[/?]",
+  "/_vercel/(speed-)?insights/",
+  "/cdn-cgi/rum",
+  "/cdn-cgi/challenge-platform/",
+  "google\\.com/(pagead|ads)/"
+ ],
+ "volatileParams": [
+  "v",
+  "_rsc",
+  "dpl",
+  "_",
+  "t",
+  "ts",
+  "timestamp",
+  "cb",
+  "cachebust",
+  "cacheBust",
+  "nocache",
+  "rnd",
+  "rand",
+  "random",
+  "_t"
+ ],
+ "entries": [
+  {
+   "url": "https://www.revolut.com/",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/html; charset=utf-8",
+   "headers": {
+    "content-type": "text/html; charset=utf-8",
+    "x-dns-prefetch-control": "on",
+    "x-nextjs-cache": "HIT"
+   },
+   "resourceType": "document",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/index.html",
+   "size": 332734,
+   "modes": [
+    "navigate"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Black.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900244027151",
+    "x-goog-hash": "crc32c=cjMRWw==, md5=1qrGippP28mruKW4DOuv0g==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "54692",
+    "x-guploader-uploadid": "AKhXX7LmY8NnFsTxqMr1LZD2W4AnC74GtqvwcFx_K7qx5-pTGxsIdUdBrC20kNU0sFhm9AaY"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Black.woff2",
+   "size": 54692,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/4562810d13544b3c.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/4562810d13544b3c.css",
+   "size": 269,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/456c431c535d051a.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/456c431c535d051a.css",
+   "size": 610,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/d399403192974b50.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/d399403192974b50.css",
+   "size": 80012,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8dd8d037a1437460.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/8dd8d037a1437460.css",
+   "size": 1079,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/21f7a82ab6ab81bb.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/21f7a82ab6ab81bb.css",
+   "size": 895,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/dc47bdace3270359.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/dc47bdace3270359.css",
+   "size": 22009,
+   "modes": [
+    "cors",
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/47ca1b8b706cc037.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/47ca1b8b706cc037.css",
+   "size": 3552,
+   "modes": [
+    "cors",
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0bc5db34f8c6bdee.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/0bc5db34f8c6bdee.css",
+   "size": 390,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/c6ecbe583fe8137f.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/c6ecbe583fe8137f.css",
+   "size": 3611,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/086b4b3958a1c44b.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/086b4b3958a1c44b.css",
+   "size": 995,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/47c3c294bc935ca3.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/47c3c294bc935ca3.css",
+   "size": 467,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/28d73bebbdabd188.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/28d73bebbdabd188.css",
+   "size": 294,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e1a305d439d5f4da.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/e1a305d439d5f4da.css",
+   "size": 943,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/fb946ce736caa3b2.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/fb946ce736caa3b2.css",
+   "size": 460,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e0fef94bf8ced77b.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/e0fef94bf8ced77b.css",
+   "size": 372,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/c9d88bc2edc1c0d2.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/c9d88bc2edc1c0d2.css",
+   "size": 4164,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/a0afab39e15964c7.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/a0afab39e15964c7.css",
+   "size": 8309,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0d7a368346a90fb0.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/0d7a368346a90fb0.css",
+   "size": 5652,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/119b960c4a0396c8.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/119b960c4a0396c8.css",
+   "size": 748,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-Regular.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900248020248",
+    "x-goog-hash": "crc32c=xvZT+w==, md5=WJHgWCHL8kArbdP0qEz+Eg==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "103152",
+    "x-guploader-uploadid": "AKhXX7KpoDU66MisGPyQ8vVpH-fwd_BwKfbWGaIKs4719xnJbanl59bedGvRFDG_0lz_NGc"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-Regular.woff2",
+   "size": 103152,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/d81cff07fe472432.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/d81cff07fe472432.css",
+   "size": 380,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/846f4a1aafccbe4a.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/846f4a1aafccbe4a.css",
+   "size": 140,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/fef8e53017e8c936.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/fef8e53017e8c936.css",
+   "size": 614,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/9efe9548e03a9d43.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/9efe9548e03a9d43.css",
+   "size": 123,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/e4ab0e3638a45cfe.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/e4ab0e3638a45cfe.css",
+   "size": 230,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8fa9955edcf736ef.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/8fa9955edcf736ef.css",
+   "size": 566,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/9db46d0383db1a96.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/9db46d0383db1a96.css",
+   "size": 2674,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/4bf8fb6d3e597db4.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/4bf8fb6d3e597db4.css",
+   "size": 1192,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/945caaa305a623c0.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/945caaa305a623c0.css",
+   "size": 91,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/8902f016e2bdf2d8.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/8902f016e2bdf2d8.css",
+   "size": 1044,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/abb18ba2687c20a0.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/abb18ba2687c20a0.css",
+   "size": 1452,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-SemiBold.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900248218010",
+    "x-goog-hash": "crc32c=wBixrw==, md5=nSnxSG3Ugb98Riac5lSu/A==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "111740",
+    "x-guploader-uploadid": "AKhXX7KBIX0kc2E55MTa8ytJcK5_DxQxKp379DeqgEZ9A_4MFFwAaXBZA_F6JIrxwLgCXu53gQvXSRc"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-SemiBold.woff2",
+   "size": 111740,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/b168da85aa9121dc.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/b168da85aa9121dc.css",
+   "size": 1608,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Black-Capitalised.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900243966680",
+    "x-goog-hash": "crc32c=PVBsog==, md5=1vFyWjMcPbkS2CMhATbLyA==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "13",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "23624",
+    "x-guploader-uploadid": "AJjja9Yx3163NNKHNGzqTDjMSsrJ8b5bbNIoH42ZR2nbi04hIwcMPnSSPiHnNUATNrOhSLDsA9YuOtA"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Black-Capitalised.woff2",
+   "size": 23624,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Medium.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900243971181",
+    "x-goog-hash": "crc32c=h6nROA==, md5=hc9V1WNep9eUspC18Y8spQ==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "40328",
+    "x-guploader-uploadid": "AJjja9Y6eXqX3Mazg_H610jmy6IecmSBfsNssu-fbfE6o_LCHEACuCQ41AYMtoLaCjVALQAR"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Medium.woff2",
+   "size": 40328,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/2309e107-7172-4cfc-a965-dc0d7acd4b72/dce27cc2-39ac-4f46-b887-46b8e1f5e976.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=71846",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(74;u=5;i=?0)",
+    "x-goog-generation": "1752073993806639",
+    "x-goog-hash": "crc32c=G2zj/g==, md5=XxtafjGIuv028Fl1nJJg2w==",
+    "x-goog-meta-x-pigeon-asset-assetid": "42125203-af6c-4e69-9533-438fd1719727",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "Website-Awards-Promotions-2025-Euromoney",
+    "x-goog-meta-x-pigeon-asset-projectid": "221eb18d-1901-4f1d-adeb-40a59947ef9f",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "71846",
+    "x-guploader-uploadid": "AAVLpEjF7jnxwfso4EP2hNBiz5XU9fkV00NY8qeooiOe_ewQWkx0VOKbvEzqpvM9Wv8j_l6v"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/2309e107-7172-4cfc-a965-dc0d7acd4b72/dce27cc2-39ac-4f46-b887-46b8e1f5e976.png",
+   "size": 59032,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/6ca566dc-8294-4e99-afbd-c51804cc5af4/2fb9c781-10a1-4bbf-bb42-7526bcc81286.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=4774",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(37;u=2;i=?0 305;u=5;i=?0)",
+    "x-goog-generation": "1732718852099596",
+    "x-goog-hash": "crc32c=HG5Peg==, md5=9HvTtSwX8l/DU/qgPqYEUg==",
+    "x-goog-meta-x-pigeon-asset-assetid": "aac30c67-5ce4-4c09-9bc7-faa71b387d4f",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-02-02",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "4774",
+    "x-guploader-uploadid": "AKhXX7LRBzbcmbfdBeTHWQofFzy8xj1wYdO5PtIOYCEf1wPWvOQPP2mTDMf1Qu-7h1eVteBE8uGw8wQ"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/6ca566dc-8294-4e99-afbd-c51804cc5af4/2fb9c781-10a1-4bbf-bb42-7526bcc81286.png",
+   "size": 2235,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4680.ca7261c6781fffa1.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/4680.ca7261c6781fffa1.js",
+   "size": 5764,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/baf74063-c481-431d-85a0-9e5743572f28/91d20a70-1a2d-46e1-8f45-ebd7e83196a8.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=3084",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(37;u=2;i=?0 356;u=5;i=?0)",
+    "x-goog-generation": "1732718845418659",
+    "x-goog-hash": "crc32c=2/MpfQ==, md5=BKFG0MusBASDLyV0E1o0Kw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "752d54a2-44fe-40b0-acc7-d5abc209f81b",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-02-01",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "3084",
+    "x-guploader-uploadid": "AKhXX7Ibb8yF8i0_2YBWIgXbAY1qzVwUconsBRP6w2o0mvlPIBDoL9Usov7GkgCzUdgiwpSN"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/baf74063-c481-431d-85a0-9e5743572f28/91d20a70-1a2d-46e1-8f45-ebd7e83196a8.png",
+   "size": 1398,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1109.5f24fe4d5fa3e149.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1109.5f24fe4d5fa3e149.js",
+   "size": 812,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8710.eec9c71cebe7f2df.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8710.eec9c71cebe7f2df.js",
+   "size": 6121,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/AeonikPro-Regular.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900243991017",
+    "x-goog-hash": "crc32c=dkK/lQ==, md5=qmthMr7v8ytCO+DvEdRbBw==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "53688",
+    "x-guploader-uploadid": "AKhXX7JlLZdGaSH2H5HVJB3P00eemynDEXSmDHjRalteDFoI6GNJ6C54VHf39wxdShl7FTjr"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/AeonikPro-Regular.woff2",
+   "size": 53688,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/6024.10d1da113fd5eb63.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/6024.10d1da113fd5eb63.js",
+   "size": 21899,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5474.a0a41162318b67de.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/5474.a0a41162318b67de.js",
+   "size": 7391,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/webpack-0f65ee3edaac4e8c.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/webpack-0f65ee3edaac4e8c.js",
+   "size": 16233,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/143.971c4a8d69ed7539.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/143.971c4a8d69ed7539.js",
+   "size": 7213,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/875.34e9c4b61ebf724c.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/875.34e9c4b61ebf724c.js",
+   "size": 29594,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1891-cbd27ce5aa786816.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1891-cbd27ce5aa786816.js",
+   "size": 25977,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1143-26d8834eb1e633a7.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1143-26d8834eb1e633a7.js",
+   "size": 6716,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4330.9373b947e73b009e.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/4330.9373b947e73b009e.js",
+   "size": 18134,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/495.f78c4b893e756bd4.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/495.f78c4b893e756bd4.js",
+   "size": 43096,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/42-f1ee14f69b7366a5.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/42-f1ee14f69b7366a5.js",
+   "size": 18279,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7223-4580c651598abe51.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/7223-4580c651598abe51.js",
+   "size": 10872,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7606.b308f29ddbe837d1.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/7606.b308f29ddbe837d1.js",
+   "size": 89516,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-Medium.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1704900248141359",
+    "x-goog-hash": "crc32c=RwAztA==, md5=gj81qEWp37+YAMije2NSaQ==",
+    "x-goog-meta-goog-reserved-file-mtime": "1730715435",
+    "x-goog-metageneration": "12",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "111192",
+    "x-guploader-uploadid": "AKhXX7KwrZR7zFkBcVtYpIL0NY_xPaVmCsA_RTotjVlormxPeh42ILdFEYcVjyucJMEUp-nOv2Y1OSw"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-Medium.woff2",
+   "size": 111192,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8963-2168483bece3ff7b.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8963-2168483bece3ff7b.js",
+   "size": 10188,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1683-d87a287bb25184ce.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1683-d87a287bb25184ce.js",
+   "size": 10030,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9513-e73240b1a87bff69.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/9513-e73240b1a87bff69.js",
+   "size": 11270,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7171-5fc7db6d3e1ac7c7.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/7171-5fc7db6d3e1ac7c7.js",
+   "size": 33322,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/550-bd6a383fdf2caefe.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/550-bd6a383fdf2caefe.js",
+   "size": 19664,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/c1d9d317-7303-4f79-8756-937632237bb5/344c3cc7-0d4d-4749-8f12-b677d289a4a5.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=2656752",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1746716341200829",
+    "x-goog-hash": "crc32c=UL1IYw==, md5=11kNY+A+HRqR5Hu+71PLgw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "c1d9d317-7303-4f79-8756-937632237bb5",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-filename": "344c3cc7-0d4d-4749-8f12-b677d289a4a5.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "2656752",
+    "x-guploader-uploadid": "AJ5rDhHXht5fyq2zRHEJBSWRbHp2bz7ND0-sCmhsz5r9onUjviQX-ZdbrrvTVVOxt8diUokNnc4K7KU"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/c1d9d317-7303-4f79-8756-937632237bb5/344c3cc7-0d4d-4749-8f12-b677d289a4a5.png",
+   "size": 2560231,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4540-7b9db3834439e92c.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/4540-7b9db3834439e92c.js",
+   "size": 10232,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/510-7a0c9d63e566648f.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/510-7a0c9d63e566648f.js",
+   "size": 13396,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7520.7409ae10c766d1f2.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/7520.7409ae10c766d1f2.js",
+   "size": 41114,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/2ad33298-6664-45ae-b325-8c3782fc0b5c/1bc89c99-4c81-4639-970a-51a8a20a5f5c.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=199209",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(37;u=2;i=?0 318;u=5;i=?0)",
+    "x-goog-generation": "1778162364830556",
+    "x-goog-hash": "crc32c=0UWi5w==, md5=02eFn5yvLzgvh8ruhl2oCQ==",
+    "x-goog-meta-verification": "not-applicable",
+    "x-goog-meta-x-pigeon-asset-assetid": "1eb682e9-6e84-402f-bd3e-28b4a77acb3e",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "Forbes_WBBanks2026_Logo_Revolut_20-26_light_hor",
+    "x-goog-meta-x-pigeon-asset-projectid": "221eb18d-1901-4f1d-adeb-40a59947ef9f",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "199209",
+    "x-guploader-uploadid": "AAVLpEjNC6Q-314ujRnjXARungpGs7AwmoXaWWR2vSoSAgpNKlMkvORccsWqkaiz05Meg7jQEZhXjH4"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/2ad33298-6664-45ae-b325-8c3782fc0b5c/1bc89c99-4c81-4639-970a-51a8a20a5f5c.png",
+   "size": 71959,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/dfa154ba-a21c-4dc1-b9a3-4ce83ccdb1ca/3829d1d5-8883-4351-a6a8-a960d419f04e.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=95080",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(74;u=5;i)",
+    "x-goog-generation": "1753090792947356",
+    "x-goog-hash": "crc32c=IwMJGw==, md5=UFLGAznj3NdsqVTxFjQ57w==",
+    "x-goog-meta-x-pigeon-asset-assetid": "acb0a888-3938-4996-b135-ed00772c1383",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "Website-Awards-Promotions-2025-SmartMoney-CS",
+    "x-goog-meta-x-pigeon-asset-projectid": "221eb18d-1901-4f1d-adeb-40a59947ef9f",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "95080",
+    "x-guploader-uploadid": "AKhXX7I2YEV-gGsWHWNYOjMTW7q8gDCJXnW-ZmmOc1HCBGKOE8JnkWuDZR37oiI9XE6HrUc"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/dfa154ba-a21c-4dc1-b9a3-4ce83ccdb1ca/3829d1d5-8883-4351-a6a8-a960d419f04e.png",
+   "size": 86147,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/c5c49070-312c-4567-8359-6ffc1624cafa/931fbf11-937a-45d4-9c9d-7078412a8ba9.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=82320",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(74;u=5;i=?0)",
+    "x-goog-generation": "1752073995862326",
+    "x-goog-hash": "crc32c=6gPRzw==, md5=ksYrsiBTpBHRULR/4NkToQ==",
+    "x-goog-meta-x-pigeon-asset-assetid": "09561d12-4637-4cd0-b3db-53954799006a",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "Website-Awards-Promotions-2025-BBB",
+    "x-goog-meta-x-pigeon-asset-projectid": "221eb18d-1901-4f1d-adeb-40a59947ef9f",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "82320",
+    "x-guploader-uploadid": "AKhXX7ILJzmqAZ9FaEDjtsxaAPDO9xC61N_4DyPtfjIJoMZ04z0WYprzXqsuZds3Gjgtv6k"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/c5c49070-312c-4567-8359-6ffc1624cafa/931fbf11-937a-45d4-9c9d-7078412a8ba9.png",
+   "size": 62349,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/f9f2192a-0076-4545-8e1e-83d852ea5130/264c79dd-e283-4f7d-9e60-a11079c7fc02.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=96969",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(74;u=5;i)",
+    "x-goog-generation": "1753090795345999",
+    "x-goog-hash": "crc32c=x7csGA==, md5=GyAd8b2POET3kuZ2bC+UfA==",
+    "x-goog-meta-x-pigeon-asset-assetid": "34cdb6a9-7cf7-4a5d-a902-0642aabddd18",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "Website-Awards-Promotions-2025-SmartMoney-CG",
+    "x-goog-meta-x-pigeon-asset-projectid": "221eb18d-1901-4f1d-adeb-40a59947ef9f",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "96969",
+    "x-guploader-uploadid": "AAVLpEhHCvLtIWpArPJzcMbf6rJw5AacI5fPm0qk7ttWtpMcdyWqJDeGBGp0y9ibArDl-fnb"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/f9f2192a-0076-4545-8e1e-83d852ea5130/264c79dd-e283-4f7d-9e60-a11079c7fc02.png",
+   "size": 87613,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/01f199ee-b3f2-4203-9ab7-27d133045284/a1b80bd3-607e-450e-80a0-83317969cf66.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=297038",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1740427955187029",
+    "x-goog-hash": "crc32c=Hr09fw==, md5=3zxpOtOC7aV7zERswRJ5Ag==",
+    "x-goog-meta-x-pigeon-asset-assetid": "01f199ee-b3f2-4203-9ab7-27d133045284",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-filename": "a1b80bd3-607e-450e-80a0-83317969cf66.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "297038",
+    "x-guploader-uploadid": "AAVLpEjqmQL5_gJfP9XfHSCDyVfA-Q044X09dPmBzWSBQ-8H1ou-nNnJrltLulWmMzVKFL5lZAca-w8"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/01f199ee-b3f2-4203-9ab7-27d133045284/a1b80bd3-607e-450e-80a0-83317969cf66.png",
+   "size": 256203,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/flags/GB.webp",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/webp",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "content-type": "image/webp",
+    "x-goog-generation": "1735659195839296",
+    "x-goog-hash": "crc32c=LsGusw==, md5=e0TR3ssO7wzxwoQU1DLO/w==",
+    "x-goog-meta-goog-reserved-file-mtime": "1735652166",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "3480",
+    "x-guploader-uploadid": "AAVLpEjX30gY1YR7yjRk0ffYw8WdUoRRqHy3h4fBnESLhCMPv9llTAIdskFTuIffmukm6wo"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/flags/GB.webp",
+   "size": 3480,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1768.d05619f5c5f304d5.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1768.d05619f5c5f304d5.js",
+   "size": 19811,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/framework-f3100f6256206564.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/framework-f3100f6256206564.js",
+   "size": 140291,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/main-33d09fb7dfd28369.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/main-33d09fb7dfd28369.js",
+   "size": 139740,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/890.b6309732b2f8236e.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/890.b6309732b2f8236e.js",
+   "size": 21613,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9441.007c866623512ed9.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/9441.007c866623512ed9.js",
+   "size": 44845,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5400-e0eff4f5b6dbf49c.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/5400-e0eff4f5b6dbf49c.js",
+   "size": 10485,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/7625-eabd7061b9ed70d6.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/7625-eabd7061b9ed70d6.js",
+   "size": 21148,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/36-05f46b1f56ac455b.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/36-05f46b1f56ac455b.js",
+   "size": 27394,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9446-d389043f49cd84d5.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/9446-d389043f49cd84d5.js",
+   "size": 15599,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_buildManifest.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_buildManifest.js",
+   "size": 10675,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8867-5fa42c8f3294c0ec.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8867-5fa42c8f3294c0ec.js",
+   "size": 7530,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2687-d5b770683501303a.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/2687-d5b770683501303a.js",
+   "size": 7723,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/pages/index-e36afbee2b3398aa.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/pages/index-e36afbee2b3398aa.js",
+   "size": 5131,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_ssgManifest.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/4hgme0h8eQqjj0T9ql5IW/_ssgManifest.js",
+   "size": 1049,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/pages/_app-401d62212f0bce74.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/pages/_app-401d62212f0bce74.js",
+   "size": 807215,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/scripts/_next-ga-init.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "content-type": "application/javascript; charset=UTF-8",
+    "x-dns-prefetch-control": "on"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/scripts/_next-ga-init.js",
+   "size": 353,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/scripts/sanitize-tracking-params.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "content-type": "application/javascript; charset=UTF-8",
+    "x-dns-prefetch-control": "on"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/scripts/sanitize-tracking-params.js",
+   "size": 1806,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/ArrowThinRight.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659255842230",
+    "x-goog-hash": "crc32c=EpNBuA==, md5=tAWs8f2Icvo1eNrcG39ppg==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692831",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "377",
+    "x-guploader-uploadid": "AAVLpEjC9V3VI-FLaXwwwiEBc5kVQZotpRWxqqiANlMtGt5s4TKzyLHkcjHcmtWres0t6Htc"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/ArrowThinRight.svg",
+   "size": 377,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoTwitter.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659258982589",
+    "x-goog-hash": "crc32c=kO9xpA==, md5=vt0TRxg+2b7//3G05JZLSA==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692829",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "296",
+    "x-guploader-uploadid": "AJjja9ZSwXSoFqQC2BaR6l04VIXlDJpGm4Vy3keV4nymXCb1TZ16gYsSndjnvEFfjr-sS3ad"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/LogoTwitter.svg",
+   "size": 296,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoInstagram.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659258894770",
+    "x-goog-hash": "crc32c=UyqKeg==, md5=Kq4tNukqzbl9WaCdT80rhw==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692829",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "1163",
+    "x-guploader-uploadid": "AKhXX7IV_6XkoOxeTtBWSiUxFRGQ7JpLahJfCxbnH3pswP0f0ROQG7ja05UwlN0FrzGoJNxm"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/LogoInstagram.svg",
+   "size": 1163,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoLinkedIn.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659258953405",
+    "x-goog-hash": "crc32c=nuU1Qg==, md5=jojW3GNe2R+CieVeX1g1GQ==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692829",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "865",
+    "x-guploader-uploadid": "AAVLpEgBwrUavkDCZDpWzVdVLqZrzlUiCze9asQfMqnGdsEWrEmENqA0-V1ghoXrQgI5M0I"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/LogoLinkedIn.svg",
+   "size": 865,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoFacebook.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659258753981",
+    "x-goog-hash": "crc32c=I+kmfA==, md5=5gpjpEsHmGk1NRVnJ50rWA==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692828",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "381",
+    "x-guploader-uploadid": "AFy3sg3eVo8H0i0g6_WLE7IAF9ySyEnCNIbEye3OjaiGfcBqa4VGjJKR3tcZ1q-BPdFAgG1m"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/LogoFacebook.svg",
+   "size": 381,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/LogoTikTok.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659258932511",
+    "x-goog-hash": "crc32c=oPe+GQ==, md5=zdArSjRI8nGZarVOP3W2Ag==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692838",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "912",
+    "x-guploader-uploadid": "AJjja9al6771XLz1v30a4g3pFWyZJ9NeEb7ZPrphCU0P68Q-WNq4LFBsTCTTOw4WngIkBvWx"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/LogoTikTok.svg",
+   "size": 912,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/1b17207f-8c44-4e67-9637-2ed365bfb5a1/8fb2616d-e499-4546-8288-9db34a2e881f.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=20551",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(37;u=2;i=?0 424;u=5;i=?0)",
+    "x-goog-generation": "1764094249030007",
+    "x-goog-hash": "crc32c=w4SxtA==, md5=qfMAnrWxO0YC6eiT6hXx6g==",
+    "x-goog-meta-x-pigeon-asset-assetid": "1b17207f-8c44-4e67-9637-2ed365bfb5a1",
+    "x-goog-meta-x-pigeon-asset-draftversion": "7",
+    "x-goog-meta-x-pigeon-asset-filename": "8fb2616d-e499-4546-8288-9db34a2e881f.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "20551",
+    "x-guploader-uploadid": "AJjja9bYC4DghRTa7iw5JwS1zWZ2s6QL22K6ROZInrzKaZ9qfRrf37rrjUj1tvLgcLasYxu0"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/1b17207f-8c44-4e67-9637-2ed365bfb5a1/8fb2616d-e499-4546-8288-9db34a2e881f.png",
+   "size": 9161,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/e33846f9-ef6b-4234-8bba-fb264119f37f/3c0bd2f0-f34c-4547-8890-61e855e0e93e.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=195194",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1733248331217311",
+    "x-goog-hash": "crc32c=fKmdBw==, md5=5/eAesujMlrom4r96SHWUg==",
+    "x-goog-meta-x-pigeon-asset-assetid": "e33846f9-ef6b-4234-8bba-fb264119f37f",
+    "x-goog-meta-x-pigeon-asset-draftversion": "3",
+    "x-goog-meta-x-pigeon-asset-filename": "3c0bd2f0-f34c-4547-8890-61e855e0e93e.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "195194",
+    "x-guploader-uploadid": "AAVLpEidjhzrRsMOwvm9ImtUIrjMzv8iSzH41M8CwIikn52_cEmqkloHxRyWWBiSlNPwjx__gN1-BrY"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/e33846f9-ef6b-4234-8bba-fb264119f37f/3c0bd2f0-f34c-4547-8890-61e855e0e93e.png",
+   "size": 123880,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/fonts/Inter-4.2/InterVariable.woff2",
+   "method": "GET",
+   "status": 200,
+   "contentType": "font/woff2",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "font/woff2",
+    "x-goog-generation": "1757517474970859",
+    "x-goog-hash": "crc32c=6kUnHQ==, md5=9PRaCTrV+wtctGEQbH2aFA==",
+    "x-goog-meta-goog-reserved-file-mtime": "1757517392",
+    "x-goog-metageneration": "4",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "352836",
+    "x-guploader-uploadid": "AKhXX7JQEuowLyOUpUBrHar2kD5rZrUylz4ksTTC9DuSwmtO6i6O6pj_lQDMDqoZUee8IzQ"
+   },
+   "resourceType": "font",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/fonts/Inter-4.2/InterVariable.woff2",
+   "size": 352836,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/af2fd3c8-cfef-40f0-a673-4a2c9fa85d69/f36ebe42-c594-470e-8e8f-3fd9af86a9a5.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=736977",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1734021574003549",
+    "x-goog-hash": "crc32c=4naZpw==, md5=R75M0caklVmnca35U1tiEw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "af2fd3c8-cfef-40f0-a673-4a2c9fa85d69",
+    "x-goog-meta-x-pigeon-asset-draftversion": "7",
+    "x-goog-meta-x-pigeon-asset-filename": "f36ebe42-c594-470e-8e8f-3fd9af86a9a5.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "736977",
+    "x-guploader-uploadid": "AJjja9aNxpVsT7pdYKt-XHBkny5rsBTWQQSF5zfUHVCNx33icgAjM8qHBf4DJFWCvurUtVGk"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/af2fd3c8-cfef-40f0-a673-4a2c9fa85d69/f36ebe42-c594-470e-8e8f-3fd9af86a9a5.png",
+   "size": 651827,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4bcf4f81-c0b1-4bde-82f5-0b4cd2ddd2ef/61f4df02-d372-4ced-86ef-cb50176593a7.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=10128846",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1744123390600962",
+    "x-goog-hash": "crc32c=SKvjYg==, md5=mT2/g8xrEAUrR2xriRXCsQ==",
+    "x-goog-meta-x-pigeon-asset-assetid": "4bcf4f81-c0b1-4bde-82f5-0b4cd2ddd2ef",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "61f4df02-d372-4ced-86ef-cb50176593a7.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "10128846",
+    "x-guploader-uploadid": "AKhXX7L-elpXmc4u0c2DzNHJXsoCt8rPiBsDJFTauxZ4Ajy7uwFKUZFO9VcRLqnCbUk-Flg"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/4bcf4f81-c0b1-4bde-82f5-0b4cd2ddd2ef/61f4df02-d372-4ced-86ef-cb50176593a7.png",
+   "size": 8476433,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/d6d0bfe6-bc41-44db-8dde-dd3665b3c359/65411b9a-e95d-4c34-a38e-d3e4fa53fa8d.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=1209085",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1734086493193692",
+    "x-goog-hash": "crc32c=UWeb4Q==, md5=fv89GsbyaFGmXVcrqwhBuA==",
+    "x-goog-meta-x-pigeon-asset-assetid": "d6d0bfe6-bc41-44db-8dde-dd3665b3c359",
+    "x-goog-meta-x-pigeon-asset-draftversion": "8",
+    "x-goog-meta-x-pigeon-asset-filename": "65411b9a-e95d-4c34-a38e-d3e4fa53fa8d.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "1209085",
+    "x-guploader-uploadid": "AAVLpEiaigJumT7JgS4XK8V0T_7WzjA14UrO4AIqJRQMOQqHNiT6Hy5SWGoKsMgCKcxGGGUb"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/d6d0bfe6-bc41-44db-8dde-dd3665b3c359/65411b9a-e95d-4c34-a38e-d3e4fa53fa8d.png",
+   "size": 953129,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/ecad5fbe-66ca-48bb-8694-ffe6f33d3ef9/7a88c57b-f75a-4e3f-8ab1-4476f7b487d3.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=3513284",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1732725657908456",
+    "x-goog-hash": "crc32c=SYqBmg==, md5=8593XdEBVnnvT/vP29WNdw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "ecad5fbe-66ca-48bb-8694-ffe6f33d3ef9",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "7a88c57b-f75a-4e3f-8ab1-4476f7b487d3.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "3513284",
+    "x-guploader-uploadid": "AJjja9ZENbv2_qrpGDdvJ3OTJamAveLuYCPdAOC7rFE51zv2caGl3yProlASyFsS4mQaCChP"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/ecad5fbe-66ca-48bb-8694-ffe6f33d3ef9/7a88c57b-f75a-4e3f-8ab1-4476f7b487d3.png",
+   "size": 3089444,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4ddae90c-6272-457d-a3e6-202835b6e225/b703c9e3-0dae-4151-a703-50f5bd61e8cc.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=195307",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1733247455047231",
+    "x-goog-hash": "crc32c=MY4pJQ==, md5=wFQpSGPy++H9DHU3/nQR3A==",
+    "x-goog-meta-x-pigeon-asset-assetid": "4ddae90c-6272-457d-a3e6-202835b6e225",
+    "x-goog-meta-x-pigeon-asset-draftversion": "3",
+    "x-goog-meta-x-pigeon-asset-filename": "b703c9e3-0dae-4151-a703-50f5bd61e8cc.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "195307",
+    "x-guploader-uploadid": "AKhXX7JavIaMFwLfk_ivSHMk3J1Y6Bg4fuq2wuPmilFQdVvYNt6C9kkIQlRM5VePcqyF_lDhSoeFzbk"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/4ddae90c-6272-457d-a3e6-202835b6e225/b703c9e3-0dae-4151-a703-50f5bd61e8cc.png",
+   "size": 123543,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/dbda1cf2-0f02-4e27-b0ce-1ea086d048b2/0dc34d59-82c9-47e0-8641-a532b22f5256.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=191797",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1733247941363999",
+    "x-goog-hash": "crc32c=A/p3Rw==, md5=zRCV72cYWz7sJjEFh5lvAw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "dbda1cf2-0f02-4e27-b0ce-1ea086d048b2",
+    "x-goog-meta-x-pigeon-asset-draftversion": "4",
+    "x-goog-meta-x-pigeon-asset-filename": "0dc34d59-82c9-47e0-8641-a532b22f5256.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "191797",
+    "x-guploader-uploadid": "AKhXX7JkX_M5bc6hpZIgcNyh33latzHNyAHdm7rjQrOlJgygZ26liwu9ZzALBSmlbR9Ki4p-QbE7qhA"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/dbda1cf2-0f02-4e27-b0ce-1ea086d048b2/0dc34d59-82c9-47e0-8641-a532b22f5256.png",
+   "size": 122050,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://polyfills.revolut.com/v3/polyfill.min.js?features=Array.prototype.at%2CPromise.allSettled%2CIntl.getCanonicalLocales%2CIntl.Locale%2CIntl.PluralRules%2CIntl.PluralRules.~locale.en%2CIntl.NumberFormat%2CIntl.NumberFormat.~locale.en%2CIntl.DisplayNames%2CIntl.DisplayNames.~locale.en%2CIntl.DateTimeFormat%2CIntl.DateTimeFormat.~locale.en%2CIntl.DateTimeFormat.prototype.formatToParts&flags=gated",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-methods": "GET,HEAD,OPTIONS",
+    "access-control-allow-origin": "*",
+    "content-type": "text/javascript; charset=UTF-8",
+    "referrer-policy": "no-referrer",
+    "useragent_normaliser": "chrome/153.0.0",
+    "x-compress-hint": "on"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/polyfills.revolut.com/v3/polyfill.min__q90638e2f.js",
+   "size": 101,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/0b709a3f-3f22-48ba-9af7-70552fb3cb10/cde96607-75d5-4a58-b785-991480da4c2f.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=9204970",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1732540425657964",
+    "x-goog-hash": "crc32c=TwIDmg==, md5=I4kstaNcKC0IVjouOC6cTA==",
+    "x-goog-meta-x-pigeon-asset-assetid": "0b709a3f-3f22-48ba-9af7-70552fb3cb10",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "cde96607-75d5-4a58-b785-991480da4c2f.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "9204970",
+    "x-guploader-uploadid": "AAVLpEjr8n5gVDkRXSTxsupMKvRg_E-sSmyAqyCNc1OVMsGM4bkRsYAfaxI5ZOiD2oc_i4MM"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/0b709a3f-3f22-48ba-9af7-70552fb3cb10/cde96607-75d5-4a58-b785-991480da4c2f.png",
+   "size": 7400262,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/38a40981-07a2-49fe-93c7-7de5f6070228/becea9ab-7462-42d0-913a-6c89c2837708.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=10084591",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1732540431137290",
+    "x-goog-hash": "crc32c=pvP3jA==, md5=2zw1bOthceNH8Qes9AUoMw==",
+    "x-goog-meta-x-pigeon-asset-assetid": "38a40981-07a2-49fe-93c7-7de5f6070228",
+    "x-goog-meta-x-pigeon-asset-draftversion": "0",
+    "x-goog-meta-x-pigeon-asset-filename": "becea9ab-7462-42d0-913a-6c89c2837708.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "10084591",
+    "x-guploader-uploadid": "AAVLpEiPxOUO5BdvBiqyJWo6N1R1ECDTpqIURt1-jyIjlNkMyH3ql2tIsP6Uv_nFY9SO0T8o"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/38a40981-07a2-49fe-93c7-7de5f6070228/becea9ab-7462-42d0-913a-6c89c2837708.png",
+   "size": 8005375,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/115d8a851f68f3bf.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/115d8a851f68f3bf.css",
+   "size": 551,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/25deca81905e34f5.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/25deca81905e34f5.css",
+   "size": 111,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/31047779e51cc020.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/31047779e51cc020.css",
+   "size": 2232,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/0164363330916ad3.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/0164363330916ad3.css",
+   "size": 153,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/82e593d76b88b79c.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/82e593d76b88b79c.css",
+   "size": 297,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/2b8313a1146c224e.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/2b8313a1146c224e.css",
+   "size": 1420,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8256.aa9b1994eb0c86c5.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8256.aa9b1994eb0c86c5.js",
+   "size": 17165,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8952.55d275ab61570e9b.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8952.55d275ab61570e9b.js",
+   "size": 2018,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/4759-d728280cb3c700ce.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/4759-d728280cb3c700ce.js",
+   "size": 14402,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8376.f8606e727867769b.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8376.f8606e727867769b.js",
+   "size": 11381,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/9699.cde4978e3c53992b.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/9699.cde4978e3c53992b.js",
+   "size": 21604,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2525.b98426d748df0e8c.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/2525.b98426d748df0e8c.js",
+   "size": 158207,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/6276.ce1a0404ba371ec5.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/6276.ce1a0404ba371ec5.js",
+   "size": 1741,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/94150ea7-4f5d-4931-9947-ab0518bea769/07844b11-869f-4b91-a5e5-ae2605f6c1c8.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "imgq:100,h2pri",
+    "cf-polished": "ok, orig_size=535258",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(45;u=5;i)",
+    "x-goog-generation": "1740427658366033",
+    "x-goog-hash": "crc32c=sVNuFA==, md5=GFMRwGpFUyX745tpUTnPxg==",
+    "x-goog-meta-x-pigeon-asset-assetid": "94150ea7-4f5d-4931-9947-ab0518bea769",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-filename": "07844b11-869f-4b91-a5e5-ae2605f6c1c8.png",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "535258",
+    "x-guploader-uploadid": "AAVLpEgEO61-Pvv-za7bGgmQSDLAwITBtzvZAZD-o2PKjHKs3Ez2h05B0HL-nYNrBxvpMps_"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/94150ea7-4f5d-4931-9947-ab0518bea769/07844b11-869f-4b91-a5e5-ae2605f6c1c8.png",
+   "size": 462642,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/1931.eeca2389100f25f9.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/1931.eeca2389100f25f9.js",
+   "size": 9443,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/5421.7c7b08cf960b1602.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/5421.7c7b08cf960b1602.js",
+   "size": 12082,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/2188.4985470678d6ec02.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/2188.4985470678d6ec02.js",
+   "size": 2733,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/api/user-country/",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/plain; charset=utf-8",
+   "headers": {
+    "content-type": "text/plain; charset=utf-8"
+   },
+   "resourceType": "fetch",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/api/user-country/index.txt",
+   "size": 2,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/css/95d304347ecd1c5b.css",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/css; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "text/css; charset=UTF-8"
+   },
+   "resourceType": "stylesheet",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/css/95d304347ecd1c5b.css",
+   "size": 821,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/_next/static/chunks/8157.23766670578d31ad.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/_next/static/chunks/8157.23766670578d31ad.js",
+   "size": 4767,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://www.revolut.com/api/t/errors",
+   "method": "POST",
+   "status": 200,
+   "contentType": "application/json",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "x-sentry-error,x-sentry-rate-limits,retry-after",
+    "content-type": "application/json",
+    "referrer-policy": "no-referrer"
+   },
+   "resourceType": "fetch",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/www.revolut.com/api/t/errors__post3e471a05.json",
+   "size": 2,
+   "bodyHash": "3e471a0513dc56289ec27288360d4b297db0c7ff617c78d2631aa9a8c80abfa2"
+  },
+  {
+   "url": "https://assets.revolut.com/assets/flags/US.webp",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/webp",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "content-type": "image/webp",
+    "x-goog-generation": "1735659211694879",
+    "x-goog-hash": "crc32c=wTyTCg==, md5=iMcdW+9AoRCoKwj/CgkeSA==",
+    "x-goog-meta-goog-reserved-file-mtime": "1735652167",
+    "x-goog-metageneration": "1",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "4032",
+    "x-guploader-uploadid": "AAVLpEhiw7OqoBg8Az-fJc9andoLcj26jcvjkXSbhUiy6tyuJt4rxI5zgMDb18oib-g4M-ND"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/flags/US.webp",
+   "size": 4032,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/Cross.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659257148848",
+    "x-goog-hash": "crc32c=Fjtvag==, md5=I2rhO/GWECwr/a5GZFLQ0A==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692829",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "425",
+    "x-guploader-uploadid": "AKhXX7JzuLREzybgS70b4GDgeWPsV6tmqm_4oPRcsK0HTvgsHXXitP8YVmb1iWOzC8MbNeQ"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/Cross.svg",
+   "size": 425,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/icons/ChevronDown.svg",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/svg+xml",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace",
+    "content-type": "image/svg+xml",
+    "x-goog-generation": "1735659256750982",
+    "x-goog-hash": "crc32c=osz62Q==, md5=vp+6M91G/LnFij0HdpiP5A==",
+    "x-goog-meta-goog-reserved-file-mtime": "1760692826",
+    "x-goog-metageneration": "7",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "294",
+    "x-guploader-uploadid": "AAVLpEhg31gxS1ykq8v-MI5efhvlIFvPApnjPG9tVvJgAsZoRtjIUPwmnOABWSGmgJo23lw"
+   },
+   "resourceType": "image",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/icons/ChevronDown.svg",
+   "size": 294,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-3Q2GNB8G11",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/growth-performance.revolut.com/gtag/js__q2db8b7f6.js",
+   "size": 565883,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-NC0XSL7JGN",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/growth-performance.revolut.com/gtag/js__q78bedeb2.js",
+   "size": 610077,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://growth-performance.revolut.com/gtag/js?id=G-NC0XSL7JGN&cx=c&gtm=4e6bh1&sign=b43b78bfd7d20b2b63b79f0fdba81e2444ec75c8ba2eb30615c6ff12915c125d_20261127",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=UTF-8",
+   "headers": {
+    "content-type": "application/javascript; charset=UTF-8"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/growth-performance.revolut.com/gtag/js__q8e813a55.js",
+   "size": 610079,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/favicons/favicon-32x32.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "cf-polished": "ok, orig_size=958",
+    "content-type": "image/png",
+    "priority": "u=4;i=?0,cf-chb=(105;u=4;i=?0)",
+    "x-goog-generation": "1700562193668443",
+    "x-goog-hash": "crc32c=A9LGlQ==, md5=8g8g9i7Iwa/ugsdvGdu38Q==",
+    "x-goog-metageneration": "2",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "958",
+    "x-guploader-uploadid": "AKhXX7IqyC-gWqc2Ygenlfzd-apKJqUVv1zLNDTGAhsCPMrCfoH8XqvzkJFS1i9RwHwS6Ih15zrn0QI"
+   },
+   "resourceType": "other",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/favicons/favicon-32x32.png",
+   "size": 598,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/808aee1c-ad2e-4005-ae3c-5ce1a5a0837e/7cf0d9a5-2d49-47cc-8b05-da204ccaa15e.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AKhXX7LIa_SeJZk_UWwqg6ZTno0ze_qEwbc5W6StuJfbPbgAizq8PpOjv_ya8otQqAQpmL8",
+    "x-goog-generation": "1739978614157390",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "905239",
+    "x-goog-meta-x-pigeon-asset-draftversion": "2",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "afb6e9ee-c615-476c-ae1d-282067f0ddaf",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-03-Virtual-Mobile",
+    "x-goog-hash": "crc32c=YugRDQ==, md5=FR9k8J3cTPkEyUVPQUEU7w==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/808aee1c-ad2e-4005-ae3c-5ce1a5a0837e/7cf0d9a5-2d49-47cc-8b05-da204ccaa15e.mp4",
+   "size": 905239,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/4954fed1-0d3f-4a3c-ab32-4ddb30e34976/13038c65-2a71-424a-93cd-544b2c6152d4.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AKhXX7JoGU47q15T_0d6pKDGDEuhyisCYKWN9muWV8DTB7kgE2gZeuGOWjTGOfEqVYSY2yM",
+    "x-goog-generation": "1772713705412787",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "1153540",
+    "x-goog-meta-x-pigeon-asset-filename": "AIR-LandingPage-VP04-PullDown-Mobile",
+    "x-goog-meta-x-pigeon-asset-assetid": "df4a9fbb-3de6-4384-a834-bf31fff37183",
+    "x-goog-meta-x-pigeon-asset-draftversion": "7",
+    "x-goog-meta-x-pigeon-asset-projectid": "2bfed2d1-490c-4ffd-b4a2-22b5f9369c9e",
+    "x-goog-meta-verification": "not-applicable",
+    "x-goog-hash": "crc32c=6dgvzw==, md5=dbKpB84EFXSx4JSq/fWGbw==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/4954fed1-0d3f-4a3c-ab32-4ddb30e34976/13038c65-2a71-424a-93cd-544b2c6152d4.mp4",
+   "size": 1153540,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/a3f03841-ddde-4f99-bf75-c2cacf2558b4/eb48080b-a584-4744-9c09-15943a9c0781.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AKhXX7J5G-PwCakrtLOQjpAa4_0fyMZcVRcZd1EqQkW0XrfPdLJCKjtQfJHkXNzn7YmnUO4",
+    "x-goog-generation": "1757664798563493",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "775869",
+    "x-goog-meta-x-pigeon-asset-draftversion": "4",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "e4a4ac04-5ea4-4e96-b83c-1099498c8460",
+    "x-goog-meta-x-pigeon-asset-filename": "Debit Mobile optimised 2",
+    "x-goog-hash": "crc32c=396Qzg==, md5=n1LUV30vzsHO39MB++CBWw==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/a3f03841-ddde-4f99-bf75-c2cacf2558b4/eb48080b-a584-4744-9c09-15943a9c0781.mp4",
+   "size": 775869,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/7bf7c951-27c0-4ceb-9021-881e85ca6b25/332f5fdd-c0b9-44be-8dea-fc17b3d6ccdf.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AP6rU81rl2znFQKj36Tef-iPsJZntw_jOTpvxpQUHCu13h97AmgTYnPGialFxX-V9NuWkJg",
+    "x-goog-generation": "1733148234073225",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "263962",
+    "x-goog-meta-x-pigeon-asset-draftversion": "2",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "ec2b1064-15c4-40fb-be4d-16623d8b83b9",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-05",
+    "x-goog-hash": "crc32c=HfD9sQ==, md5=TlKRcmPS1VIyAAz23Ul5PA==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/7bf7c951-27c0-4ceb-9021-881e85ca6b25/332f5fdd-c0b9-44be-8dea-fc17b3d6ccdf.mp4",
+   "size": 263962,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/5b4c4cc6-f5e3-4013-abb9-02ed70191f31/79c359d8-7025-4121-924b-b7880f97bcf4.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AJjja9YmJn2WwNIFmUoGhAbYIrkK7DJwuF4_JhEInghdZui-fCdpbCpD5Ia2bZ7Rsaph-5DM",
+    "x-goog-generation": "1757058409983008",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "3028778",
+    "x-goog-meta-x-pigeon-asset-draftversion": "2",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "4945d023-7f2f-4797-a895-a10904e204c9",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-03-Debit",
+    "x-goog-hash": "crc32c=LpkUFg==, md5=DIYUfPNCP53mrRYjr0wiIw==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/5b4c4cc6-f5e3-4013-abb9-02ed70191f31/79c359d8-7025-4121-924b-b7880f97bcf4.mp4",
+   "size": 3028778,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/01191ed4-da4e-4f6b-927b-62523ffec28d/b2e3f4d8-5321-4e16-9942-34f83106159b.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AKhXX7I5DVn44NNKJleJhjuV2QDUzk4RRA7fWLZrSmqyA3CykUEiAnf90KW7qEVupzBZboH-nt6hmQ0",
+    "x-goog-generation": "1772645472326665",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "4940622",
+    "x-goog-meta-x-pigeon-asset-projectid": "2bfed2d1-490c-4ffd-b4a2-22b5f9369c9e",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-verification": "not-applicable",
+    "x-goog-meta-x-pigeon-asset-filename": "AIR-LandingPage-VP03-Pulldown01",
+    "x-goog-meta-x-pigeon-asset-assetid": "2e8e0edf-61b2-4884-a63a-778527f94cad",
+    "x-goog-hash": "crc32c=try+wg==, md5=IF6ao6OCP6sF9B5pOqrjyA==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/01191ed4-da4e-4f6b-927b-62523ffec28d/b2e3f4d8-5321-4e16-9942-34f83106159b.mp4",
+   "size": 4940622,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/a07a910c-0df4-45f5-b0ca-7864377877a3/0da52da5-f59c-4863-a918-d8861c032000.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AFy3sg104zIGdoh7pC5YDeA9oBblAnLexP0PKw9tE2xrRzm57K2YRxn6hf0oBifP1X9x-0ot",
+    "x-goog-generation": "1740427367455358",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "22211340",
+    "x-goog-meta-x-pigeon-asset-draftversion": "2",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "4e248567-994f-4db0-90a6-bdd19ffce925",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-07-01",
+    "x-goog-hash": "crc32c=yIkNcA==, md5=sVBbLV9XjWq77A3/CWp/dQ==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/a07a910c-0df4-45f5-b0ca-7864377877a3/0da52da5-f59c-4863-a918-d8861c032000.mp4",
+   "size": 22211340,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/published-assets-v3/94a4cf97-5819-45b0-8219-b7b16e94ecac/959ae3c2-0d48-4c3e-a30e-2defda91b1f0.mp4",
+   "method": "GET",
+   "status": 200,
+   "contentType": "video/mp4",
+   "headers": {
+    "content-type": "video/mp4",
+    "x-guploader-uploadid": "AFy3sg0Fa0rZhH7XLY9UO8QV05Fd3BVPzaXsfV2S3aO0vBEXP-xMS5u7glJGPvzkQpTok2gz",
+    "x-goog-generation": "1739978671508758",
+    "x-goog-metageneration": "1",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "2899573",
+    "x-goog-meta-x-pigeon-asset-draftversion": "1",
+    "x-goog-meta-x-pigeon-asset-projectid": "f0a6df2b-4588-4b79-97cc-cd4869c665d3",
+    "x-goog-meta-x-pigeon-asset-assetid": "20ee07ff-404d-4870-82c3-15f35f3c8d57",
+    "x-goog-meta-x-pigeon-asset-filename": "Homepage-ValueProp-03-Virtual",
+    "x-goog-hash": "crc32c=6y4nEA==, md5=OLgMCGd/t4DEtgL4rH7/PQ==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type"
+   },
+   "resourceType": "media",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/published-assets-v3/94a4cf97-5819-45b0-8219-b7b16e94ecac/959ae3c2-0d48-4c3e-a30e-2defda91b1f0.mp4",
+   "size": 2899573,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://assets.revolut.com/assets/favicons/apple-touch-icon.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "content-type": "image/png",
+    "x-guploader-uploadid": "AKhXX7LmswgcLQNcRrcJmYn_LqTBvMWX6aDtzxgx0aohxnHlkLk5EGy9pj42PU2G3Y9ikOm1pTo3eQw",
+    "x-goog-generation": "1700562192909185",
+    "x-goog-metageneration": "2",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "1875",
+    "x-goog-hash": "crc32c=oX/8Ww==, md5=zt3Mx7mLAxGLuzrRRMfMUQ==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-polished": "ok, orig_size=1875",
+    "cf-bgj": "h2pri,imgq:100",
+    "priority": "u=4;i=?0,cf-chb=(105;u=5;i=?0)"
+   },
+   "resourceType": "other",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/favicons/apple-touch-icon.png",
+   "size": 1259
+  },
+  {
+   "url": "https://assets.revolut.com/assets/favicons/favicon-16x16.png",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/png",
+   "headers": {
+    "content-type": "image/png",
+    "x-guploader-uploadid": "AKhXX7JlRN_zOAE3VeVhu5noFElPF8r2JJxFSowAmujW-slPsl8aQzxn2ymc_GUjH5vjjcEa",
+    "x-goog-generation": "1700562192591406",
+    "x-goog-metageneration": "2",
+    "x-goog-stored-content-encoding": "identity",
+    "x-goog-stored-content-length": "659",
+    "x-goog-hash": "crc32c=JtAD7A==, md5=C6UFfdDowyVMMVLVVR5Hqg==",
+    "x-goog-storage-class": "MULTI_REGIONAL",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "Content-Type",
+    "cf-bgj": "h2pri,imgq:100",
+    "priority": "u=4;i=?0,cf-chb=(105;u=4;i=?0)",
+    "cf-polished": "ok, orig_size=659"
+   },
+   "resourceType": "other",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/assets.revolut.com/assets/favicons/favicon-16x16.png",
+   "size": 355
+  }
+ ],
+ "videos": {
+  "posters": {},
+  "onlineHosts": []
+ }
+}

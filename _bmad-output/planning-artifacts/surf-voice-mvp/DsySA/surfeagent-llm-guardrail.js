@@ -172,8 +172,13 @@ FORMATO DE SAÍDA OBRIGATÓRIO (JSON):
       windRelation: s.windRelation || 'N/D',
       tidePhase: s.tidePhase || 'N/D',
       waterTemp: s.waterTemp || 'N/D',
-      bottomType: s.bottomType || 'sand',
-      bestTide: s.bestTide || 'MID',
+      bottomType: s.bottomTypeLabel || s.bottomType || 'sand',
+      waveCharacteristics: s.waveCharacteristics || null,
+      idealSwellDirection: s.idealSwellDirection || null,
+      idealWindDirection: s.idealWindDirection || null,
+      idealTide: s.idealTide || s.bestTide || 'MID',
+      skillLevels: s.skillLevels || null,
+      hazards: s.hazards || null,
       score: s.displayScore || null
     }));
     return `[DADOS_DA_API]\n${JSON.stringify(safeSpots, null, 2)}\n[/DADOS_DA_API]`;
@@ -239,10 +244,13 @@ FORMATO DE SAÍDA OBRIGATÓRIO (JSON):
       }
     }
 
-    // Síntese Determinística Local (100% Grounded em [DADOS_DA_API], zero alucinação)
+    // Síntese Determinística Local (100% Grounded em [DADOS_DA_API] e Catálogo Oficial, zero alucinação)
     if (spots.length === 1) {
       const s = spots[0];
-      const msg = `${s.name}: ondas de ${s.swellSize} com período de ${s.swellPeriod} (${s.swellDir}), energia de ${s.energy}, vento ${s.windSpeed} (${s.windRelation}), maré ${(s.tidePhase || 'em variação').split('(')[0].trim()} e água a ${s.waterTemp}.`;
+      const catalogPart = s.waveCharacteristics
+        ? `${s.waveCharacteristics}. Fundo: ${s.bottomTypeLabel || s.bottomType}. Swell ideal: ${s.idealSwellDirection || 'SE/S'}, vento ideal: ${s.idealWindDirection || 'terral'}, maré ideal: ${s.idealTide || 'meia-maré'}.${s.hazards ? ` Atenção: ${s.hazards}.` : ''} `
+        : '';
+      const msg = `${s.name}: ${catalogPart}Condições agora: ondas de ${s.swellSize} com período de ${s.swellPeriod} (${s.swellDir}), energia de ${s.energy}, vento ${s.windSpeed} (${s.windRelation}), maré ${(s.tidePhase || 'em variação').split('(')[0].trim()} e água a ${s.waterTemp}.`;
       return {
         inScope: true,
         intent: 'SEARCH_SPOTS',

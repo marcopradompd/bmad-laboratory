@@ -1,0 +1,25 @@
+{
+  "name": "uget-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "uGet — Plataforma Completa de Alerta de Benefícios (Módulos 1 a 5: Segurança/LGPD, Geo, Push HA, uGet Pass 3D & Portal B2B)",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "node --experimental-strip-types src/server.ts",
+    "test:module1": "node --experimental-strip-types tests/module1.security.test.ts",
+    "test:module2": "node --experimental-strip-types tests/module2.catalog.test.ts",
+    "test:module3": "node --experimental-strip-types tests/module3.geofencing_push.test.ts",
+    "test:module4": "node --experimental-strip-types tests/module4.pass_surveys.test.ts",
+    "test:module5": "node --experimental-strip-types tests/module5.b2b_portal.test.ts",
+    "test:all": "node --experimental-strip-types tests/module1.security.test.ts && node --experimental-strip-types tests/module2.catalog.test.ts && node --experimental-strip-types tests/module3.geofencing_push.test.ts && node --experimental-strip-types tests/module4.pass_surveys.test.ts && node --experimental-strip-types tests/module5.b2b_portal.test.ts"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.0"
+  }
+}

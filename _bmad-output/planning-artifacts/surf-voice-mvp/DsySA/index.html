@@ -48,6 +48,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- DsySA Stylesheet -->
   <link rel="stylesheet" href="./dsysa.css">
+  <!-- Catálogo Oficial Verificado de Picos (src/data/spots_catalog.json) -->
+  <script src="./spots-catalog-service.js"></script>
 </head>
 <body class="min-h-screen antialiased text-white bg-black overflow-x-hidden font-inter">
 
@@ -1290,11 +1292,13 @@
       if (alertBox) alertBox.classList.add('hidden');
       voiceState = 'IDLE';
 
-      setVoiceButtonState('processing', 'Ranqueando picos...');
-      rankSpotsForSurfer(appState.tabs, intent, shouldSpeak);
-      if (!shouldSpeak) {
-        setVoiceButtonState('success');
-      }
+      setVoiceButtonState('processing', 'Sincronizando previsão real dos picos...');
+      Promise.all((appState.tabs || []).map(s => loadSpotForecast(s))).then(() => {
+        rankSpotsForSurfer(appState.tabs, intent, shouldSpeak);
+        if (!shouldSpeak) {
+          setVoiceButtonState('success');
+        }
+      });
     }
 
     function listenForVoiceResponse() {
@@ -1590,10 +1594,14 @@
       }
 
       try {
-        console.log(`🌊 [Open-Meteo] Buscando previsão atualizada para ${spot.name} (${spot.lat}, ${spot.lon})...`);
+        const exactLat = Number(spot.coords?.lat ?? spot.lat);
+        const exactLon = Number(spot.coords?.lon ?? spot.lon);
+        const spotProfile = spot.spotProfile || 'exposed_beach';
+        console.log(`🌊 [Open-Meteo · Perfil ${spotProfile}] Buscando previsão direta para ${spot.name} (${exactLat}, ${exactLon})...`);
         const data = await window.fetchSurfForecast({
-          lat: spot.lat,
-          lon: spot.lon,
+          lat: exactLat,
+          lon: exactLon,
+          spotProfile,
           timezone: 'auto',
           forecastDays: 15
         });
@@ -1617,32 +1625,32 @@
       let nowIdx = timeline.findIndex(p => p.timestamp.startsWith(todayIso) && parseInt(p.timestamp.slice(11, 13), 10) === currentHourInt);
       if (nowIdx < 0) nowIdx = 0;
       const now = timeline[nowIdx] || timeline[0];
+      spot.nowForecastPoint = now;
 
       if (now.swell) {
-        const expFactor = Number(spot.swellExposureFactor) > 0 ? Number(spot.swellExposureFactor) : 1.0;
-        const adjTotalH = Number(((now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
-        const adjH1 = Number(((now.swell.primary.heightM || now.swell.totalHeightM || 1.0) * expFactor).toFixed(1));
-        const t1 = now.swell.primary.periodS || 9;
-        const adjH2 = Number(((now.swell.secondary?.heightM || 0) * expFactor).toFixed(1));
-        const t2 = now.swell.secondary?.periodS || 0;
-        const energyJ = typeof window.calculateCombinedWaveEnergyJoules === 'function'
-          ? window.calculateCombinedWaveEnergyJoules(adjH1, t1, adjH2, t2)
-          : Math.round(72 * (adjH1 * adjH1 * t1 + adjH2 * adjH2 * t2));
+        // Perfil Costeiro Determinístico (displayWaveHeight + swell_wave_period/direction + energia da bancada)
+        const displayH = now.swell.displayHeightM ?? now.swell.totalHeightM ?? now.swell.primary?.heightM ?? 0;
+        const totalWaveH = now.swell.totalHeightM ?? displayH;
+        const periodS = now.swell.displayPeriodS ?? now.swell.primary?.periodS ?? now.swell.wavePeriodS ?? 8;
+        const dirDeg = now.swell.displayDirectionDeg ?? now.swell.primary?.directionDeg ?? now.swell.waveDirectionDeg ?? 135;
+        const dirCard = now.swell.displayDirectionCardinal || now.swell.primary?.directionCardinal || now.swell.waveDirectionCardinal || 'SE';
+        const energyJm2 = now.swell.energyJoulesM2 ?? Math.round(1257 * Math.pow(displayH, 2));
 
-        spot.swellSize = `${adjTotalH.toFixed(1)} m`;
-        spot.swellPeriod = `${t1} s`;
-        spot.swellDir = `${now.swell.primary.directionCardinal} ${now.swell.primary.directionDeg}°`;
-        spot.energy = `${energyJ} J`;
+        spot.swellSize = `${Number(displayH).toFixed(1)} m`;
+        spot.totalSeaHeightM = Number(totalWaveH);
+        spot.swellPeriod = `${Math.round(Number(periodS))} s`;
+        spot.swellDir = `${dirCard} ${dirDeg}°`;
+        spot.energy = `${energyJm2} J/m²`;
       }
 
       if (now.wind) {
-        const kmh = Math.round((now.wind.speedKnots || 5) * 1.852);
-        spot.windSpeed = `${kmh} km/h`;
-        spot.windSpeedKnots = now.wind.speedKnots;
-        spot.windDir = `${now.wind.directionCardinal} ${now.wind.directionDeg}°`;
-        spot.windDirDeg = now.wind.directionDeg;
+        const knots = now.wind.speedKnots !== null && now.wind.speedKnots !== undefined ? Math.round(now.wind.speedKnots) : 5;
+        spot.windSpeed = `${knots} nós`;
+        spot.windSpeedKnots = knots;
+        spot.windDir = `${now.wind.directionCardinal || 'E'} ${now.wind.directionDeg ?? 90}°`;
+        spot.windDirDeg = now.wind.directionDeg ?? 90;
 
-        const align = getWindAlignment(now.wind.directionDeg, spot.offshoreWindDeg);
+        const align = getWindAlignment(spot.windDirDeg, spot.offshoreWindDeg);
         spot.windRelation = align.relation;
       }
 
@@ -2368,12 +2376,24 @@
     // =========================================================================
     // 11. INICIALIZAÇÃO DA APLICAÇÃO (CICLO DE VIDA E PERSISTÊNCIA)
     // =========================================================================
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       window.initDsySAAuraBackground();
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
       renderDsySAIconsLibrary('all');
+
+      // Carrega o Catálogo Oficial Verificado (14 picos da Bahia) em SPOTS_DATABASE
+      if (window.SpotsCatalogService && typeof window.SpotsCatalogService.loadOfficialCatalog === 'function') {
+        const officialSpots = await window.SpotsCatalogService.loadOfficialCatalog('../src/data/spots_catalog.json');
+        if (Array.isArray(officialSpots) && officialSpots.length > 0) {
+          const legacyBaIds = new Set(['itacimirim', 'stella_maris', 'guarajuba', 'pedra_do_sal', 'barravento', 'praia_do_forte']);
+          const otherRegions = SPOTS_DATABASE.filter(s => s && !legacyBaIds.has(s.id) && !String(s.baseRegion || '').includes(', BA'));
+          SPOTS_DATABASE.length = 0;
+          officialSpots.forEach(s => SPOTS_DATABASE.push(s));
+          otherRegions.forEach(s => SPOTS_DATABASE.push(s));
+        }
+      }
 
       const { slug: sharedSlug, nameHint: sharedName } = extractSharedSpotSlug();
       const hasSharedLink = Boolean(sharedSlug || sharedName);
@@ -2384,6 +2404,16 @@
           const parsed = JSON.parse(saved);
           if (parsed.tabs && parsed.tabs.length > 0) {
             appState = parsed;
+            appState.tabs = appState.tabs.map(t => {
+              const verified = window.SpotsCatalogService
+                ? window.SpotsCatalogService.findVerifiedSpot(t.id || t.name) || window.SpotsCatalogService.findVerifiedSpot(t.name)
+                : null;
+              if (verified) {
+                if (appState.activeTabId === t.id) appState.activeTabId = verified.id;
+                return { ...verified, isBest: t.isBest, isSpecific: t.isSpecific };
+              }
+              return t;
+            });
             updateSyncTime();
             renderTabsBar();
             const openedShared = hasSharedLink ? applySharedSpotFromUrl(false) : false;

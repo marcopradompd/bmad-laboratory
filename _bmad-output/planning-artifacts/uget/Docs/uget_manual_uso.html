@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Instruções — Plataformas uGet (App do Beneficiário &amp; Portal B2B)</title>
+  <meta name="description" content="Manual oficial de uso das plataformas uGet: App do Beneficiário e Portal Web B2B Multi-Tenant, construído com o Design System ugetds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../ugetds/ugetds.css" />
+  <style>
+    .man-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+    .man-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .man-step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--uget-gradient-brand);
+      color: #FFFFFF;
+      font-family: var(--uget-font-mono);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .man-step-num.is-navy {
+      background: var(--uget-navy);
+    }
+    .man-list {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--uget-ink-secondary);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .man-code-box {
+      background: var(--uget-navy);
+      color: #E2E8F0;
+      border-radius: var(--uget-radius-md);
+      padding: 16px 20px;
+      font-family: var(--uget-font-mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      overflow-x: auto;
+    }
+    .man-divider {
+      height: 1px;
+      background: var(--uget-border-subtle);
+      margin: 32px 0;
+    }
+    @media (max-width: 960px) {
+      .man-grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .man-grid-2, .man-grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="uget-body">
+
+  <!-- HEADER STICKY (Padrão Oficial ugetds) -->
+  <header class="uget-header">
+    <div class="uget-nav-inner">
+      <a href="#top" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none;">
+        <svg width="92" height="34" viewBox="0 0 180 68" fill="none" aria-label="uGet">
+          <ellipse cx="78" cy="60" rx="11" ry="4" fill="#03223A" opacity="0.22"/>
+          <path d="M18 18V36C18 44 23.5 48.5 31 48.5C38.5 48.5 44 44 44 36V18H37.5V35.5C37.5 40 34.8 42.5 31 42.5C27.2 42.5 24.5 40 24.5 35.5V18H18Z" fill="#9B246D"/>
+          <path d="M76 8C60.5 8 49 19 49 33.5C49 45.2 57.5 53.8 68.5 55.6L75.5 64L82.5 55.6C94.2 53.5 102 44.6 102 33.2V28.5H77V34.8H94.8C93.6 43 86.2 49.5 76 49.5C64.2 49.5 56 42.3 56 33.5C56 23 64.5 14.5 76 14.5C83 14.5 88.5 17.4 92 22.2L97.5 18C92.8 11.7 85.2 8 76 8Z" fill="#6B2F8F"/>
+          <path d="M124.5 17.5C114.5 17.5 107.5 24.5 107.5 33.2C107.5 42.3 114.8 49 125.2 49C131.6 49 136.4 46.7 139.2 42.8L134.2 39.2C132.2 41.7 129.1 43.2 125.3 43.2C119.2 43.2 114.8 39.8 114.2 35H140.5C140.7 33.9 140.8 32.8 140.8 31.8C140.8 23.2 134.1 17.5 124.5 17.5ZM114.4 29.8C115.4 25.4 119.1 22.8 124.3 22.8C129.6 22.8 133.4 25.4 134.2 29.8H114.4Z" fill="#9B246D"/>
+          <path d="M153.5 11H147V18.5H141.5V24H147V39.2C147 45.6 150.7 48.8 157.4 48.8C159.8 48.8 162.1 48.3 163.8 47.4V41.8C162.5 42.4 160.8 42.8 159.2 42.8C155.3 42.8 153.5 41.1 153.5 37.5V24H163.5V18.5H153.5V11Z" fill="#9B246D"/>
+        </svg>
+        <span class="uget-badge uget-badge-purple uget-mono" style="font-size:0.7rem;">Manual Oficial</span>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <a href="../app/public/index.html" class="uget-btn uget-btn-soft uget-btn-sm">
+          <span data-uget-icon="geo-radar" data-size="15"></span>
+          <span>Abrir App</span>
+        </a>
+        <a href="../app/public/b2b.html" class="uget-btn uget-btn-navy uget-btn-sm">
+          <span data-uget-icon="institution" data-size="15"></span>
+          <span>Abrir Portal B2B</span>
+        </a>
+        <a href="../ugetds/index.html" class="uget-btn uget-btn-outline uget-btn-sm">
+          <span>ugetds v1.0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO — MIST #DCE6EE + CHEVRONS 45° + PIN G WATERMARK (Padrão ugetds/index.html) -->
+  <section id="top" class="uget-chevron-surface" style="background-color:var(--uget-mist); border-bottom:1px solid #C7D6E3; padding:64px 0 72px;">
+    <svg class="uget-chevron-left" viewBox="0 0 240 360" fill="none" aria-hidden="true">
+      <polygon points="0,40 160,180 0,320 0,255 95,180 0,105" fill="#6B2F8F" opacity="0.92"/>
+      <polygon points="0,120 75,180 0,240" fill="#03223A"/>
+      <polygon points="0,275 110,360 35,360 0,330" fill="#03223A"/>
+    </svg>
+
+    <svg class="uget-chevron-right" viewBox="0 0 280 380" fill="none" aria-hidden="true">
+      <path d="M120 20C55 20 8 68 8 130C8 184 48 224 98 232L120 264L142 232C194 224 232 184 232 130C232 68 185 20 120 20Z" stroke="#FFFFFF" stroke-width="26" opacity="0.45"/>
+      <polygon points="280,10 115,155 280,300 280,232 185,155 280,78" fill="#6B2F8F" opacity="0.88"/>
+      <polygon points="280,82 205,155 280,228" fill="#03223A" opacity="0.92"/>
+      <polygon points="225,155 280,105 280,155" fill="#9B246D" opacity="0.45"/>
+    </svg>
+
+    <div class="uget-container" style="position:relative; z-index:10; max-width:920px;">
+      <span class="uget-badge uget-badge-navy" style="margin-bottom:16px;">
+        <span class="uget-live-dot"></span>
+        <span>Documentação Interativa · Módulos 1 a 5</span>
+      </span>
+      <h1 class="uget-display" style="font-size:clamp(2.1rem,4.4vw,3.4rem); margin-bottom:16px;">
+        <span class="uget-text-mask is-visible">
+          <span class="uget-text-mask-inner">Manual de Uso das <span class="uget-gradient-text">Plataformas uGet.</span></span>
+        </span>
+      </h1>
+      <p class="uget-lead" style="color:#2C3E50; max-width:740px;">
+        Guia completo sobre <strong>o que é</strong>, <strong>qual o propósito</strong>, <strong>para quem se destina</strong> e <strong>como utilizar</strong> cada uma das duas plataformas desenvolvidas: o <strong>App do Beneficiário</strong> e o <strong>Portal Web B2B</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO PRINCIPAL COM TABS OFICIAIS DO UGETDS -->
+  <main class="uget-section" style="padding:48px 0 84px;">
+    <div class="uget-container">
+
+      <div class="uget-tabs" data-uget-tabs>
+        <!-- Barra de Abas Oficial (.uget-tab-list / .uget-tab) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div class="uget-tab-list" role="tablist" aria-label="Manual das Plataformas uGet">
+            <button type="button" class="uget-tab is-brand is-active" role="tab" aria-selected="true" data-tab-target="manual-beneficiario">
+              <span data-uget-icon="pin-uget" data-size="17"></span>
+              <span>App do Beneficiário</span>
+            </button>
+            <button type="button" class="uget-tab is-brand" role="tab" aria-selected="false" data-tab-target="manual-b2b">
+              <span data-uget-icon="institution" data-size="17"></span>
+              <span>Portal Web B2B (Clubes &amp; Parceiros)</span>
+            </button>
+          </div>
+
+          <span class="uget-badge uget-badge-purple uget-mono">Segurança OWASP · LGPD · Push HA</span>
+        </div>
+
+        <!-- ================================================================
+             ABA 1: APP DO BENEFICIÁRIO
+             ================================================================ -->
+        <section class="uget-tab-panel is-active" role="tabpanel" data-tab-panel="manual-beneficiario">
+          <!-- Bloco 1: Descrição, Propósito e Para Quem É -->
+          <div class="man-grid-3" style="margin-bottom:28px;">
+            <article class="uget-card uget-flashlight">
+              <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="pin-uget" data-size="15"></span> Descrição do Produto</span>
+              <h2 class="uget-h4" style="margin-bottom:10px;">O que é o App do Beneficiário?</h2>
+              <p class="uget-text" style="font-size:0.9rem;">
+                É a aplicação voltada ao consumidor final que reúne em um único lugar todos os convênios, descontos e benefícios oferecidos pelos clubes, sindicatos e associações aos quais ele pertence — com radar geoespacial ao vivo, alertas de proximidade e carteirinha digital <strong>uGet Pass 3D</strong> utilizável mesmo sem internet.
+              </p>
+            </article>
+
+            <article class="uget-card uget-flashlight">
+              <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="bell-smart" data-size="15"></span> Propósito</span>
+              <h2 class="uget-h4" style="margin-bottom:10px;">Por que ele existe?</h2>
+              <p class="uget-text" style="font-size:0.9rem;">
+                A maioria dos associados desconhece ou esquece os descontos a que tem direito no momento da compra. O propósito do App uGet é <strong>eliminar essa fricção</strong>: avisar proativamente quando você passa perto de um parceiro elegível, mostrar apenas benefícios dos seus clubes (<strong>RN-01</strong>) e permitir o resgate no caixa em segundos.
+              </p>
+            </article>
+
+            <article class="uget-card uget-card-navy uget-flashlight is-dark">
+              <span class="uget-eyebrow" style="color:#D8B4FE; margin-bottom:10px;"><span data-uget-icon="verified" data-size="15"></span> Para quem é</span>
+              <h2 class="uget-h4" style="color:#FFFFFF; margin-bottom:10px;">Público-Alvo</h2>
+              <ul class="man-list" style="color:#CBD5E1; margin-top:6px;">
+                <li>Associados de entidades de classe (ex.: <strong>OAB-BA/CAAB</strong>, <strong>ABM</strong>, <strong>CROBA</strong>).</li>
+                <li>Sócios de clubes esportivos e de bem-estar (ex.: <strong>Sócio Esquadrão</strong>, <strong>AlphaClub</strong>).</li>
+                <li>Assinantes de clubes de vantagens e sindicatos (ex.: <strong>Clube A Tarde+</strong>).</li>
+              </ul>
+            </article>
+          </div>
+
+          <!-- Bloco 2: Como Funciona (Passo a Passo) -->
+          <div class="uget-card" style="padding:32px; margin-bottom:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+              <div>
+                <span class="uget-eyebrow"><span data-uget-icon="geo-radar" data-size="15"></span> Passo a Passo</span>
+                <h3 class="uget-h3" style="margin-top:6px;">Como funciona o App do Beneficiário</h3>
+              </div>
+              <a href="../app/public/index.html" class="uget-btn uget-btn-brand uget-btn-sm">
+                <span data-uget-icon="arrow-right" data-size="15"></span>
+                <span>Abrir App Agora</span>
+              </a>
+            </div>
+
+            <div class="man-grid-3">
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">01</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Defina Localização &amp; Raio</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  No topo da tela, escolha um bairro de Salvador (Barra, Pituba, Rio Vermelho, Graça) ou clique em <strong>Meu GPS</strong> para usar sua posição real. Ajuste o raio de alcance entre <strong>100 m e 15 km</strong>.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">02</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Ative seus Clubes (RN-01)</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Na seção <strong>Meus Clubes &amp; Associações Ativas</strong>, clique nos cards das instituições das quais você faz parte. A lista e o Radar são atualizados instantaneamente para exibir <strong>somente</strong> convênios elegíveis.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">03</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Explore, Filtre &amp; Simule Push</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Use a busca inteligente, os chips de categoria (Saúde, Gastronomia, Bem-Estar, Educação, Serviços, Varejo) ou clique em <strong>Simular Alerta Push</strong> para testar uma notificação de proximidade com Deep Link direto para a oferta.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">04</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Veja o Detalhe (T03)</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Ao clicar em qualquer benefício (ou pin no Radar), abre o modal completo com regras do convênio, status de horário (<strong>Ativo agora</strong>), botões diretos para <strong>Traçar Rota</strong> (Google Maps), <strong>Ligar</strong>, <strong>Site</strong> e <strong>Usar Benefício</strong>.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">05</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Apresente o uGet Pass 3D</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Na aba <strong>uGet Pass 3D</strong>, seu cartão interativo exibe o QR Code assinado criptograficamente (HMAC-SHA256) e salvo em cache local por <strong>24 horas</strong> — garantindo validação no caixa mesmo sem sinal de internet.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num">06</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Avalie &amp; Controle sua LGPD</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Após usar um convênio, responda a <strong>Micro-pesquisa Pós-Visita</strong> (nota 1–5★ + economia em R$). Na aba <strong>Raio &amp; Central LGPD</strong>, configure o Modo Não Perturbe (22h–07h), revogue GPS/Push, exporte seus dados em JSON ou anonimize a conta.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco 3: Alertas Inteligentes & Como Rodar -->
+          <div class="man-grid-2">
+            <div class="uget-alert uget-alert-geo" style="padding:22px;">
+              <span data-uget-icon="bell-smart" data-size="22"></span>
+              <div>
+                <strong style="display:block; font-size:0.95rem; margin-bottom:6px;">Regras Inteligentes de Privacidade &amp; Anti-Spam</strong>
+                <ul class="man-list" style="margin-top:4px; color:var(--uget-purple-dark);">
+                  <li><strong>RN-02 (Cooldown 24h):</strong> você nunca recebe alertas repetidos da mesma unidade parceira em menos de 24 horas.</li>
+                  <li><strong>Modo Não Perturbe (DND):</strong> notificações ficam silenciadas automaticamente entre 22h e 07h (personalizável).</li>
+                  <li><strong>Minimização LGPD:</strong> o motor de geofencing não grava histórico de trajetos de GPS e pausa na hora se você revogar o consentimento.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="uget-card" style="padding:22px;">
+              <strong style="display:block; font-size:0.95rem; margin-bottom:10px;">Como acessar o App do Beneficiário</strong>
+              <div class="man-code-box">
+# Modo Completo (com API Node.js + Segurança + Push HA)
+cd uget/app
+npm run dev
+# Acesse: http://localhost:4000/
+
+# Modo Demonstração Offline (sem servidor)
+# Abra direto: uget/app/public/index.html
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             ABA 2: PORTAL WEB B2B (CLUBES & PARCEIROS)
+             ================================================================ -->
+        <section class="uget-tab-panel" role="tabpanel" data-tab-panel="manual-b2b" hidden>
+          <!-- Bloco 1: Descrição, Propósito e Para Quem É -->
+          <div class="man-grid-3" style="margin-bottom:28px;">
+            <article class="uget-card uget-flashlight">
+              <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="institution" data-size="15"></span> Descrição do Produto</span>
+              <h2 class="uget-h4" style="margin-bottom:10px;">O que é o Portal Web B2B?</h2>
+              <p class="uget-text" style="font-size:0.9rem;">
+                É a plataforma administrativa multi-tenant (isolada por <strong>RBAC</strong>) que permite a clubes, associações e estabelecimentos conveniados gerenciar suas ofertas em tempo real, validar a autenticidade do <strong>uGet Pass</strong> no caixa e acompanhar indicadores de desempenho e retorno (ROI) sem violar a LGPD.
+              </p>
+            </article>
+
+            <article class="uget-card uget-flashlight">
+              <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="wallet-save" data-size="15"></span> Propósito</span>
+              <h2 class="uget-h4" style="margin-bottom:10px;">Por que ele existe?</h2>
+              <p class="uget-text" style="font-size:0.9rem;">
+                Dar <strong>autonomia operacional e mensuração real</strong> para instituições e lojistas. Em vez de planilhas estáticas e descontos sem controle, cada clube publica ou pausa convênios com efeito imediato no radar dos associados e mede quantos resgates foram validados, qual a nota média e quanto os associados economizaram.
+              </p>
+            </article>
+
+            <article class="uget-card uget-card-navy uget-flashlight is-dark">
+              <span class="uget-eyebrow" style="color:#D8B4FE; margin-bottom:10px;"><span data-uget-icon="store" data-size="15"></span> Para quem é</span>
+              <h2 class="uget-h4" style="color:#FFFFFF; margin-bottom:10px;">Perfis de Acesso (RBAC)</h2>
+              <ul class="man-list" style="color:#CBD5E1; margin-top:6px;">
+                <li><strong>Gestor de Clube (<code>CLUB_MANAGER</code>):</strong> gerencia convênios e acompanha KPIs exclusivamente do próprio clube.</li>
+                <li><strong>Gestor de Parceiro (<code>PARTNER_MANAGER</code>):</strong> valida QR Codes no caixa e monitora satisfação da própria loja.</li>
+                <li><strong>Super Admin (<code>SUPER_ADMIN</code>):</strong> visão global, saúde da fila Push HA, DLQ e logs imutáveis de auditoria.</li>
+              </ul>
+            </article>
+          </div>
+
+          <!-- Bloco 2: Como Funciona (Passo a Passo) -->
+          <div class="uget-card" style="padding:32px; margin-bottom:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+              <div>
+                <span class="uget-eyebrow"><span data-uget-icon="verified" data-size="15"></span> Operação Diária</span>
+                <h3 class="uget-h3" style="margin-top:6px;">Como funciona o Portal Web B2B</h3>
+              </div>
+              <a href="../app/public/b2b.html" class="uget-btn uget-btn-navy uget-btn-sm">
+                <span data-uget-icon="arrow-right" data-size="15"></span>
+                <span>Abrir Portal B2B</span>
+              </a>
+            </div>
+
+            <div class="man-grid-3">
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">01</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Login Multi-Tenant Seguro</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Informe e-mail e senha corporativos (ou use os atalhos <strong>Demo Clube OAB-BA</strong> / <strong>Demo Parceiro Drogaria Vida</strong>). O backend valida JWT + Anti-CSRF + escopo RBAC — usuários comuns recebem bloqueio <code>HTTP 403</code>.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">02</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Acompanhe KPIs (Zero PII)</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  O painel superior mostra 4 indicadores 100% agregados: <strong>Convênios Ativos</strong>, <strong>Passes Validados</strong>, <strong>Nota Média &amp; Taxa de Honra (%)</strong> e <strong>Economia Gerada (R$)</strong> — sem jamais expor nome, CPF ou e-mail dos clientes.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">03</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Valide o uGet Pass no Caixa</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  No bloco <strong>Validador de Caixa</strong>, leia ou cole o código assinado (<code>UGET.&lt;payload&gt;.&lt;hmac&gt;</code>) e clique em <strong>Validar Desconto no Caixa</strong>. Códigos adulterados, expirados (15 min) ou de outro parceiro são rejeitados automaticamente.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">04</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Publique Novos Convênios</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Em <strong>Publicar Novo Benefício</strong>, selecione o clube e o parceiro permitidos no seu escopo, defina título, desconto (ex.: <code>25% OFF</code>) e regras. Todas as entradas passam por sanitização anti-XSS e entram ao vivo no App imediatamente.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">05</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Pause ou Reative Ofertas</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Na tabela <strong>Convênios do seu Escopo</strong>, clique em <strong>Pausar</strong> ou <strong>Reativar</strong> em qualquer benefício do seu tenant. Toda alteração gera um evento imutável no log de auditoria.
+                </p>
+              </div>
+
+              <div class="uget-card uget-flashlight" style="background:var(--uget-bg-canvas); padding:22px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                  <span class="man-step-num is-navy">06</span>
+                  <h4 class="uget-h4" style="font-size:1.02rem; margin:0;">Isolamento Multi-Tenant</h4>
+                </div>
+                <p class="uget-text" style="font-size:0.86rem;">
+                  Um gestor da <strong>OAB-BA</strong> nunca consegue editar ofertas da <strong>ABM</strong>, e o caixa da <strong>Drogaria Vida</strong> não consegue validar um pass emitido para o <strong>Café Origem</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco 3: Contas Demo & Como Rodar -->
+          <div class="man-grid-2">
+            <div class="uget-alert uget-alert-success" style="padding:22px;">
+              <span data-uget-icon="verified" data-size="22"></span>
+              <div>
+                <strong style="display:block; font-size:0.95rem; margin-bottom:6px;">Contas de Demonstração (Prontas para Teste)</strong>
+                <ul class="man-list" style="margin-top:4px; color:var(--uget-success-ink);">
+                  <li><strong>Clube OAB-BA:</strong> <code>gestor@oab-ba.uget.app</code> · Senha: <code>UgetOabDemoPassword2026</code></li>
+                  <li><strong>Parceiro Drogaria Vida:</strong> <code>parceiro@drogaria.uget.app</code> · Senha: <code>UgetPartnerDemoPassword2026</code></li>
+                  <li><strong>Modo Demo Offline:</strong> ao abrir <code>b2b.html</code> direto sem o servidor, o login ativa automaticamente o painel interativo de demonstração.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="uget-card" style="padding:22px;">
+              <strong style="display:block; font-size:0.95rem; margin-bottom:10px;">Como executar o Portal B2B &amp; Testes E2E</strong>
+              <div class="man-code-box">
+# Iniciar API + App + Portal B2B
+cd uget/app
+npm run dev
+# Portal B2B: http://localhost:4000/b2b
+
+# Validar toda a plataforma (30 testes E2E)
+npm run test:all
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--uget-border-subtle); background:#FFFFFF; padding:28px 0;">
+    <div class="uget-container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <span class="uget-text" style="font-size:0.84rem;"><strong>uGet</strong> — Manual Oficial de Instruções · Design System <code>ugetds v1.0</code></span>
+      <div style="display:flex; gap:14px; font-size:0.82rem;">
+        <a href="../app/public/index.html" class="uget-nav-link">App do Beneficiário</a>
+        <a href="../app/public/b2b.html" class="uget-nav-link">Portal Web B2B</a>
+        <a href="../ugetds/index.html" class="uget-nav-link">Catálogo ugetds</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../ugetds/ugetds.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uGet B2B — Portal de Clubes &amp; Parceiros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../ugetds/ugetds.css" />
+  <style>
+    .b2b-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+    .b2b-two-col { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 24px; margin-bottom: 28px; }
+    .b2b-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .b2b-table th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--uget-ink-muted);
+      border-bottom: 1px solid var(--uget-border);
+    }
+    .b2b-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--uget-border-subtle);
+      vertical-align: middle;
+    }
+    .b2b-hidden { display: none !important; }
+    @media (max-width: 960px) {
+      .b2b-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .b2b-two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .b2b-kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="uget-body">
+
+  <!-- HEADER STICKY (Padrão ugetds) -->
+  <header class="uget-header">
+    <div class="uget-nav-inner">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <a href="/b2b" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none;">
+          <svg width="84" height="31" viewBox="0 0 180 68" fill="none" aria-label="uGet">
+            <ellipse cx="78" cy="60" rx="11" ry="4" fill="#03223A" opacity="0.22"/>
+            <path d="M18 18V36C18 44 23.5 48.5 31 48.5C38.5 48.5 44 44 44 36V18H37.5V35.5C37.5 40 34.8 42.5 31 42.5C27.2 42.5 24.5 40 24.5 35.5V18H18Z" fill="#9B246D"/>
+            <path d="M76 8C60.5 8 49 19 49 33.5C49 45.2 57.5 53.8 68.5 55.6L75.5 64L82.5 55.6C94.2 53.5 102 44.6 102 33.2V28.5H77V34.8H94.8C93.6 43 86.2 49.5 76 49.5C64.2 49.5 56 42.3 56 33.5C56 23 64.5 14.5 76 14.5C83 14.5 88.5 17.4 92 22.2L97.5 18C92.8 11.7 85.2 8 76 8Z" fill="#6B2F8F"/>
+            <path d="M124.5 17.5C114.5 17.5 107.5 24.5 107.5 33.2C107.5 42.3 114.8 49 125.2 49C131.6 49 136.4 46.7 139.2 42.8L134.2 39.2C132.2 41.7 129.1 43.2 125.3 43.2C119.2 43.2 114.8 39.8 114.2 35H140.5C140.7 33.9 140.8 32.8 140.8 31.8C140.8 23.2 134.1 17.5 124.5 17.5ZM114.4 29.8C115.4 25.4 119.1 22.8 124.3 22.8C129.6 22.8 133.4 25.4 134.2 29.8H114.4Z" fill="#9B246D"/>
+            <path d="M153.5 11H147V18.5H141.5V24H147V39.2C147 45.6 150.7 48.8 157.4 48.8C159.8 48.8 162.1 48.3 163.8 47.4V41.8C162.5 42.4 160.8 42.8 159.2 42.8C155.3 42.8 153.5 41.1 153.5 37.5V24H163.5V18.5H153.5V11Z" fill="#9B246D"/>
+          </svg>
+        </a>
+        <span class="uget-badge uget-badge-navy">Portal B2B · Multi-Tenant</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span id="b2bScopeBadge" class="uget-badge uget-badge-purple uget-mono b2b-hidden"></span>
+        <button id="b2bLogoutBtn" type="button" class="uget-btn uget-btn-ghost uget-btn-sm b2b-hidden">Sair</button>
+        <a href="./index.html" class="uget-btn uget-btn-soft uget-btn-sm">
+          <span data-uget-icon="geo-radar" data-size="15"></span>
+          <span>App do Associado</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- TELA DE LOGIN MULTI-TENANT B2B -->
+  <section id="b2bAuthView" class="uget-chevron-surface" style="background:var(--uget-mist); min-height:calc(100vh - 68px); padding:56px 0;">
+    <svg class="uget-chevron-right" viewBox="0 0 280 380" fill="none" aria-hidden="true" style="opacity:0.4;">
+      <polygon points="280,10 115,155 280,300 280,232 185,155 280,78" fill="#6B2F8F"/>
+      <polygon points="280,82 205,155 280,228" fill="#03223A"/>
+    </svg>
+
+    <div class="uget-container" style="position:relative; z-index:5; max-width:540px;">
+      <div class="uget-card uget-flashlight" style="padding:36px;">
+        <span class="uget-eyebrow" style="margin-bottom:10px;"><span data-uget-icon="institution" data-size="15"></span> Acesso Restrito RBAC</span>
+        <h1 class="uget-h3" style="margin-bottom:8px;">Portal de Clubes &amp; Parceiros</h1>
+        <p class="uget-text" style="font-size:0.88rem; margin-bottom:24px;">
+          Gerencie convênios ativos, valide códigos <strong class="uget-mono">uGet Pass</strong> no caixa e acompanhe métricas agregadas 100% livres de PII (LGPD).
+        </p>
+
+        <form id="b2bLoginForm" style="display:flex; flex-direction:column; gap:16px;">
+          <div class="uget-field">
+            <label for="b2bEmail" class="uget-label">E-mail corporativo</label>
+            <input id="b2bEmail" class="uget-input" type="email" required value="gestor@oab-ba.uget.app" />
+          </div>
+          <div class="uget-field">
+            <label for="b2bPassword" class="uget-label">Senha</label>
+            <input id="b2bPassword" class="uget-input" type="password" required value="UgetOabDemoPassword2026" />
+          </div>
+          <button type="submit" class="uget-btn uget-btn-brand" style="width:100%;">
+            <span data-uget-icon="verified" data-size="16"></span>
+            <span>Entrar no Portal B2B</span>
+          </button>
+        </form>
+
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--uget-border-subtle); display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="fillClubDemoBtn" type="button" class="uget-btn uget-btn-soft uget-btn-sm">Demo Clube (OAB-BA)</button>
+          <button id="fillPartnerDemoBtn" type="button" class="uget-btn uget-btn-outline uget-btn-sm">Demo Parceiro (Drogaria Vida)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD MULTI-TENANT B2B -->
+  <main id="b2bDashView" class="b2b-hidden" style="padding:36px 0 72px;">
+    <div class="uget-container">
+      <!-- Banner Superior -->
+      <div class="uget-card uget-card-navy uget-chevron-surface" style="padding:28px 32px; margin-bottom:26px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; position:relative; z-index:4;">
+          <div>
+            <span class="uget-badge" style="background:rgba(255,255,255,0.16); color:#fff; margin-bottom:10px;">
+              <span class="uget-live-dot"></span>
+              <span>Relatórios Agregados · Zero PII (LGPD)</span>
+            </span>
+            <h2 class="uget-h3" style="color:#fff; margin:0 0 4px;">Painel Multi-Tenant B2B</h2>
+            <p id="b2bScopeSubtitle" style="margin:0; font-size:0.86rem; color:#CBD5E1;"></p>
+          </div>
+          <button id="b2bRefreshBtn" type="button" class="uget-btn uget-btn-soft uget-btn-sm">Atualizar Métricas</button>
+        </div>
+      </div>
+
+      <!-- KPIs Agregados -->
+      <div class="b2b-kpi-grid">
+        <div class="uget-card uget-flashlight" style="padding:22px;">
+          <span class="uget-eyebrow" style="font-size:0.68rem;"><span data-uget-icon="discount-tag" data-size="14"></span> Convênios Ativos</span>
+          <div id="kpiActiveBenefits" class="uget-h2 uget-mono" style="margin-top:8px;">0</div>
+        </div>
+        <div class="uget-card uget-flashlight" style="padding:22px;">
+          <span class="uget-eyebrow" style="font-size:0.68rem;"><span data-uget-icon="qr-redeem" data-size="14"></span> Passes Validados</span>
+          <div id="kpiValidated" class="uget-h2 uget-mono" style="margin-top:8px;">0</div>
+        </div>
+        <div class="uget-card uget-flashlight" style="padding:22px;">
+          <span class="uget-eyebrow" style="font-size:0.68rem;"><span data-uget-icon="verified" data-size="14"></span> Nota &amp; Honra</span>
+          <div id="kpiRating" class="uget-h2 uget-mono" style="margin-top:8px;">—</div>
+        </div>
+        <div class="uget-card uget-flashlight" style="padding:22px;">
+          <span class="uget-eyebrow" style="font-size:0.68rem;"><span data-uget-icon="wallet-save" data-size="14"></span> Economia Gerada</span>
+          <div id="kpiSavings" class="uget-h2 uget-mono" style="margin-top:8px;">R$ 0</div>
+        </div>
+      </div>
+
+      <!-- Validador de Caixa + Cadastro de Convênio -->
+      <div class="b2b-two-col">
+        <!-- Validador QR uGet Pass -->
+        <div class="uget-card uget-flashlight" style="padding:28px;">
+          <span class="uget-eyebrow" style="margin-bottom:8px;"><span data-uget-icon="qr-redeem" data-size="15"></span> Validador de Caixa (Anti-fraude HMAC)</span>
+          <h3 class="uget-h4" style="margin-bottom:14px;">Validar uGet Pass do Cliente</h3>
+          <form id="b2bValidateForm" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="uget-field">
+              <label for="signedCodeInput" class="uget-label">Código Assinado do QR Code</label>
+              <input id="signedCodeInput" class="uget-input uget-mono" type="text" placeholder="UGET.eyJ1aWQi..." required />
+            </div>
+            <button type="submit" class="uget-btn-beam" style="width:100%;">
+              <span class="uget-btn-beam-orbit"></span>
+              <span class="uget-btn-beam-inner" style="width:100%; justify-content:center;">
+                <span class="uget-btn-beam-shimmer"></span>
+                <span data-uget-icon="verified" data-size="17"></span>
+                <span>Validar Desconto no Caixa</span>
+              </span>
+            </button>
+          </form>
+          <div id="validateResultBox" style="margin-top:16px;"></div>
+        </div>
+
+        <!-- Novo Convênio -->
+        <div class="uget-card uget-flashlight" style="padding:28px;">
+          <span class="uget-eyebrow" style="margin-bottom:8px;"><span data-uget-icon="store" data-size="15"></span> Gestão de Convênios</span>
+          <h3 class="uget-h4" style="margin-bottom:14px;">Publicar Novo Benefício</h3>
+          <form id="b2bCreateBenefitForm" style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="uget-field">
+                <label for="newClubSelect" class="uget-label">Clube</label>
+                <select id="newClubSelect" class="uget-select"></select>
+              </div>
+              <div class="uget-field">
+                <label for="newPartnerSelect" class="uget-label">Parceiro</label>
+                <select id="newPartnerSelect" class="uget-select"></select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1.4fr 0.6fr; gap:12px;">
+              <div class="uget-field">
+                <label for="newTitleInput" class="uget-label">Título da Oferta</label>
+                <input id="newTitleInput" class="uget-input" type="text" placeholder="Ex.: Consulta Preventiva Especial" required />
+              </div>
+              <div class="uget-field">
+                <label for="newDiscountInput" class="uget-label">Desconto</label>
+                <input id="newDiscountInput" class="uget-input" type="text" placeholder="25% OFF" required />
+              </div>
+            </div>
+            <div class="uget-field">
+              <label for="newRulesInput" class="uget-label">Regras de Uso</label>
+              <input id="newRulesInput" class="uget-input" type="text" placeholder="Apresente o uGet Pass no atendimento." required />
+            </div>
+            <button type="submit" class="uget-btn uget-btn-navy uget-btn-sm" style="align-self:flex-start;">
+              <span data-uget-icon="arrow-right" data-size="15"></span>
+              <span>Publicar Convênio</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tabela de Convênios do Tenant -->
+      <div class="uget-card" style="padding:26px; overflow-x:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 class="uget-h4" style="margin:0;">Convênios do seu Escopo</h3>
+          <span class="uget-badge uget-badge-purple uget-mono" id="benefitsTableCount">0 itens</span>
+        </div>
+        <table class="b2b-table">
+          <thead>
+            <tr>
+              <th>Parceiro / Oferta</th>
+              <th>Clube</th>
+              <th>Desconto</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="b2bBenefitsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../ugetds/ugetds.js"></script>
+  <script src="./b2b.js"></script>
+</body>
+</html>
